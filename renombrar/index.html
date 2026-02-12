@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Renombrar Fotos - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .rename-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+    .rename-table th { background: var(--color-primary); color: #fff; padding: 0.5rem; text-align: left; }
+    .rename-table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--color-border); }
+    .rename-table tr:nth-child(even) { background: var(--color-bg); }
+    .old-name { color: var(--color-text-light); }
+    .new-name { color: var(--color-primary); font-weight: 600; }
+    .scripts-section { margin-top: 2rem; }
+    .script-card {
+      background: var(--color-bg);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .script-card h3 { font-size: 0.95rem; margin-bottom: 0.5rem; }
+    .script-card p { font-size: 0.85rem; color: var(--color-text-light); margin-bottom: 0.5rem; }
+    .script-card pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 0.8rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      overflow-x: auto;
+      white-space: pre;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .tab-buttons { display: flex; gap: 0; margin-bottom: 0; }
+    .tab-btn {
+      padding: 0.6rem 1.2rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+    }
+    .tab-btn.active { background: var(--color-surface); border-bottom: 1px solid var(--color-surface); }
+    .tab-content { border: 1px solid var(--color-border); border-radius: 0 8px 8px 8px; padding: 1.5rem; background: var(--color-surface); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>Renombrar Fotos</h1>
+  </header>
+
+  <main>
+    <div class="tab-buttons">
+      <button class="tab-btn active" data-tab="web">Renombrar en linea</button>
+      <button class="tab-btn" data-tab="scripts">Scripts para PC</button>
+    </div>
+
+    <div class="tab-content">
+      <!-- Tab 1: Herramienta web -->
+      <div class="tab-panel active" id="tab-web">
+        <div class="tool-container" style="box-shadow:none;padding:0;">
+          <div class="drop-zone" id="drop-zone">
+            <div class="icon">&#9999;</div>
+            <p>Arrastra fotos aqui</p>
+            <p class="hint">o haz clic para seleccionar</p>
+          </div>
+          <input type="file" id="file-input" accept="image/*" multiple>
+
+          <div class="form-row mt-2">
+            <div class="form-group">
+              <label for="base-name">Nombre base</label>
+              <input type="text" id="base-name" value="foto" placeholder="foto">
+            </div>
+            <div class="form-group">
+              <label for="start-num">Numero inicial</label>
+              <input type="number" id="start-num" value="1" min="0">
+            </div>
+            <div class="form-group">
+              <label for="digits">Digitos</label>
+              <input type="number" id="digits" value="4" min="1" max="8">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="separator">Separador</label>
+            <select id="separator">
+              <option value="_">Guion bajo (_)</option>
+              <option value="-">Guion (-)</option>
+              <option value="">Sin separador</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sort-by">Ordenar por</label>
+            <select id="sort-by">
+              <option value="date">Fecha del archivo (mas antigua primero)</option>
+              <option value="name">Nombre original (A-Z)</option>
+            </select>
+          </div>
+
+          <div id="preview-section" class="hidden">
+            <h2 class="mt-2">Vista previa</h2>
+            <table class="rename-table">
+              <thead><tr><th>#</th><th>Nombre original</th><th>Nuevo nombre</th></tr></thead>
+              <tbody id="preview-body"></tbody>
+            </table>
+
+            <div class="btn-group mt-2">
+              <button class="btn btn-success" id="btn-download">Descargar archivos renombrados</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Scripts descargables -->
+      <div class="tab-panel" id="tab-scripts">
+        <p class="mb-2">Estos scripts renombran todos los JPG/JPEG de una carpeta usando la <strong>fecha de captura (EXIF)</strong>, serializando automaticamente.</p>
+
+        <div class="script-card">
+          <h3>Windows - PowerShell</h3>
+          <p>Haz clic en descargar. Clic derecho sobre el archivo descargado y selecciona "Ejecutar con PowerShell". Te pedira la carpeta y el nombre base.</p>
+          <pre id="ps-script"></pre>
+          <div class="btn-group mt-1">
+            <button class="btn btn-primary" id="btn-dl-ps">Descargar .ps1</button>
+            <button class="btn btn-outline" id="btn-copy-ps">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script-card">
+          <h3>Mac / Linux - Bash</h3>
+          <p>Descarga el archivo .sh y ejecuta en Terminal: <code>bash renombrar_fotos.sh</code>. Necesita <code>exiftool</code> instalado (<code>brew install exiftool</code>).</p>
+          <pre id="sh-script"></pre>
+          <div class="btn-group mt-1">
+            <button class="btn btn-primary" id="btn-dl-sh">Descargar .sh</button>
+            <button class="btn btn-outline" id="btn-copy-sh">Copiar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    // ===== Tabs =====
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== Herramienta Web =====
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const previewSection = document.getElementById('preview-section');
+    const previewBody = document.getElementById('preview-body');
+    let selectedFiles = [];
+
+    setupDropZone(dropZone, fileInput, handleFiles);
+
+    // Actualizar preview al cambiar opciones
+    ['base-name', 'start-num', 'digits', 'separator', 'sort-by'].forEach(id => {
+      document.getElementById(id).addEventListener('change', updatePreview);
+      document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    function handleFiles(files) {
+      selectedFiles = Array.from(files);
+      if (!selectedFiles.length) return;
+      updatePreview();
+    }
+
+    function getSorted() {
+      const sortBy = document.getElementById('sort-by').value;
+      const sorted = [...selectedFiles];
+      if (sortBy === 'date') {
+        sorted.sort((a, b) => a.lastModified - b.lastModified);
+      } else {
+        sorted.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+      }
+      return sorted;
+    }
+
+    function getNewName(index, originalName) {
+      const baseName = document.getElementById('base-name').value.trim() || 'foto';
+      const startNum = parseInt(document.getElementById('start-num').value) || 1;
+      const digits = parseInt(document.getElementById('digits').value) || 4;
+      const sep = document.getElementById('separator').value;
+      const ext = '.' + getExt(originalName);
+      const num = String(startNum + index).padStart(digits, '0');
+      return baseName + sep + num + ext;
+    }
+
+    function updatePreview() {
+      if (!selectedFiles.length) return;
+      const sorted = getSorted();
+      previewBody.innerHTML = sorted.map((f, i) => {
+        const newName = getNewName(i, f.name);
+        return `<tr>
+          <td>${i + 1}</td>
+          <td class="old-name">${f.name}</td>
+          <td class="new-name">${newName}</td>
+        </tr>`;
+      }).join('');
+      show(previewSection);
+    }
+
+    document.getElementById('btn-download').addEventListener('click', async () => {
+      const sorted = getSorted();
+      const files = sorted.map((f, i) => ({
+        name: getNewName(i, f.name),
+        data: f
+      }));
+      await downloadAll(files);
+    });
+
+    // ===== Scripts =====
+    const PS_SCRIPT = `# Renombrar fotos por fecha de captura (EXIF) - Windows PowerShell
+# Clic derecho > Ejecutar con PowerShell
+
+Add-Type -AssemblyName System.Drawing
+Add-Type -AssemblyName System.Windows.Forms
+
+# Pedir carpeta
+$dialog = New-Object System.Windows.Forms.FolderBrowserDialog
+$dialog.Description = "Selecciona la carpeta con las fotos"
+if ($dialog.ShowDialog() -ne "OK") { exit }
+$folder = $dialog.SelectedPath
+
+# Pedir nombre base
+$baseName = Read-Host "Nombre base (ej: foto7)"
+if (-not $baseName) { $baseName = "foto" }
+
+# Obtener fotos
+$photos = Get-ChildItem -Path $folder -Include *.jpg,*.jpeg -File -Recurse:$false | Sort-Object Name
+
+if ($photos.Count -eq 0) {
+    Write-Host "No se encontraron archivos JPG/JPEG" -ForegroundColor Red
+    Read-Host "Presiona Enter para salir"
+    exit
+}
+
+Write-Host "Encontradas $($photos.Count) fotos" -ForegroundColor Green
+
+# Obtener fecha EXIF
+function Get-ExifDate($path) {
+    try {
+        $img = [System.Drawing.Image]::FromFile($path)
+        $prop = $img.GetPropertyItem(36867) # DateTimeOriginal
+        $dateStr = [System.Text.Encoding]::ASCII.GetString($prop.Value).Trim([char]0)
+        $img.Dispose()
+        return [DateTime]::ParseExact($dateStr, "yyyy:MM:dd HH:mm:ss", $null)
+    } catch {
+        return (Get-Item $path).LastWriteTime
+    }
+}
+
+# Ordenar por fecha de captura
+$sorted = $photos | ForEach-Object {
+    [PSCustomObject]@{
+        File = $_
+        Date = Get-ExifDate $_.FullName
+    }
+} | Sort-Object Date
+
+# Renombrar
+$counter = 1
+$total = $sorted.Count
+$digits = [Math]::Max(4, $total.ToString().Length)
+
+foreach ($item in $sorted) {
+    $ext = $item.File.Extension.ToLower()
+    $newName = "{0}_{1}{2}" -f $baseName, $counter.ToString().PadLeft($digits, '0'), $ext
+    $newPath = Join-Path $folder $newName
+
+    Write-Host "$($item.File.Name) -> $newName  ($($item.Date.ToString('yyyy-MM-dd HH:mm:ss')))"
+
+    # Evitar conflictos: renombrar a temporal primero
+    $tempPath = Join-Path $folder ("_temp_" + [Guid]::NewGuid().ToString() + $ext)
+    Rename-Item -Path $item.File.FullName -NewName $tempPath -Force
+    Rename-Item -Path $tempPath -NewName $newPath -Force
+
+    $counter++
+}
+
+Write-Host ""
+Write-Host "Listo! $total fotos renombradas." -ForegroundColor Green
+Read-Host "Presiona Enter para salir"`;
+
+    const SH_SCRIPT = `#!/bin/bash
+# Renombrar fotos por fecha de captura (EXIF) - Mac/Linux
+# Requiere: brew install exiftool (Mac) o sudo apt install libimage-exiftool-perl (Linux)
+# Uso: bash renombrar_fotos.sh
+
+# Verificar exiftool
+if ! command -v exiftool &> /dev/null; then
+    echo "Error: exiftool no esta instalado."
+    echo "Mac: brew install exiftool"
+    echo "Linux: sudo apt install libimage-exiftool-perl"
+    exit 1
+fi
+
+# Pedir carpeta
+read -p "Ruta de la carpeta con fotos: " FOLDER
+FOLDER="\${FOLDER/#\\~/$HOME}"
+
+if [ ! -d "$FOLDER" ]; then
+    echo "Error: La carpeta no existe."
+    exit 1
+fi
+
+# Pedir nombre base
+read -p "Nombre base (ej: foto7): " BASE_NAME
+BASE_NAME=\${BASE_NAME:-foto}
+
+# Buscar fotos JPG/JPEG
+shopt -s nocaseglob
+FILES=()
+for f in "$FOLDER"/*.jpg "$FOLDER"/*.jpeg; do
+    [ -f "$f" ] && FILES+=("$f")
+done
+shopt -u nocaseglob
+
+if [ \${#FILES[@]} -eq 0 ]; then
+    echo "No se encontraron archivos JPG/JPEG"
+    exit 1
+fi
+
+echo "Encontradas \${#FILES[@]} fotos"
+
+# Crear archivo temporal con fechas
+TMPFILE=$(mktemp)
+for f in "\${FILES[@]}"; do
+    DATE=$(exiftool -DateTimeOriginal -s3 -d "%Y%m%d%H%M%S" "$f" 2>/dev/null)
+    if [ -z "$DATE" ]; then
+        DATE=$(stat -f "%Sm" -t "%Y%m%d%H%M%S" "$f" 2>/dev/null || stat -c "%Y" "$f" 2>/dev/null)
+    fi
+    echo "$DATE|$f"
+done | sort > "$TMPFILE"
+
+# Renombrar
+COUNTER=1
+TOTAL=$(wc -l < "$TMPFILE")
+DIGITS=$(printf "%d" "$TOTAL" | wc -c | tr -d ' ')
+[ "$DIGITS" -lt 4 ] && DIGITS=4
+
+while IFS='|' read -r DATE FILEPATH; do
+    EXT="\${FILEPATH##*.}"
+    EXT=$(echo "$EXT" | tr '[:upper:]' '[:lower:]')
+    NUM=$(printf "%0\${DIGITS}d" $COUNTER)
+    NEWNAME="\${BASE_NAME}_\${NUM}.\${EXT}"
+    NEWPATH="$FOLDER/$NEWNAME"
+
+    BASENAME=$(basename "$FILEPATH")
+    echo "$BASENAME -> $NEWNAME"
+
+    # Renombrar via temporal para evitar conflictos
+    TMPNAME="$FOLDER/_temp_\$\$_$COUNTER.\$EXT"
+    mv "$FILEPATH" "$TMPNAME"
+    mv "$TMPNAME" "$NEWPATH"
+
+    COUNTER=$((COUNTER + 1))
+done < "$TMPFILE"
+
+rm "$TMPFILE"
+echo ""
+echo "Listo! $TOTAL fotos renombradas."`;
+
+    document.getElementById('ps-script').textContent = PS_SCRIPT;
+    document.getElementById('sh-script').textContent = SH_SCRIPT;
+
+    document.getElementById('btn-dl-ps').addEventListener('click', () => {
+      const blob = new Blob([PS_SCRIPT], { type: 'text/plain' });
+      downloadBlob(blob, 'renombrar_fotos.ps1');
+    });
+
+    document.getElementById('btn-dl-sh').addEventListener('click', () => {
+      const blob = new Blob([SH_SCRIPT], { type: 'text/plain' });
+      downloadBlob(blob, 'renombrar_fotos.sh');
+    });
+
+    document.getElementById('btn-copy-ps').addEventListener('click', async () => {
+      await navigator.clipboard.writeText(PS_SCRIPT);
+      document.getElementById('btn-copy-ps').textContent = 'Copiado';
+    });
+
+    document.getElementById('btn-copy-sh').addEventListener('click', async () => {
+      await navigator.clipboard.writeText(SH_SCRIPT);
+      document.getElementById('btn-copy-sh').textContent = 'Copiado';
+    });
+  </script>
+</body>
+</html>
