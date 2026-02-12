@@ -6,57 +6,67 @@
   <title>Comparar Fotos - Herramientas Foro 7</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
-    .photo-viewer { text-align: center; margin: 1rem 0; }
-    .photo-viewer img {
-      max-width: 100%;
-      max-height: 65vh;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      object-fit: contain;
-    }
-    .photo-name {
-      text-align: center;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--color-text-light);
-    }
-    .action-buttons {
+    .compare-container {
       display: flex;
       gap: 1rem;
       justify-content: center;
+      align-items: flex-start;
       margin: 1rem 0;
     }
-    .action-buttons .btn {
-      min-width: 120px;
-      font-size: 1.1rem;
-      padding: 0.8rem 2rem;
-    }
-    .download-options {
+    .compare-side {
+      flex: 1;
+      max-width: 48%;
+      text-align: center;
+      border: 3px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
+      transition: border-color 0.3s;
     }
-    .download-row {
+    .compare-side img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: contain;
+      background: var(--color-bg);
+    }
+    .compare-side .photo-label {
+      padding: 0.4rem 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--color-bg);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .compare-side .side-buttons {
       display: flex;
       gap: 0.5rem;
-      flex-wrap: wrap;
+      padding: 0.5rem;
       justify-content: center;
     }
-    .download-section h3 {
-      font-size: 0.95rem;
-      margin-bottom: 0.5rem;
-      color: var(--color-text-light);
-      text-align: center;
+    .compare-side .side-buttons .btn { flex: 1; font-size: 0.95rem; }
+    .single-view { max-width: 500px; margin: 1rem auto; text-align: center; }
+    .single-view img {
+      max-height: 60vh; max-width: 100%;
+      object-fit: contain; border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 0.5rem;
     }
+    .single-buttons { display: flex; gap: 0.5rem; justify-content: center; margin: 0.5rem 0; }
+    .download-options { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+    .download-row { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+    .download-section h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--color-text-light); text-align: center; }
     .script-note {
-      background: var(--color-bg);
-      padding: 0.8rem 1rem;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      color: var(--color-text-light);
-      margin-top: 0.5rem;
-      text-align: center;
+      background: var(--color-bg); padding: 0.8rem 1rem; border-radius: 8px;
+      font-size: 0.82rem; color: var(--color-text-light); margin-top: 0.5rem; text-align: center;
+    }
+    .flash-si { animation: flashSi 0.3s; }
+    .flash-no { animation: flashNo 0.3s; }
+    @keyframes flashSi { 0%,100%{ border-color: var(--color-border); } 50%{ border-color: var(--color-success); } }
+    @keyframes flashNo { 0%,100%{ border-color: var(--color-border); } 50%{ border-color: var(--color-error); } }
+    @media (max-width: 600px) {
+      .compare-container { flex-direction: column; }
+      .compare-side { max-width: 100%; }
     }
   </style>
 </head>
@@ -68,73 +78,75 @@
 
   <main>
     <div class="tool-container">
-      <!-- Paso 1: Seleccionar fotos -->
+      <!-- Paso 1: Seleccionar -->
       <div id="step-load">
         <div class="drop-zone" id="drop-zone">
           <div class="icon">&#8644;</div>
           <p>Arrastra fotos aqui</p>
-          <p class="hint">Clasifica una por una como SI o NO</p>
+          <p class="hint">Compara dos fotos y clasifica cada una SI o NO</p>
         </div>
         <input type="file" id="file-input" accept="image/*" multiple>
       </div>
 
-      <!-- Paso 2: Clasificar una por una -->
-      <div id="step-classify" class="hidden">
+      <!-- Paso 2: Comparar -->
+      <div id="step-compare" class="hidden">
         <div id="status" class="mb-1"></div>
+        <div class="progress-bar" id="progress"><div class="fill" style="width:0%"></div></div>
 
-        <div class="progress-bar" id="progress">
-          <div class="fill" style="width:0%"></div>
+        <!-- Modo dos fotos -->
+        <div id="mode-pair" class="hidden">
+          <div class="compare-container">
+            <div class="compare-side" id="side-left">
+              <img id="img-left" src="" alt="Foto izquierda">
+              <div class="photo-label" id="label-left"></div>
+              <div class="side-buttons">
+                <button class="btn btn-success btn-left-si">SI (A)</button>
+                <button class="btn btn-danger btn-left-no">NO (Z)</button>
+              </div>
+            </div>
+            <div class="compare-side" id="side-right">
+              <img id="img-right" src="" alt="Foto derecha">
+              <div class="photo-label" id="label-right"></div>
+              <div class="side-buttons">
+                <button class="btn btn-success btn-right-si">SI (D)</button>
+                <button class="btn btn-danger btn-right-no">NO (C)</button>
+              </div>
+            </div>
+          </div>
+          <div class="keyboard-hint">
+            Izquierda: <kbd>A</kbd> SI / <kbd>Z</kbd> NO &nbsp;&nbsp;|&nbsp;&nbsp;
+            Derecha: <kbd>D</kbd> SI / <kbd>C</kbd> NO
+          </div>
         </div>
 
-        <div class="photo-name" id="photo-name"></div>
-
-        <div class="photo-viewer">
-          <img id="current-photo" src="" alt="Foto actual">
-        </div>
-
-        <div class="action-buttons">
-          <button class="btn btn-danger" id="btn-no">NO (N)</button>
-          <button class="btn btn-outline" id="btn-undo" disabled>Deshacer (Z)</button>
-          <button class="btn btn-success" id="btn-yes">SI (S)</button>
-        </div>
-
-        <div class="keyboard-hint">
-          <kbd>S</kbd> = SI &nbsp; <kbd>N</kbd> = NO &nbsp; <kbd>Z</kbd> = Deshacer
+        <!-- Modo una foto (ultima) -->
+        <div id="mode-single" class="hidden">
+          <div class="single-view">
+            <p class="photo-name" id="single-name"></p>
+            <img id="img-single" src="" alt="Ultima foto">
+            <div class="single-buttons">
+              <button class="btn btn-success" id="btn-single-si">SI (S)</button>
+              <button class="btn btn-danger" id="btn-single-no">NO (N)</button>
+            </div>
+          </div>
+          <div class="keyboard-hint"><kbd>S</kbd> SI &nbsp; <kbd>N</kbd> NO</div>
         </div>
 
         <div class="stats mt-2">
-          <div class="stat">
-            <div class="value" id="stat-si">0</div>
-            <div class="label">SI</div>
-          </div>
-          <div class="stat">
-            <div class="value" id="stat-no">0</div>
-            <div class="label">NO</div>
-          </div>
-          <div class="stat">
-            <div class="value" id="stat-remaining">0</div>
-            <div class="label">Restantes</div>
-          </div>
+          <div class="stat"><div class="value" id="stat-si">0</div><div class="label">SI</div></div>
+          <div class="stat"><div class="value" id="stat-no">0</div><div class="label">NO</div></div>
+          <div class="stat"><div class="value" id="stat-remaining">0</div><div class="label">Restantes</div></div>
         </div>
       </div>
 
-      <!-- Paso 3: Descargar -->
+      <!-- Paso 3: Resultado -->
       <div id="step-done" class="hidden">
         <div class="alert alert-success text-center" id="done-msg"></div>
-
         <div class="stats mt-2">
-          <div class="stat">
-            <div class="value" id="final-si">0</div>
-            <div class="label">SI</div>
-          </div>
-          <div class="stat">
-            <div class="value" id="final-no">0</div>
-            <div class="label">NO</div>
-          </div>
+          <div class="stat"><div class="value" id="final-si">0</div><div class="label">SI</div></div>
+          <div class="stat"><div class="value" id="final-no">0</div><div class="label">NO</div></div>
         </div>
-
         <div class="download-options">
-          <!-- Descargar fotos -->
           <div class="download-section">
             <h3>Descargar fotos</h3>
             <div class="download-row">
@@ -143,8 +155,6 @@
               <button class="btn btn-primary" id="btn-dl-folders">Guardar ambas en carpetas</button>
             </div>
           </div>
-
-          <!-- Descargar scripts -->
           <div class="download-section">
             <h3>Descargar script para mover en tu PC</h3>
             <div class="download-row">
@@ -161,190 +171,204 @@
     </div>
   </main>
 
-  <footer class="site-footer">
-    Foro 7 &mdash; Herramientas para procesamiento de fotos
-  </footer>
+  <footer class="site-footer">Foro 7 &mdash; Herramientas para procesamiento de fotos</footer>
 
   <script src="../js/common.js"></script>
   <script>
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const stepLoad = document.getElementById('step-load');
-    const stepClassify = document.getElementById('step-classify');
+    const stepCompare = document.getElementById('step-compare');
     const stepDone = document.getElementById('step-done');
+    const modePair = document.getElementById('mode-pair');
+    const modeSingle = document.getElementById('mode-single');
+    const sideLeft = document.getElementById('side-left');
+    const sideRight = document.getElementById('side-right');
 
-    let photos = [];
-    let currentIdx = 0;
-    let classifications = []; // { file, choice: 'SI'|'NO' }
+    let photos = [];      // cola de fotos sin clasificar
+    let nextIdx = 0;      // siguiente foto a cargar de la cola
+    let leftFile = null;  // foto actual en slot izquierdo
+    let rightFile = null; // foto actual en slot derecho
+    let results = [];     // { file, choice }
+    let total = 0;
+    let busy = false;
 
     setupDropZone(dropZone, fileInput, handleFiles);
 
     function handleFiles(files) {
       photos = Array.from(files).filter(f => f.type.startsWith('image/'));
-      if (!photos.length) return;
+      if (photos.length < 2) { alert('Se necesitan al menos 2 fotos'); return; }
       photos.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-      currentIdx = 0;
-      classifications = [];
+      total = photos.length;
+      nextIdx = 0;
+      results = [];
+      leftFile = null;
+      rightFile = null;
+      busy = false;
+
       hide(stepLoad);
-      show(stepClassify);
-      showPhoto();
+      show(stepCompare);
+
+      // Cargar las dos primeras
+      leftFile = photos[nextIdx++];
+      rightFile = photos[nextIdx++];
+      showPair();
     }
 
-    async function showPhoto() {
-      if (currentIdx >= photos.length) {
-        finalize();
-        return;
-      }
-      const file = photos[currentIdx];
+    async function showPair() {
+      show(modePair);
+      hide(modeSingle);
+      await Promise.all([
+        loadSide('left', leftFile),
+        loadSide('right', rightFile)
+      ]);
+      updateUI();
+    }
+
+    async function loadSide(side, file) {
       const url = await readAsDataURL(file);
-      document.getElementById('current-photo').src = url;
-      document.getElementById('photo-name').textContent =
-        `${file.name} (${currentIdx + 1} de ${photos.length})`;
-      updateProgress(document.getElementById('progress'),
-        Math.round((currentIdx / photos.length) * 100));
-      updateStats();
-      document.getElementById('btn-undo').disabled = classifications.length === 0;
+      document.getElementById('img-' + side).src = url;
+      document.getElementById('label-' + side).textContent = file.name;
     }
 
-    function classify(choice) {
-      if (currentIdx >= photos.length) return;
-      classifications.push({ file: photos[currentIdx], choice });
-      currentIdx++;
-      showPhoto();
+    async function showLast(file) {
+      hide(modePair);
+      show(modeSingle);
+      const url = await readAsDataURL(file);
+      document.getElementById('img-single').src = url;
+      document.getElementById('single-name').textContent = file.name;
+      updateUI();
     }
 
-    function undo() {
-      if (!classifications.length) return;
-      classifications.pop();
-      currentIdx--;
-      showPhoto();
+    function classifySide(side, choice) {
+      if (busy) return;
+      busy = true;
+
+      const file = side === 'left' ? leftFile : rightFile;
+      results.push({ file, choice });
+
+      // Flash visual
+      const el = side === 'left' ? sideLeft : sideRight;
+      el.classList.add(choice === 'SI' ? 'flash-si' : 'flash-no');
+      setTimeout(() => el.classList.remove('flash-si', 'flash-no'), 300);
+
+      // Cargar siguiente foto en ese slot
+      if (nextIdx < photos.length) {
+        const newFile = photos[nextIdx++];
+        if (side === 'left') leftFile = newFile;
+        else rightFile = newFile;
+
+        setTimeout(async () => {
+          await loadSide(side, newFile);
+          updateUI();
+          busy = false;
+        }, 200);
+      } else {
+        // Ya no hay mas fotos en cola, queda una sola sin clasificar
+        const remaining = side === 'left' ? rightFile : leftFile;
+        setTimeout(() => {
+          leftFile = null;
+          rightFile = null;
+          showLast(remaining);
+          busy = false;
+        }, 200);
+      }
     }
 
-    function updateStats() {
-      const si = classifications.filter(c => c.choice === 'SI').length;
-      const no = classifications.filter(c => c.choice === 'NO').length;
-      document.getElementById('stat-si').textContent = si;
-      document.getElementById('stat-no').textContent = no;
-      document.getElementById('stat-remaining').textContent = photos.length - currentIdx;
+    function classifyLast(choice) {
+      if (busy) return;
+      // La foto que queda en modo single
+      const el = modeSingle.querySelector('img');
+      const file = photos.find(p =>
+        !results.some(r => r.file === p)
+      );
+      if (file) results.push({ file, choice });
+      finalize();
+    }
+
+    function updateUI() {
+      const classified = results.length;
+      const remaining = total - classified;
+      document.getElementById('stat-si').textContent = results.filter(r => r.choice === 'SI').length;
+      document.getElementById('stat-no').textContent = results.filter(r => r.choice === 'NO').length;
+      document.getElementById('stat-remaining').textContent = remaining;
+      document.getElementById('status').innerHTML =
+        `<div class="alert alert-info">${classified} de ${total} clasificadas</div>`;
+      updateProgress(document.getElementById('progress'), Math.round((classified / total) * 100));
     }
 
     function finalize() {
-      hide(stepClassify);
+      hide(stepCompare);
       show(stepDone);
-      const siList = classifications.filter(c => c.choice === 'SI');
-      const noList = classifications.filter(c => c.choice === 'NO');
-      document.getElementById('done-msg').textContent =
-        `Clasificacion completa: ${siList.length} SI, ${noList.length} NO`;
-      document.getElementById('final-si').textContent = siList.length;
-      document.getElementById('final-no').textContent = noList.length;
-
-      // Ocultar botones si no hay fotos en esa categoria
-      document.getElementById('btn-dl-si').style.display = siList.length ? '' : 'none';
-      document.getElementById('btn-dl-no').style.display = noList.length ? '' : 'none';
+      const si = results.filter(r => r.choice === 'SI').length;
+      const no = results.filter(r => r.choice === 'NO').length;
+      document.getElementById('done-msg').textContent = `Listo: ${si} SI, ${no} NO`;
+      document.getElementById('final-si').textContent = si;
+      document.getElementById('final-no').textContent = no;
+      document.getElementById('btn-dl-si').style.display = si ? '' : 'none';
+      document.getElementById('btn-dl-no').style.display = no ? '' : 'none';
     }
 
-    // Botones de clasificacion
-    document.getElementById('btn-yes').addEventListener('click', () => classify('SI'));
-    document.getElementById('btn-no').addEventListener('click', () => classify('NO'));
-    document.getElementById('btn-undo').addEventListener('click', undo);
+    // ===== Botones =====
+    document.querySelector('.btn-left-si').addEventListener('click', () => classifySide('left', 'SI'));
+    document.querySelector('.btn-left-no').addEventListener('click', () => classifySide('left', 'NO'));
+    document.querySelector('.btn-right-si').addEventListener('click', () => classifySide('right', 'SI'));
+    document.querySelector('.btn-right-no').addEventListener('click', () => classifySide('right', 'NO'));
+    document.getElementById('btn-single-si').addEventListener('click', () => classifyLast('SI'));
+    document.getElementById('btn-single-no').addEventListener('click', () => classifyLast('NO'));
 
-    // Teclado
+    // ===== Teclado =====
     document.addEventListener('keydown', e => {
-      if (stepClassify.classList.contains('hidden')) return;
+      if (stepCompare.classList.contains('hidden')) return;
       const key = e.key.toLowerCase();
-      if (key === 's') classify('SI');
-      else if (key === 'n') classify('NO');
-      else if (key === 'z') undo();
+      if (!modeSingle.classList.contains('hidden')) {
+        if (key === 's') classifyLast('SI');
+        else if (key === 'n') classifyLast('NO');
+      } else {
+        if (key === 'a') classifySide('left', 'SI');
+        else if (key === 'z') classifySide('left', 'NO');
+        else if (key === 'd') classifySide('right', 'SI');
+        else if (key === 'c') classifySide('right', 'NO');
+      }
     });
 
     // ===== Descargas =====
-
     function getFilesBy(choice) {
-      return classifications
-        .filter(c => c.choice === choice)
-        .map(c => ({ name: c.file.name, data: c.file }));
+      return results.filter(r => r.choice === choice).map(r => ({ name: r.file.name, data: r.file }));
     }
 
-    // Descargar solo SI
-    document.getElementById('btn-dl-si').addEventListener('click', () => {
-      downloadAll(getFilesBy('SI'));
-    });
-
-    // Descargar solo NO
-    document.getElementById('btn-dl-no').addEventListener('click', () => {
-      downloadAll(getFilesBy('NO'));
-    });
-
-    // Guardar ambas en carpetas
+    document.getElementById('btn-dl-si').addEventListener('click', () => downloadAll(getFilesBy('SI')));
+    document.getElementById('btn-dl-no').addEventListener('click', () => downloadAll(getFilesBy('NO')));
     document.getElementById('btn-dl-folders').addEventListener('click', () => {
       saveToFolders({ SI: getFilesBy('SI'), NO: getFilesBy('NO') });
     });
 
-    // ===== Generar Scripts =====
-
+    // ===== Scripts =====
     function generateWinScript() {
-      const siFiles = classifications.filter(c => c.choice === 'SI').map(c => c.file.name);
-      const noFiles = classifications.filter(c => c.choice === 'NO').map(c => c.file.name);
-
-      let script = '@echo off\r\n';
-      script += 'chcp 65001 >nul\r\n';
-      script += 'echo Clasificando fotos...\r\n';
-      script += 'echo.\r\n';
-
-      if (siFiles.length) {
-        script += 'if not exist "SI" mkdir "SI"\r\n';
-        for (const f of siFiles) {
-          script += `if exist "${f}" move "${f}" "SI\\${f}"\r\n`;
-        }
-      }
-
-      if (noFiles.length) {
-        script += 'if not exist "NO" mkdir "NO"\r\n';
-        for (const f of noFiles) {
-          script += `if exist "${f}" move "${f}" "NO\\${f}"\r\n`;
-        }
-      }
-
-      script += 'echo.\r\n';
-      script += `echo Listo: ${siFiles.length} fotos a SI, ${noFiles.length} fotos a NO\r\n`;
-      script += 'pause\r\n';
-      return script;
+      const si = results.filter(r => r.choice === 'SI').map(r => r.file.name);
+      const no = results.filter(r => r.choice === 'NO').map(r => r.file.name);
+      let s = '@echo off\r\nchcp 65001 >nul\r\necho Clasificando fotos...\r\necho.\r\n';
+      if (si.length) { s += 'if not exist "SI" mkdir "SI"\r\n'; si.forEach(f => s += `if exist "${f}" move "${f}" "SI\\${f}"\r\n`); }
+      if (no.length) { s += 'if not exist "NO" mkdir "NO"\r\n'; no.forEach(f => s += `if exist "${f}" move "${f}" "NO\\${f}"\r\n`); }
+      s += `echo.\r\necho Listo: ${si.length} fotos a SI, ${no.length} fotos a NO\r\npause\r\n`;
+      return s;
     }
 
     function generateMacScript() {
-      const siFiles = classifications.filter(c => c.choice === 'SI').map(c => c.file.name);
-      const noFiles = classifications.filter(c => c.choice === 'NO').map(c => c.file.name);
-
-      let script = '#!/bin/bash\n';
-      script += '# Clasificar fotos en carpetas SI y NO\n';
-      script += '# Ejecutar en la carpeta donde estan las fotos\n\n';
-
-      if (siFiles.length) {
-        script += 'mkdir -p "SI"\n';
-        for (const f of siFiles) {
-          script += `[ -f "${f}" ] && mv "${f}" "SI/${f}"\n`;
-        }
-      }
-
-      if (noFiles.length) {
-        script += '\nmkdir -p "NO"\n';
-        for (const f of noFiles) {
-          script += `[ -f "${f}" ] && mv "${f}" "NO/${f}"\n`;
-        }
-      }
-
-      script += `\necho "Listo: ${siFiles.length} fotos a SI, ${noFiles.length} fotos a NO"\n`;
-      return script;
+      const si = results.filter(r => r.choice === 'SI').map(r => r.file.name);
+      const no = results.filter(r => r.choice === 'NO').map(r => r.file.name);
+      let s = '#!/bin/bash\n# Ejecutar en la carpeta de las fotos\n\n';
+      if (si.length) { s += 'mkdir -p "SI"\n'; si.forEach(f => s += `[ -f "${f}" ] && mv "${f}" "SI/${f}"\n`); }
+      if (no.length) { s += '\nmkdir -p "NO"\n'; no.forEach(f => s += `[ -f "${f}" ] && mv "${f}" "NO/${f}"\n`); }
+      s += `\necho "Listo: ${si.length} fotos a SI, ${no.length} fotos a NO"\n`;
+      return s;
     }
 
     document.getElementById('btn-script-win').addEventListener('click', () => {
-      const blob = new Blob([generateWinScript()], { type: 'text/plain' });
-      downloadBlob(blob, 'clasificar_fotos.bat');
+      downloadBlob(new Blob([generateWinScript()], { type: 'text/plain' }), 'clasificar_fotos.bat');
     });
-
     document.getElementById('btn-script-mac').addEventListener('click', () => {
-      const blob = new Blob([generateMacScript()], { type: 'text/plain' });
-      downloadBlob(blob, 'clasificar_fotos.sh');
+      downloadBlob(new Blob([generateMacScript()], { type: 'text/plain' }), 'clasificar_fotos.sh');
     });
   </script>
 </body>
