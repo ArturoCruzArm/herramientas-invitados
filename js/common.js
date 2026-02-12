@@ -69,15 +69,15 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
-/** Descargar ZIP usando JSZip */
-async function downloadZip(files, zipName) {
-  const zip = new JSZip();
-  for (const f of files) {
-    zip.file(f.name, f.data);
+/** Descargar multiples archivos individuales con delay */
+async function downloadAll(files) {
+  for (let i = 0; i < files.length; i++) {
+    downloadBlob(files[i].data, files[i].name);
+    if (i < files.length - 1) await sleep(300);
   }
-  const blob = await zip.generateAsync({ type: 'blob' });
-  downloadBlob(blob, zipName);
 }
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /** Configurar zona de drag & drop */
 function setupDropZone(el, fileInput, onFiles) {

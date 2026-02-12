@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clasificar Fotos - Herramientas Foro 7</title>
   <link rel="stylesheet" href="../css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <style>
     .action-buttons { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; }
     .action-buttons .btn { min-width: 120px; font-size: 1.1rem; padding: 0.8rem 2rem; }
@@ -98,7 +97,7 @@
           </div>
         </div>
         <div class="btn-group mt-2" style="justify-content:center">
-          <button class="btn btn-success" id="btn-download">Descargar ZIP</button>
+          <button class="btn btn-success" id="btn-download">Descargar archivos</button>
         </div>
       </div>
     </div>
@@ -251,31 +250,23 @@
     });
 
     document.getElementById('btn-download').addEventListener('click', async () => {
-      const zip = new JSZip();
-      const siFolder = zip.folder('SI');
-      const noFolder = zip.folder('NO');
+      const files = [];
 
       for (const c of classifications) {
-        const folder = c.choice === 'SI' ? siFolder : noFolder;
+        const prefix = c.choice + '_';
         if (c.rotation !== 0) {
           const rotatedBlob = await applyRotation(c.file, c.rotation);
-          folder.file(c.file.name, rotatedBlob);
+          files.push({ name: prefix + c.file.name, data: rotatedBlob });
         } else {
-          const buf = await readAsArrayBuffer(c.file);
-          folder.file(c.file.name, buf);
+          files.push({ name: prefix + c.file.name, data: c.file });
         }
       }
 
-      if (videos.length) {
-        const videosFolder = zip.folder('VIDEOS');
-        for (const v of videos) {
-          const buf = await readAsArrayBuffer(v);
-          videosFolder.file(v.name, buf);
-        }
+      for (const v of videos) {
+        files.push({ name: 'VIDEOS_' + v.name, data: v });
       }
 
-      const blob = await zip.generateAsync({ type: 'blob' });
-      downloadBlob(blob, 'fotos-clasificadas.zip');
+      await downloadAll(files);
     });
   </script>
 </body>

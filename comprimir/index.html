@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Compresor de Fotos - Herramientas Foro 7</title>
   <link rel="stylesheet" href="../css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -74,7 +73,7 @@
       </div>
 
       <div class="btn-group mt-2">
-        <button class="btn btn-success hidden" id="btn-download">Descargar ZIP</button>
+        <button class="btn btn-success hidden" id="btn-download">Descargar archivos</button>
       </div>
     </div>
   </main>
@@ -153,13 +152,7 @@
       if (compressed.length) show(btnDl);
     }
 
-    btnDl.addEventListener('click', async () => {
-      if (compressed.length === 1) {
-        downloadBlob(compressed[0].data, compressed[0].name);
-      } else {
-        await downloadZip(compressed, 'fotos-comprimidas.zip');
-      }
-    });
+    btnDl.addEventListener('click', () => downloadAll(compressed));
   </script>
 </body>
 </html>

@@ -6,7 +6,6 @@
   <title>HEIC a JPEG - Herramientas Foro 7</title>
   <link rel="stylesheet" href="../css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -32,7 +31,7 @@
       <div class="preview-grid" id="preview"></div>
 
       <div class="btn-group mt-2">
-        <button class="btn btn-success hidden" id="btn-download">Descargar todo (ZIP)</button>
+        <button class="btn btn-success hidden" id="btn-download">Descargar archivos</button>
       </div>
     </div>
   </main>
@@ -91,22 +90,10 @@
 
       statusEl.innerHTML = `<div class="alert alert-success">${converted.length} de ${heicFiles.length} convertido(s)</div>`;
 
-      if (converted.length === 1) {
-        btnDl.textContent = 'Descargar JPEG';
-        show(btnDl);
-      } else if (converted.length > 1) {
-        btnDl.textContent = 'Descargar todo (ZIP)';
-        show(btnDl);
-      }
+      if (converted.length) show(btnDl);
     }
 
-    btnDl.addEventListener('click', async () => {
-      if (converted.length === 1) {
-        downloadBlob(converted[0].data, converted[0].name);
-      } else {
-        await downloadZip(converted, 'heic-a-jpeg.zip');
-      }
-    });
+    btnDl.addEventListener('click', () => downloadAll(converted));
   </script>
 </body>
 </html>
