@@ -97,7 +97,7 @@
           </div>
         </div>
         <div class="btn-group mt-2" style="justify-content:center">
-          <button class="btn btn-success" id="btn-download">Descargar archivos</button>
+          <button class="btn btn-success" id="btn-download">Guardar en carpetas</button>
         </div>
       </div>
     </div>
@@ -250,23 +250,18 @@
     });
 
     document.getElementById('btn-download').addEventListener('click', async () => {
-      const files = [];
+      const grouped = { SI: [], NO: [] };
 
       for (const c of classifications) {
-        const prefix = c.choice + '_';
-        if (c.rotation !== 0) {
-          const rotatedBlob = await applyRotation(c.file, c.rotation);
-          files.push({ name: prefix + c.file.name, data: rotatedBlob });
-        } else {
-          files.push({ name: prefix + c.file.name, data: c.file });
-        }
+        const data = c.rotation !== 0 ? await applyRotation(c.file, c.rotation) : c.file;
+        grouped[c.choice].push({ name: c.file.name, data });
       }
 
-      for (const v of videos) {
-        files.push({ name: 'VIDEOS_' + v.name, data: v });
+      if (videos.length) {
+        grouped.VIDEOS = videos.map(v => ({ name: v.name, data: v }));
       }
 
-      await downloadAll(files);
+      await saveToFolders(grouped);
     });
   </script>
 </body>

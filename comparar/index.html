@@ -10,34 +10,30 @@
       display: flex;
       gap: 1rem;
       justify-content: center;
-      align-items: stretch;
+      align-items: flex-start;
       margin: 1rem 0;
-      min-height: 300px;
     }
     .compare-side {
       flex: 1;
       max-width: 48%;
       text-align: center;
-      cursor: pointer;
       border: 3px solid var(--color-border);
       border-radius: var(--radius);
       overflow: hidden;
-      transition: border-color var(--transition), box-shadow var(--transition);
       display: flex;
       flex-direction: column;
+      transition: border-color var(--transition);
     }
-    .compare-side:hover {
-      border-color: var(--color-primary);
-      box-shadow: var(--shadow-hover);
-    }
+    .compare-side.chose-si { border-color: var(--color-success); }
+    .compare-side.chose-no { border-color: var(--color-error); }
     .compare-side img {
       width: 100%;
-      flex: 1;
+      aspect-ratio: 4/3;
       object-fit: contain;
       background: var(--color-bg);
     }
     .compare-side .photo-label {
-      padding: 0.5rem;
+      padding: 0.4rem 0.5rem;
       font-size: 0.82rem;
       font-weight: 600;
       background: var(--color-bg);
@@ -45,10 +41,22 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .single-photo { max-width: 60%; margin: 0 auto; }
-    .single-photo img { max-height: 60vh; width: 100%; object-fit: contain; border-radius: var(--radius); }
-    .action-buttons { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; }
-    .action-buttons .btn { min-width: 120px; font-size: 1.05rem; padding: 0.7rem 1.5rem; }
+    .compare-side .side-buttons {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      justify-content: center;
+    }
+    .compare-side .side-buttons .btn { flex: 1; font-size: 0.95rem; }
+    .single-container { max-width: 500px; margin: 1rem auto; text-align: center; }
+    .single-container img {
+      max-height: 60vh;
+      max-width: 100%;
+      object-fit: contain;
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+    }
+    .nav-buttons { display: flex; gap: 0.5rem; justify-content: center; margin: 0.5rem 0; }
     @media (max-width: 600px) {
       .compare-container { flex-direction: column; }
       .compare-side { max-width: 100%; }
@@ -68,7 +76,7 @@
         <div class="drop-zone" id="drop-zone">
           <div class="icon">&#8644;</div>
           <p>Arrastra fotos aqui</p>
-          <p class="hint">Se compararan de dos en dos para elegir la mejor</p>
+          <p class="hint">Se muestran de dos en dos, clasifica cada una SI o NO</p>
         </div>
         <input type="file" id="file-input" accept="image/*" multiple>
       </div>
@@ -87,37 +95,44 @@
             <div class="compare-side" id="side-left">
               <img id="img-left" src="" alt="Foto izquierda">
               <div class="photo-label" id="label-left"></div>
+              <div class="side-buttons">
+                <button class="btn btn-success" id="btn-left-si">SI (A)</button>
+                <button class="btn btn-danger" id="btn-left-no">NO (Z)</button>
+              </div>
             </div>
             <div class="compare-side" id="side-right">
               <img id="img-right" src="" alt="Foto derecha">
               <div class="photo-label" id="label-right"></div>
+              <div class="side-buttons">
+                <button class="btn btn-success" id="btn-right-si">SI (D)</button>
+                <button class="btn btn-danger" id="btn-right-no">NO (C)</button>
+              </div>
             </div>
           </div>
-          <div class="action-buttons">
-            <button class="btn btn-success" id="btn-left">&#8592; Izquierda (A)</button>
-            <button class="btn btn-outline" id="btn-undo-pair" disabled>Deshacer (Z)</button>
-            <button class="btn btn-success" id="btn-right">Derecha (D) &#8594;</button>
-          </div>
           <div class="keyboard-hint">
-            <kbd>A</kbd> o <kbd>&#8592;</kbd> = Izquierda &nbsp;
-            <kbd>D</kbd> o <kbd>&#8594;</kbd> = Derecha &nbsp;
-            <kbd>Z</kbd> = Deshacer
+            Izquierda: <kbd>A</kbd> = SI &nbsp; <kbd>Z</kbd> = NO &nbsp;&nbsp;|&nbsp;&nbsp;
+            Derecha: <kbd>D</kbd> = SI &nbsp; <kbd>C</kbd> = NO &nbsp;&nbsp;|&nbsp;&nbsp;
+            <kbd>U</kbd> = Deshacer
           </div>
         </div>
 
         <!-- Modo una foto (cuando queda impar) -->
         <div id="mode-single" class="hidden">
-          <div class="single-photo">
-            <p class="photo-name text-center mb-1" id="single-name"></p>
-            <img id="img-single" src="" alt="Foto unica">
-          </div>
-          <div class="action-buttons">
-            <button class="btn btn-danger" id="btn-single-no">NO (N)</button>
-            <button class="btn btn-success" id="btn-single-yes">SI (S)</button>
+          <div class="single-container">
+            <p class="photo-name" id="single-name"></p>
+            <img id="img-single" src="" alt="Foto">
+            <div class="nav-buttons">
+              <button class="btn btn-success" id="btn-single-si">SI (S)</button>
+              <button class="btn btn-danger" id="btn-single-no">NO (N)</button>
+            </div>
           </div>
           <div class="keyboard-hint">
             <kbd>S</kbd> = SI &nbsp; <kbd>N</kbd> = NO
           </div>
+        </div>
+
+        <div class="nav-buttons mt-1">
+          <button class="btn btn-outline" id="btn-undo" disabled>Deshacer (U)</button>
         </div>
 
         <div class="stats mt-2">
@@ -150,7 +165,7 @@
           </div>
         </div>
         <div class="btn-group mt-2" style="justify-content:center">
-          <button class="btn btn-success" id="btn-download">Descargar archivos</button>
+          <button class="btn btn-success" id="btn-download">Guardar en carpetas</button>
         </div>
       </div>
     </div>
@@ -169,26 +184,26 @@
     const stepDone = document.getElementById('step-done');
     const modePair = document.getElementById('mode-pair');
     const modeSingle = document.getElementById('mode-single');
+    const sideLeft = document.getElementById('side-left');
+    const sideRight = document.getElementById('side-right');
 
     let photos = [];
-    let pairIdx = 0; // index into pairs array
-    let pairs = [];  // [[file1, file2], ...]
+    let pairIdx = 0;
+    let pairs = [];       // [[file1, file2], ...]
     let singleFile = null;
-    let results = []; // { file, choice }
-    let history = []; // for undo: { type: 'pair'|'single', pairIdx, result1, result2 }
-    let inSingleMode = false;
+    let results = [];      // { file, choice: 'SI'|'NO' }
+    // Para cada par guardamos las decisiones pendientes
+    let leftChoice = null;
+    let rightChoice = null;
+    let history = [];      // snapshots para deshacer
 
     setupDropZone(dropZone, fileInput, handleFiles);
 
     function handleFiles(files) {
       photos = Array.from(files).filter(f => f.type.startsWith('image/'));
-      if (photos.length < 2) {
-        alert('Se necesitan al menos 2 fotos');
-        return;
-      }
+      if (!photos.length) return;
       photos.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
 
-      // Create pairs
       pairs = [];
       singleFile = null;
       for (let i = 0; i < photos.length - 1; i += 2) {
@@ -201,7 +216,8 @@
       pairIdx = 0;
       results = [];
       history = [];
-      inSingleMode = false;
+      leftChoice = null;
+      rightChoice = null;
 
       hide(stepLoad);
       show(stepCompare);
@@ -210,8 +226,7 @@
 
     async function showCurrentPair() {
       if (pairIdx >= pairs.length) {
-        if (singleFile && !inSingleMode) {
-          inSingleMode = true;
+        if (singleFile) {
           showSingle();
         } else {
           finalize();
@@ -219,9 +234,12 @@
         return;
       }
 
-      inSingleMode = false;
       show(modePair);
       hide(modeSingle);
+      leftChoice = null;
+      rightChoice = null;
+      sideLeft.className = 'compare-side';
+      sideRight.className = 'compare-side';
 
       const [left, right] = pairs[pairIdx];
       const [urlL, urlR] = await Promise.all([readAsDataURL(left), readAsDataURL(right)]);
@@ -230,13 +248,12 @@
       document.getElementById('label-left').textContent = left.name;
       document.getElementById('label-right').textContent = right.name;
 
+      const total = pairs.length + (singleFile ? 1 : 0);
       document.getElementById('status').innerHTML =
-        `<div class="alert alert-info">Par ${pairIdx + 1} de ${pairs.length}${singleFile ? ' + 1 individual' : ''}</div>`;
-
-      updateProgress(document.getElementById('progress'),
-        Math.round((pairIdx / (pairs.length + (singleFile ? 1 : 0))) * 100));
+        `<div class="alert alert-info">Par ${pairIdx + 1} de ${total}</div>`;
+      updateProgress(document.getElementById('progress'), Math.round((pairIdx / total) * 100));
       updateStats();
-      document.getElementById('btn-undo-pair').disabled = history.length === 0;
+      document.getElementById('btn-undo').disabled = history.length === 0;
     }
 
     async function showSingle() {
@@ -245,47 +262,66 @@
       const url = await readAsDataURL(singleFile);
       document.getElementById('img-single').src = url;
       document.getElementById('single-name').textContent = singleFile.name;
+
+      const total = pairs.length + 1;
       document.getElementById('status').innerHTML =
-        '<div class="alert alert-info">Foto individual restante</div>';
-      updateProgress(document.getElementById('progress'),
-        Math.round((pairs.length / (pairs.length + 1)) * 100));
+        `<div class="alert alert-info">Foto ${total} de ${total} (individual)</div>`;
+      updateProgress(document.getElementById('progress'), Math.round((pairs.length / total) * 100));
       updateStats();
     }
 
-    function choosePair(side) {
-      if (pairIdx >= pairs.length) return;
-      const [left, right] = pairs[pairIdx];
-      const si = side === 'left' ? left : right;
-      const no = side === 'left' ? right : left;
-      results.push({ file: si, choice: 'SI' });
-      results.push({ file: no, choice: 'NO' });
-      history.push({ type: 'pair', pairIdx: pairIdx });
-      pairIdx++;
-      showCurrentPair();
+    function classifyLeft(choice) {
+      if (leftChoice !== null) return;
+      leftChoice = choice;
+      sideLeft.className = 'compare-side chose-' + choice.toLowerCase();
+      checkPairDone();
     }
 
-    function chooseSingle(choice) {
+    function classifyRight(choice) {
+      if (rightChoice !== null) return;
+      rightChoice = choice;
+      sideRight.className = 'compare-side chose-' + choice.toLowerCase();
+      checkPairDone();
+    }
+
+    function checkPairDone() {
+      if (leftChoice === null || rightChoice === null) return;
+      const [left, right] = pairs[pairIdx];
+
+      history.push({
+        type: 'pair',
+        pairIdx: pairIdx,
+        resultsCount: results.length
+      });
+
+      results.push({ file: left, choice: leftChoice });
+      results.push({ file: right, choice: rightChoice });
+      pairIdx++;
+
+      setTimeout(() => showCurrentPair(), 300);
+    }
+
+    function classifySingle(choice) {
       if (!singleFile) return;
+      history.push({
+        type: 'single',
+        resultsCount: results.length
+      });
       results.push({ file: singleFile, choice });
-      history.push({ type: 'single' });
-      inSingleMode = false;
       singleFile = null;
       finalize();
     }
 
-    function undoLast() {
+    function undo() {
       if (!history.length) return;
       const last = history.pop();
+      results.splice(last.resultsCount);
+
       if (last.type === 'pair') {
-        results.splice(-2, 2);
-        pairIdx--;
+        pairIdx = last.pairIdx;
         showCurrentPair();
-      } else if (last.type === 'single') {
-        results.pop();
-        singleFile = results.length > 0 ? null : photos[photos.length - 1];
-        // restore singleFile from original
+      } else {
         singleFile = photos[photos.length - 1];
-        inSingleMode = true;
         showSingle();
       }
     }
@@ -297,6 +333,7 @@
       document.getElementById('stat-si').textContent = si;
       document.getElementById('stat-no').textContent = no;
       document.getElementById('stat-remaining').textContent = remaining;
+      document.getElementById('btn-undo').disabled = history.length === 0;
     }
 
     function finalize() {
@@ -304,39 +341,43 @@
       show(stepDone);
       const si = results.filter(r => r.choice === 'SI').length;
       const no = results.filter(r => r.choice === 'NO').length;
-      document.getElementById('done-msg').textContent = `Comparacion completa: ${photos.length} fotos procesadas`;
+      document.getElementById('done-msg').textContent =
+        `Listo: ${si} foto(s) SI, ${no} foto(s) NO`;
       document.getElementById('final-si').textContent = si;
       document.getElementById('final-no').textContent = no;
     }
 
-    // Event listeners
-    document.getElementById('side-left').addEventListener('click', () => choosePair('left'));
-    document.getElementById('side-right').addEventListener('click', () => choosePair('right'));
-    document.getElementById('btn-left').addEventListener('click', () => choosePair('left'));
-    document.getElementById('btn-right').addEventListener('click', () => choosePair('right'));
-    document.getElementById('btn-undo-pair').addEventListener('click', undoLast);
-    document.getElementById('btn-single-yes').addEventListener('click', () => chooseSingle('SI'));
-    document.getElementById('btn-single-no').addEventListener('click', () => chooseSingle('NO'));
+    // Botones
+    document.getElementById('btn-left-si').addEventListener('click', () => classifyLeft('SI'));
+    document.getElementById('btn-left-no').addEventListener('click', () => classifyLeft('NO'));
+    document.getElementById('btn-right-si').addEventListener('click', () => classifyRight('SI'));
+    document.getElementById('btn-right-no').addEventListener('click', () => classifyRight('NO'));
+    document.getElementById('btn-undo').addEventListener('click', undo);
+    document.getElementById('btn-single-si').addEventListener('click', () => classifySingle('SI'));
+    document.getElementById('btn-single-no').addEventListener('click', () => classifySingle('NO'));
 
+    // Teclado
     document.addEventListener('keydown', e => {
       if (stepCompare.classList.contains('hidden')) return;
+      const key = e.key.toLowerCase();
 
-      if (!inSingleMode) {
-        if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') choosePair('left');
-        else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') choosePair('right');
-        else if (e.key === 'z' || e.key === 'Z') undoLast();
+      if (!modeSingle.classList.contains('hidden')) {
+        if (key === 's') classifySingle('SI');
+        else if (key === 'n') classifySingle('NO');
       } else {
-        if (e.key === 's' || e.key === 'S') chooseSingle('SI');
-        else if (e.key === 'n' || e.key === 'N') chooseSingle('NO');
+        if (key === 'a') classifyLeft('SI');
+        else if (key === 'z') classifyLeft('NO');
+        else if (key === 'd') classifyRight('SI');
+        else if (key === 'c') classifyRight('NO');
+        else if (key === 'u') undo();
       }
     });
 
+    // Descargar en carpetas
     document.getElementById('btn-download').addEventListener('click', async () => {
-      const files = results.map(r => ({
-        name: r.choice + '_' + r.file.name,
-        data: r.file
-      }));
-      await downloadAll(files);
+      const si = results.filter(r => r.choice === 'SI').map(r => ({ name: r.file.name, data: r.file }));
+      const no = results.filter(r => r.choice === 'NO').map(r => ({ name: r.file.name, data: r.file }));
+      await saveToFolders({ SI: si, NO: no });
     });
   </script>
 </body>

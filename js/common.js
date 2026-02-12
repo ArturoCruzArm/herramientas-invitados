@@ -118,6 +118,34 @@ function getExt(name) {
   return name.split('.').pop().toLowerCase();
 }
 
+/** Guardar archivos en carpetas usando File System Access API
+ *  grouped = { 'SI': [{name, data}], 'NO': [{name, data}], ... }
+ */
+async function saveToFolders(grouped) {
+  if (!window.showDirectoryPicker) {
+    // Fallback: descargar con prefijo
+    const files = [];
+    for (const [folder, items] of Object.entries(grouped)) {
+      for (const item of items) {
+        files.push({ name: folder + '_' + item.name, data: item.data });
+      }
+    }
+    await downloadAll(files);
+    return;
+  }
+  const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+  for (const [folder, items] of Object.entries(grouped)) {
+    if (!items.length) continue;
+    const subHandle = await dirHandle.getDirectoryHandle(folder, { create: true });
+    for (const item of items) {
+      const fileHandle = await subHandle.getFileHandle(item.name, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(item.data);
+      await writable.close();
+    }
+  }
+}
+
 /** Mostrar/ocultar elemento */
 function show(el) { el.classList.remove('hidden'); }
 function hide(el) { el.classList.add('hidden'); }
