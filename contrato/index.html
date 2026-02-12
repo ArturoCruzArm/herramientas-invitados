@@ -6,6 +6,20 @@
   <title>Generar Contrato - Herramientas Foro 7</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
+    /* ===== Acceso ===== */
+    #login-gate {
+      max-width: 340px; margin: 3rem auto; text-align: center;
+      padding: 2rem; background: var(--color-surface);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+    }
+    #login-gate .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    #login-gate input {
+      text-align: center; font-size: 1.3rem; letter-spacing: 0.3rem;
+      margin: 1rem 0; padding: 0.7rem;
+    }
+    #login-gate .error { color: var(--color-error); font-size: 0.85rem; display: none; }
+    #app-content { display: none; }
+
     /* ===== Formulario ===== */
     .form-section { margin-bottom: 1.5rem; }
     .form-section h3 {
@@ -27,15 +41,33 @@
     }
     .paquete-option:hover { border-color: var(--color-primary-light); }
     .paquete-option.selected { border-color: var(--color-primary); background: rgba(6,68,32,0.04); }
-    .paquete-option h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
-    .paquete-option .precio { color: var(--color-primary); font-weight: 700; font-size: 1.1rem; }
+    .paquete-option h4 { font-size: 0.95rem; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .paquete-option .precio-edit {
+      width: 110px; font-size: 1rem; font-weight: 700; color: var(--color-primary);
+      border: 1px dashed var(--color-primary); border-radius: 4px; padding: 2px 6px;
+      background: rgba(6,68,32,0.06); text-align: right;
+    }
     .paquete-option ul { font-size: 0.82rem; color: var(--color-text-light); margin: 0.3rem 0 0 1.2rem; }
     .paquete-option ul li { margin-bottom: 0.1rem; }
+
+    .extra-item {
+      display: flex; gap: 0.5rem; align-items: center;
+      margin-bottom: 0.5rem; flex-wrap: wrap;
+    }
+    .extra-item input[type="text"] { flex: 1; min-width: 150px; }
+    .extra-item input[type="number"] { width: 110px; }
+    .extra-item .btn-remove {
+      background: none; border: none; color: var(--color-error);
+      font-size: 1.4rem; cursor: pointer; padding: 0 0.4rem; line-height: 1;
+    }
+    .extra-item .btn-remove:hover { opacity: 0.7; }
+
     .resumen-pago {
       background: var(--color-bg); padding: 1rem; border-radius: 8px;
       margin-top: 1rem; font-size: 0.95rem;
     }
     .resumen-pago .total { font-size: 1.3rem; font-weight: 700; color: var(--color-primary); }
+    .resumen-pago .descuento { color: var(--color-error); }
 
     /* ===== Contrato imprimible ===== */
     #contract-view { display: none; }
@@ -83,163 +115,199 @@
   </header>
 
   <main>
-    <!-- SECCION 1: FORMULARIO -->
-    <div class="tool-container" id="form-view">
-      <h2>Datos del contrato</h2>
-
-      <div class="form-section">
-        <h3>Datos del cliente</h3>
-        <div class="form-group">
-          <label for="cliente-nombre">Nombre completo del cliente</label>
-          <input type="text" id="cliente-nombre" placeholder="Nombre completo">
-        </div>
-        <div class="form-group">
-          <label for="cliente-telefono">Telefono</label>
-          <input type="text" id="cliente-telefono" placeholder="477 000 0000">
-        </div>
-        <div class="form-group">
-          <label for="cliente-email">Correo electronico (opcional)</label>
-          <input type="text" id="cliente-email" placeholder="correo@ejemplo.com">
-        </div>
+    <!-- GATE DE ACCESO -->
+    <div id="login-gate">
+      <div class="icon">&#128274;</div>
+      <h2>Acceso restringido</h2>
+      <p style="color:var(--color-text-light);font-size:0.9rem;">Ingresa la clave para continuar</p>
+      <input type="password" id="clave-input" maxlength="10" placeholder="Clave">
+      <div>
+        <button class="btn btn-primary" id="btn-clave" style="width:100%">Entrar</button>
       </div>
-
-      <div class="form-section">
-        <h3>Datos del evento</h3>
-        <div class="form-group">
-          <label for="evento-tipo">Tipo de evento</label>
-          <select id="evento-tipo">
-            <option value="XV Años">XV Años</option>
-            <option value="Boda">Boda</option>
-            <option value="Bautizo">Bautizo</option>
-            <option value="Primera Comunion">Primera Comunion</option>
-            <option value="Graduacion">Graduacion</option>
-            <option value="Cumpleaños">Cumpleaños</option>
-            <option value="Evento corporativo">Evento corporativo</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="evento-nombre">Nombre del festejado(a)</label>
-          <input type="text" id="evento-nombre" placeholder="Nombre del festejado(a)">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="evento-fecha">Fecha del evento</label>
-            <input type="date" id="evento-fecha">
-          </div>
-          <div class="form-group">
-            <label for="evento-hora">Hora de inicio</label>
-            <input type="time" id="evento-hora" value="18:00">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="evento-lugar-ceremonia">Lugar de la ceremonia</label>
-          <input type="text" id="evento-lugar-ceremonia" placeholder="Iglesia, templo, etc.">
-        </div>
-        <div class="form-group">
-          <label for="evento-lugar-recepcion">Lugar de la recepcion</label>
-          <input type="text" id="evento-lugar-recepcion" placeholder="Salon de fiestas">
-        </div>
-      </div>
-
-      <div class="form-section">
-        <h3>Paquete</h3>
-        <div id="paquetes-list">
-          <div class="paquete-option" data-paquete="basico" data-precio="5000">
-            <h4>Paquete Basico <span class="precio">$5,000 MXN</span></h4>
-            <ul>
-              <li>50 fotos impresas 5x7"</li>
-              <li>Pelicula USB 4K (2 horas)</li>
-              <li>Foto ampliada 11x14"</li>
-              <li>Caja impresa para USB y fotos</li>
-              <li>1 hora ceremonia + 4 horas fiesta</li>
-            </ul>
-          </div>
-          <div class="paquete-option" data-paquete="completo" data-precio="6500">
-            <h4>Paquete Completo <span class="precio">$6,500 MXN</span></h4>
-            <ul>
-              <li>100 fotos impresas 5x7"</li>
-              <li>Pelicula USB editada y musicalizada</li>
-              <li>Videoclip para proyectar en evento</li>
-              <li>Foto ampliada 50x60cm con marco</li>
-              <li>1 hora ceremonia + 6 horas fiesta</li>
-            </ul>
-          </div>
-          <div class="paquete-option" data-paquete="premium" data-precio="8500">
-            <h4>Paquete Premium <span class="precio">$8,500 MXN</span></h4>
-            <ul>
-              <li>200 fotos o fotolibro 30x60 de lujo</li>
-              <li>Pelicula USB editada y musicalizada</li>
-              <li>Videoclip para proyectar en evento</li>
-              <li>Foto ampliada 60x80cm</li>
-              <li>Caja de madera para fotos</li>
-              <li>Sesion antes y dia del evento</li>
-              <li>1 hora ceremonia + 8 horas fiesta</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-section">
-        <h3>Servicios adicionales</h3>
-        <div class="checkbox-group">
-          <label><input type="checkbox" id="extra-dron" data-precio="1200" data-label="Tomas con Dron 4K"> Dron 4K (+$1,200)</label>
-          <label><input type="checkbox" id="extra-invitacion" data-precio="0" data-label="Invitacion Web personalizada"> Invitacion Web</label>
-          <label><input type="checkbox" id="extra-musica" data-precio="0" data-label="Musica personalizada"> Musica personalizada</label>
-        </div>
-      </div>
-
-      <div class="form-section">
-        <h3>Pagos</h3>
-        <div class="form-group">
-          <label for="pago-apartado">Monto de apartado</label>
-          <input type="number" id="pago-apartado" value="1000" min="0" step="100">
-        </div>
-        <div class="form-group">
-          <label for="pago-fecha-apartado">Fecha de apartado</label>
-          <input type="date" id="pago-fecha-apartado">
-        </div>
-        <div class="form-group">
-          <label for="pago-metodo">Metodo de pago del apartado</label>
-          <select id="pago-metodo">
-            <option value="Efectivo">Efectivo</option>
-            <option value="Transferencia">Transferencia</option>
-            <option value="Deposito">Deposito</option>
-          </select>
-        </div>
-
-        <div class="resumen-pago" id="resumen-pago">
-          <div>Paquete: <span id="resumen-paquete">-</span></div>
-          <div>Extras: <span id="resumen-extras">$0</span></div>
-          <div class="total">Total: $<span id="resumen-total">0</span> MXN</div>
-          <div>Apartado: $<span id="resumen-apartado">1,000</span></div>
-          <div><strong>Restante: $<span id="resumen-restante">0</span> MXN</strong></div>
-        </div>
-      </div>
-
-      <div class="form-section">
-        <h3>Notas adicionales (opcional)</h3>
-        <div class="form-group">
-          <textarea id="notas" rows="3" style="width:100%;padding:0.6rem;border:1px solid var(--color-border);border-radius:8px;font-family:inherit;font-size:0.95rem;" placeholder="Cualquier acuerdo especial..."></textarea>
-        </div>
-      </div>
-
-      <div class="btn-group" style="justify-content:center">
-        <button class="btn btn-primary" id="btn-generar" style="font-size:1.1rem;padding:0.8rem 2.5rem;">Generar Contrato</button>
-      </div>
+      <p class="error" id="clave-error">Clave incorrecta</p>
     </div>
 
-    <!-- SECCION 2: CONTRATO IMPRIMIBLE -->
-    <div id="contract-view">
-      <div class="print-actions">
-        <button class="btn btn-outline" id="btn-volver">Volver a editar</button>
-        <button class="btn btn-primary" id="btn-imprimir" style="font-size:1.1rem;padding:0.8rem 2.5rem;">Imprimir contrato</button>
+    <!-- CONTENIDO PRINCIPAL (oculto hasta autenticar) -->
+    <div id="app-content">
+      <!-- SECCION 1: FORMULARIO -->
+      <div class="tool-container" id="form-view">
+        <h2>Datos del contrato</h2>
+
+        <div class="form-section">
+          <h3>Datos del cliente</h3>
+          <div class="form-group">
+            <label for="cliente-nombre">Nombre completo del cliente</label>
+            <input type="text" id="cliente-nombre" placeholder="Nombre completo">
+          </div>
+          <div class="form-group">
+            <label for="cliente-telefono">Telefono</label>
+            <input type="text" id="cliente-telefono" placeholder="477 000 0000">
+          </div>
+          <div class="form-group">
+            <label for="cliente-email">Correo electronico (opcional)</label>
+            <input type="text" id="cliente-email" placeholder="correo@ejemplo.com">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Datos del evento</h3>
+          <div class="form-group">
+            <label for="evento-tipo">Tipo de evento</label>
+            <select id="evento-tipo">
+              <option value="XV Años">XV Años</option>
+              <option value="Boda">Boda</option>
+              <option value="Bautizo">Bautizo</option>
+              <option value="Primera Comunion">Primera Comunion</option>
+              <option value="Graduacion">Graduacion</option>
+              <option value="Cumpleaños">Cumpleaños</option>
+              <option value="Evento corporativo">Evento corporativo</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="evento-nombre">Nombre del festejado(a)</label>
+            <input type="text" id="evento-nombre" placeholder="Nombre del festejado(a)">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="evento-fecha">Fecha del evento</label>
+              <input type="date" id="evento-fecha">
+            </div>
+            <div class="form-group">
+              <label for="evento-hora">Hora de inicio</label>
+              <input type="time" id="evento-hora" value="18:00">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="evento-lugar-ceremonia">Lugar de la ceremonia</label>
+            <input type="text" id="evento-lugar-ceremonia" placeholder="Iglesia, templo, etc.">
+          </div>
+          <div class="form-group">
+            <label for="evento-lugar-recepcion">Lugar de la recepcion</label>
+            <input type="text" id="evento-lugar-recepcion" placeholder="Salon de fiestas">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Paquete</h3>
+          <p style="font-size:0.82rem;color:var(--color-text-light);margin-bottom:0.5rem;">Selecciona un paquete. Puedes ajustar el precio haciendo clic en el monto.</p>
+          <div id="paquetes-list">
+            <div class="paquete-option" data-paquete="basico">
+              <h4>Paquete Basico $<input type="number" class="precio-edit" data-paquete="basico" value="5000" min="0" step="100"> MXN</h4>
+              <ul>
+                <li>50 fotos impresas 5x7"</li>
+                <li>Pelicula USB 4K (2 horas)</li>
+                <li>Foto ampliada 11x14"</li>
+                <li>Caja impresa para USB y fotos</li>
+                <li>1 hora ceremonia + 4 horas fiesta</li>
+              </ul>
+            </div>
+            <div class="paquete-option" data-paquete="completo">
+              <h4>Paquete Completo $<input type="number" class="precio-edit" data-paquete="completo" value="6500" min="0" step="100"> MXN</h4>
+              <ul>
+                <li>100 fotos impresas 5x7"</li>
+                <li>Pelicula USB editada y musicalizada</li>
+                <li>Videoclip para proyectar en evento</li>
+                <li>Foto ampliada 50x60cm con marco</li>
+                <li>1 hora ceremonia + 6 horas fiesta</li>
+              </ul>
+            </div>
+            <div class="paquete-option" data-paquete="premium">
+              <h4>Paquete Premium $<input type="number" class="precio-edit" data-paquete="premium" value="8500" min="0" step="100"> MXN</h4>
+              <ul>
+                <li>200 fotos o fotolibro 30x60 de lujo</li>
+                <li>Pelicula USB editada y musicalizada</li>
+                <li>Videoclip para proyectar en evento</li>
+                <li>Foto ampliada 60x80cm</li>
+                <li>Caja de madera para fotos</li>
+                <li>Sesion antes y dia del evento</li>
+                <li>1 hora ceremonia + 8 horas fiesta</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Servicios adicionales</h3>
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="extra-dron" data-precio="1200" data-label="Tomas con Dron 4K"> Dron 4K (+$1,200)</label>
+            <label><input type="checkbox" id="extra-invitacion" data-precio="0" data-label="Invitacion Web personalizada"> Invitacion Web</label>
+            <label><input type="checkbox" id="extra-musica" data-precio="0" data-label="Musica personalizada"> Musica personalizada</label>
+          </div>
+
+          <h4 style="font-size:0.9rem;margin:1rem 0 0.5rem;color:var(--color-text-light);">Conceptos adicionales</h4>
+          <div id="extras-list"></div>
+          <button class="btn btn-outline" id="btn-add-extra" style="font-size:0.85rem;">+ Agregar concepto</button>
+        </div>
+
+        <div class="form-section">
+          <h3>Descuento</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="descuento-monto">Monto de descuento ($)</label>
+              <input type="number" id="descuento-monto" value="0" min="0" step="100">
+            </div>
+            <div class="form-group">
+              <label for="descuento-motivo">Motivo (opcional)</label>
+              <input type="text" id="descuento-motivo" placeholder="Ej: Promo temporada">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Pagos</h3>
+          <div class="form-group">
+            <label for="pago-apartado">Monto de apartado</label>
+            <input type="number" id="pago-apartado" value="1000" min="0" step="100">
+          </div>
+          <div class="form-group">
+            <label for="pago-fecha-apartado">Fecha de apartado</label>
+            <input type="date" id="pago-fecha-apartado">
+          </div>
+          <div class="form-group">
+            <label for="pago-metodo">Metodo de pago del apartado</label>
+            <select id="pago-metodo">
+              <option value="Efectivo">Efectivo</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Deposito">Deposito</option>
+            </select>
+          </div>
+
+          <div class="resumen-pago" id="resumen-pago">
+            <div>Paquete: <span id="resumen-paquete">-</span></div>
+            <div>Extras: <span id="resumen-extras">$0</span></div>
+            <div>Conceptos adicionales: <span id="resumen-conceptos">$0</span></div>
+            <div class="descuento">Descuento: <span id="resumen-descuento">-$0</span></div>
+            <div class="total">Total: $<span id="resumen-total">0</span> MXN</div>
+            <div>Apartado: $<span id="resumen-apartado">1,000</span></div>
+            <div><strong>Restante: $<span id="resumen-restante">0</span> MXN</strong></div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Notas adicionales (opcional)</h3>
+          <div class="form-group">
+            <textarea id="notas" rows="3" style="width:100%;padding:0.6rem;border:1px solid var(--color-border);border-radius:8px;font-family:inherit;font-size:0.95rem;" placeholder="Cualquier acuerdo especial..."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-group" style="justify-content:center">
+          <button class="btn btn-primary" id="btn-generar" style="font-size:1.1rem;padding:0.8rem 2.5rem;">Generar Contrato</button>
+        </div>
       </div>
 
-      <div id="contract-print"></div>
+      <!-- SECCION 2: CONTRATO IMPRIMIBLE -->
+      <div id="contract-view">
+        <div class="print-actions">
+          <button class="btn btn-outline" id="btn-volver">Volver a editar</button>
+          <button class="btn btn-primary" id="btn-imprimir" style="font-size:1.1rem;padding:0.8rem 2.5rem;">Imprimir contrato</button>
+        </div>
 
-      <div class="print-actions">
-        <button class="btn btn-primary" id="btn-imprimir2" style="font-size:1.1rem;padding:0.8rem 2.5rem;">Imprimir contrato</button>
+        <div id="contract-print"></div>
+
+        <div class="print-actions">
+          <button class="btn btn-primary" id="btn-imprimir2" style="font-size:1.1rem;padding:0.8rem 2.5rem;">Imprimir contrato</button>
+        </div>
       </div>
     </div>
   </main>
@@ -247,11 +315,29 @@
   <footer class="site-footer">Foro 7 &mdash; Herramientas para procesamiento de fotos</footer>
 
   <script>
+    // ===== Gate de acceso =====
+    const CLAVE = '1234';
+    const claveInput = document.getElementById('clave-input');
+    const claveError = document.getElementById('clave-error');
+
+    function intentarAcceso() {
+      if (claveInput.value === CLAVE) {
+        document.getElementById('login-gate').style.display = 'none';
+        document.getElementById('app-content').style.display = 'block';
+      } else {
+        claveError.style.display = 'block';
+        claveInput.value = '';
+        claveInput.focus();
+      }
+    }
+
+    document.getElementById('btn-clave').addEventListener('click', intentarAcceso);
+    claveInput.addEventListener('keydown', e => { if (e.key === 'Enter') intentarAcceso(); });
+
     // ===== Datos de paquetes =====
     const PAQUETES = {
       basico: {
         nombre: 'Paquete Basico',
-        precio: 5000,
         incluye: [
           '50 fotografias impresas en formato 5x7"',
           'Pelicula en USB 4K (2 horas de grabacion)',
@@ -262,7 +348,6 @@
       },
       completo: {
         nombre: 'Paquete Completo',
-        precio: 6500,
         incluye: [
           '100 fotografias impresas en formato 5x7"',
           'Pelicula en USB editada y musicalizada',
@@ -273,7 +358,6 @@
       },
       premium: {
         nombre: 'Paquete Premium',
-        precio: 8500,
         incluye: [
           '200 fotografias impresas o fotolibro 30x60 de lujo',
           'Pelicula en USB editada y musicalizada',
@@ -290,7 +374,9 @@
 
     // ===== Seleccion de paquete =====
     document.querySelectorAll('.paquete-option').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', e => {
+        // No seleccionar si hizo clic en el input de precio
+        if (e.target.classList.contains('precio-edit')) return;
         document.querySelectorAll('.paquete-option').forEach(e => e.classList.remove('selected'));
         el.classList.add('selected');
         selectedPaquete = el.dataset.paquete;
@@ -298,8 +384,54 @@
       });
     });
 
+    // Actualizar al cambiar precio de paquete
+    document.querySelectorAll('.precio-edit').forEach(input => {
+      input.addEventListener('input', updateResumen);
+      input.addEventListener('click', e => e.stopPropagation());
+    });
+
+    function getPrecioPaquete(key) {
+      const input = document.querySelector(`.precio-edit[data-paquete="${key}"]`);
+      return input ? (parseInt(input.value) || 0) : 0;
+    }
+
+    // ===== Conceptos adicionales dinamicos =====
+    let extraCounter = 0;
+
+    document.getElementById('btn-add-extra').addEventListener('click', () => {
+      extraCounter++;
+      const row = document.createElement('div');
+      row.className = 'extra-item';
+      row.dataset.id = extraCounter;
+      row.innerHTML = `
+        <input type="text" placeholder="Descripcion del concepto" class="extra-desc">
+        <input type="number" placeholder="Precio" value="0" min="0" step="100" class="extra-precio">
+        <button class="btn-remove" title="Quitar">&times;</button>
+      `;
+      document.getElementById('extras-list').appendChild(row);
+
+      row.querySelector('.btn-remove').addEventListener('click', () => {
+        row.remove();
+        updateResumen();
+      });
+      row.querySelector('.extra-desc').addEventListener('input', updateResumen);
+      row.querySelector('.extra-precio').addEventListener('input', updateResumen);
+      row.querySelector('.extra-desc').focus();
+      updateResumen();
+    });
+
+    function getConceptosAdicionales() {
+      const items = [];
+      document.querySelectorAll('.extra-item').forEach(row => {
+        const desc = row.querySelector('.extra-desc').value.trim();
+        const precio = parseInt(row.querySelector('.extra-precio').value) || 0;
+        if (desc) items.push({ label: desc, precio });
+      });
+      return items;
+    }
+
     // ===== Calculos =====
-    function getExtras() {
+    function getExtrasCheckbox() {
       const extras = [];
       document.querySelectorAll('.checkbox-group input:checked').forEach(cb => {
         extras.push({ label: cb.dataset.label, precio: parseInt(cb.dataset.precio) || 0 });
@@ -308,16 +440,22 @@
     }
 
     function updateResumen() {
+      const precioPaquete = selectedPaquete ? getPrecioPaquete(selectedPaquete) : 0;
       const paq = selectedPaquete ? PAQUETES[selectedPaquete] : null;
-      const extras = getExtras();
-      const precioExtras = extras.reduce((sum, e) => sum + e.precio, 0);
-      const precioPaquete = paq ? paq.precio : 0;
-      const total = precioPaquete + precioExtras;
+      const extrasCheckbox = getExtrasCheckbox();
+      const conceptos = getConceptosAdicionales();
+      const precioExtras = extrasCheckbox.reduce((sum, e) => sum + e.precio, 0);
+      const precioConceptos = conceptos.reduce((sum, e) => sum + e.precio, 0);
+      const descuento = parseInt(document.getElementById('descuento-monto').value) || 0;
+      const subtotal = precioPaquete + precioExtras + precioConceptos;
+      const total = Math.max(0, subtotal - descuento);
       const apartado = parseInt(document.getElementById('pago-apartado').value) || 0;
       const restante = Math.max(0, total - apartado);
 
       document.getElementById('resumen-paquete').textContent = paq ? `${paq.nombre} - $${precioPaquete.toLocaleString()}` : '-';
       document.getElementById('resumen-extras').textContent = '$' + precioExtras.toLocaleString();
+      document.getElementById('resumen-conceptos').textContent = '$' + precioConceptos.toLocaleString();
+      document.getElementById('resumen-descuento').textContent = descuento > 0 ? `-$${descuento.toLocaleString()}` : '-$0';
       document.getElementById('resumen-total').textContent = total.toLocaleString();
       document.getElementById('resumen-apartado').textContent = apartado.toLocaleString();
       document.getElementById('resumen-restante').textContent = restante.toLocaleString();
@@ -325,6 +463,7 @@
 
     document.querySelectorAll('.checkbox-group input').forEach(cb => cb.addEventListener('change', updateResumen));
     document.getElementById('pago-apartado').addEventListener('input', updateResumen);
+    document.getElementById('descuento-monto').addEventListener('input', updateResumen);
 
     // ===== Fecha de hoy por defecto =====
     const hoy = new Date().toISOString().split('T')[0];
@@ -347,9 +486,16 @@
       if (!document.getElementById('evento-fecha').value) { alert('Ingresa la fecha del evento'); return; }
 
       const paq = PAQUETES[selectedPaquete];
-      const extras = getExtras();
-      const precioExtras = extras.reduce((sum, e) => sum + e.precio, 0);
-      const total = paq.precio + precioExtras;
+      const precioPaquete = getPrecioPaquete(selectedPaquete);
+      const extrasCheckbox = getExtrasCheckbox();
+      const conceptos = getConceptosAdicionales();
+      const allExtras = [...extrasCheckbox, ...conceptos];
+      const precioExtras = extrasCheckbox.reduce((sum, e) => sum + e.precio, 0);
+      const precioConceptos = conceptos.reduce((sum, e) => sum + e.precio, 0);
+      const descuento = parseInt(document.getElementById('descuento-monto').value) || 0;
+      const motivoDescuento = document.getElementById('descuento-motivo').value.trim();
+      const subtotal = precioPaquete + precioExtras + precioConceptos;
+      const total = Math.max(0, subtotal - descuento);
       const apartado = parseInt(document.getElementById('pago-apartado').value) || 0;
       const restante = total - apartado;
 
@@ -366,23 +512,38 @@
       const metodoPago = document.getElementById('pago-metodo').value;
       const notas = document.getElementById('notas').value.trim();
 
-      const extrasListHTML = extras.length
-        ? '<ul>' + extras.map(e => `<li>${e.label}${e.precio ? ' - ' + formatMoneda(e.precio) : ' (incluido)'}</li>`).join('') + '</ul>'
-        : '<p>Ninguno</p>';
+      const hasExtras = allExtras.length > 0;
+
+      const extrasListHTML = hasExtras
+        ? '<ul>' + allExtras.map(e => `<li>${e.label}${e.precio ? ' - ' + formatMoneda(e.precio) : ' (incluido)'}</li>`).join('') + '</ul>'
+        : '';
+
+      let sec = 1;
+
+      let costRows = `<tr><td class="label">${paq.nombre}</td><td style="text-align:right">${formatMoneda(precioPaquete)}</td></tr>`;
+      allExtras.filter(e => e.precio > 0).forEach(e => {
+        costRows += `<tr><td class="label">${e.label}</td><td style="text-align:right">${formatMoneda(e.precio)}</td></tr>`;
+      });
+      if (descuento > 0) {
+        costRows += `<tr class="descuento" style="color:#c00"><td class="label">Descuento${motivoDescuento ? ' (' + motivoDescuento + ')' : ''}</td><td style="text-align:right;color:#c00">-${formatMoneda(descuento)}</td></tr>`;
+      }
+      costRows += `<tr style="font-weight:bold;font-size:12pt"><td class="label">COSTO TOTAL</td><td style="text-align:right">${formatMoneda(total)}</td></tr>`;
+      costRows += `<tr><td class="label">Apartado recibido (${metodoPago.toLowerCase()})</td><td style="text-align:right">${formatMoneda(apartado)}</td></tr>`;
+      costRows += `<tr style="font-weight:bold"><td class="label">SALDO RESTANTE</td><td style="text-align:right">${formatMoneda(restante)}</td></tr>`;
 
       const html = `
         <h1>CONTRATO DE SERVICIOS</h1>
         <p class="subtitle">Foro 7 Producciones &mdash; Fotografia y Video Profesional<br>
         Padilla 112, Cumbres de Arbide, Leon, Gto. &bull; Tel: 477 920 3776</p>
 
-        <h2>1. DATOS DEL CLIENTE</h2>
+        <h2>${sec++}. DATOS DEL CLIENTE</h2>
         <table>
           <tr><td class="label">Nombre:</td><td>${cliente}</td></tr>
           <tr><td class="label">Telefono:</td><td>${telefono || '—'}</td></tr>
           ${email ? `<tr><td class="label">Correo:</td><td>${email}</td></tr>` : ''}
         </table>
 
-        <h2>2. DATOS DEL EVENTO</h2>
+        <h2>${sec++}. DATOS DEL EVENTO</h2>
         <table>
           <tr><td class="label">Tipo de evento:</td><td>${tipoEvento}</td></tr>
           <tr><td class="label">Festejado(a):</td><td>${festejado || '—'}</td></tr>
@@ -392,40 +553,36 @@
           <tr><td class="label">Recepcion:</td><td>${lugarRecepcion || '—'}</td></tr>
         </table>
 
-        <h2>3. PAQUETE CONTRATADO: ${paq.nombre.toUpperCase()}</h2>
+        <h2>${sec++}. PAQUETE CONTRATADO: ${paq.nombre.toUpperCase()}</h2>
         <p>El presente paquete incluye:</p>
         <ul>
           ${paq.incluye.map(item => `<li>${item}</li>`).join('')}
         </ul>
 
-        ${extras.length ? `<h2>4. SERVICIOS ADICIONALES</h2>${extrasListHTML}` : ''}
+        ${hasExtras ? `<h2>${sec++}. SERVICIOS ADICIONALES</h2>${extrasListHTML}` : ''}
 
-        <h2>${extras.length ? '5' : '4'}. DESGLOSE DE COSTOS</h2>
+        <h2>${sec++}. DESGLOSE DE COSTOS</h2>
         <table class="bordered">
-          <tr><td class="label">${paq.nombre}</td><td style="text-align:right">${formatMoneda(paq.precio)}</td></tr>
-          ${extras.filter(e => e.precio > 0).map(e => `<tr><td class="label">${e.label}</td><td style="text-align:right">${formatMoneda(e.precio)}</td></tr>`).join('')}
-          <tr style="font-weight:bold;font-size:12pt"><td class="label">COSTO TOTAL</td><td style="text-align:right">${formatMoneda(total)}</td></tr>
-          <tr><td class="label">Apartado recibido (${metodoPago.toLowerCase()})</td><td style="text-align:right">${formatMoneda(apartado)}</td></tr>
-          <tr style="font-weight:bold"><td class="label">SALDO RESTANTE</td><td style="text-align:right">${formatMoneda(restante)}</td></tr>
+          ${costRows}
         </table>
 
-        <h2>${extras.length ? '6' : '5'}. FORMA DE PAGO</h2>
+        <h2>${sec++}. FORMA DE PAGO</h2>
         <p class="clausula">El cliente ha entregado un apartado de <strong>${formatMoneda(apartado)}</strong> en fecha <strong>${formatFecha(fechaApartado)}</strong> mediante <strong>${metodoPago.toLowerCase()}</strong>. El saldo restante de <strong>${formatMoneda(restante)}</strong> debera liquidarse a mas tardar el dia del evento, antes del inicio de los servicios contratados.</p>
 
-        <h2>${extras.length ? '7' : '6'}. COMPROMISOS DE FORO 7 PRODUCCIONES</h2>
+        <h2>${sec++}. COMPROMISOS DE FORO 7 PRODUCCIONES</h2>
         <p class="clausula"><strong>a)</strong> Presentarse puntualmente en los lugares y horarios acordados con el equipo profesional necesario para la cobertura del evento.</p>
         <p class="clausula"><strong>b)</strong> Entregar el material fotografico y de video en un plazo no mayor a <strong>60 dias habiles</strong> posteriores al evento.</p>
         <p class="clausula"><strong>c)</strong> Garantizar la calidad profesional de todos los productos y servicios incluidos en el paquete contratado.</p>
         <p class="clausula"><strong>d)</strong> Resguardar el material digital del evento por un periodo de <strong>6 meses</strong> a partir de la fecha de entrega.</p>
 
-        <h2>${extras.length ? '8' : '7'}. COMPROMISOS DEL CLIENTE</h2>
+        <h2>${sec++}. COMPROMISOS DEL CLIENTE</h2>
         <p class="clausula"><strong>a)</strong> Liquidar el saldo restante en tiempo y forma segun lo establecido en la clausula de forma de pago.</p>
         <p class="clausula"><strong>b)</strong> Informar con al menos <strong>15 dias de anticipacion</strong> cualquier cambio en la fecha, hora o lugar del evento.</p>
         <p class="clausula"><strong>c)</strong> En caso de cancelacion, el monto del apartado <strong>no sera reembolsable</strong>. Si la cancelacion se realiza con menos de 7 dias de anticipacion, se cobrara el 50% del costo total.</p>
         <p class="clausula"><strong>d)</strong> Facilitar el acceso y las condiciones necesarias para que el equipo de Foro 7 Producciones pueda realizar su trabajo adecuadamente.</p>
         <p class="clausula"><strong>e)</strong> Recoger el material entregable en un plazo no mayor a 30 dias despues de ser notificado de su disponibilidad.</p>
 
-        ${notas ? `<h2>${extras.length ? '9' : '8'}. ACUERDOS ESPECIALES</h2><p class="clausula">${notas}</p>` : ''}
+        ${notas ? `<h2>${sec++}. ACUERDOS ESPECIALES</h2><p class="clausula">${notas}</p>` : ''}
 
         <p class="clausula" style="margin-top:15pt">Ambas partes manifiestan estar de acuerdo con los terminos de este contrato y lo firman en la ciudad de <strong>Leon, Guanajuato</strong>, a <strong>${formatFecha(fechaApartado)}</strong>.</p>
 
