@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listar Fotos - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>Listar Fotos de 15 en 15</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <div class="drop-zone" id="drop-zone">
+        <div class="icon">&#128203;</div>
+        <p>Arrastra fotos aqui</p>
+        <p class="hint">o haz clic para seleccionar</p>
+      </div>
+      <input type="file" id="file-input" accept="image/*" multiple>
+
+      <div class="form-row mt-2">
+        <div class="form-group">
+          <label for="group-size">Fotos por grupo</label>
+          <input type="number" id="group-size" value="15" min="1" max="100">
+        </div>
+      </div>
+
+      <div id="status" class="mt-1"></div>
+
+      <div id="groups" class="mt-2"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const statusEl = document.getElementById('status');
+    const groupsEl = document.getElementById('groups');
+    const groupSizeInput = document.getElementById('group-size');
+    let fileNames = [];
+
+    setupDropZone(dropZone, fileInput, handleFiles);
+
+    function handleFiles(files) {
+      fileNames = Array.from(files)
+        .map(f => f.name)
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+      if (!fileNames.length) {
+        statusEl.innerHTML = '<div class="alert alert-error">No se encontraron archivos</div>';
+        return;
+      }
+
+      renderGroups();
+    }
+
+    groupSizeInput.addEventListener('change', () => {
+      if (fileNames.length) renderGroups();
+    });
+
+    function renderGroups() {
+      const size = parseInt(groupSizeInput.value) || 15;
+      const groups = [];
+      for (let i = 0; i < fileNames.length; i += size) {
+        groups.push(fileNames.slice(i, i + size));
+      }
+
+      statusEl.innerHTML = `<div class="alert alert-info">${fileNames.length} foto(s) en ${groups.length} grupo(s)</div>`;
+
+      groupsEl.innerHTML = groups.map((group, idx) => {
+        const text = group.join('\n');
+        return `
+          <div class="copy-group" data-idx="${idx}">
+            <h3>
+              <span>Grupo ${idx + 1} (${group.length} fotos)</span>
+              <button class="btn btn-outline btn-copy" data-idx="${idx}">Copiar</button>
+            </h3>
+            <pre>${escapeHtml(text)}</pre>
+            <span class="copied hidden" id="copied-${idx}">Copiado</span>
+          </div>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.btn-copy').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const idx = parseInt(btn.dataset.idx);
+          const text = groups[idx].join('\n');
+          try {
+            await navigator.clipboard.writeText(text);
+            const msg = document.getElementById('copied-' + idx);
+            show(msg);
+            btn.textContent = 'Copiado';
+            btn.classList.remove('btn-outline');
+            btn.classList.add('btn-success');
+          } catch (err) {
+            alert('Error al copiar: ' + err.message);
+          }
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+  </script>
+</body>
+</html>

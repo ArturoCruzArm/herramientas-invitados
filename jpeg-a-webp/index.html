@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JPEG a WebP - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>JPEG a WebP</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <div class="drop-zone" id="drop-zone">
+        <div class="icon">&#128247;</div>
+        <p>Arrastra imagenes JPEG aqui</p>
+        <p class="hint">o haz clic para seleccionar</p>
+      </div>
+      <input type="file" id="file-input" accept=".jpg,.jpeg" multiple>
+
+      <div class="range-group mt-2">
+        <label>
+          <span>Calidad WebP</span>
+          <span id="quality-val">80%</span>
+        </label>
+        <input type="range" id="quality" min="10" max="100" value="80" step="5">
+      </div>
+
+      <div class="progress-bar hidden mt-1" id="progress">
+        <div class="fill" style="width:0%"></div>
+      </div>
+
+      <div id="status" class="mt-1"></div>
+
+      <div class="stats hidden" id="stats">
+        <div class="stat">
+          <div class="value" id="stat-original">-</div>
+          <div class="label">Original</div>
+        </div>
+        <div class="stat">
+          <div class="value" id="stat-converted">-</div>
+          <div class="label">Convertido</div>
+        </div>
+        <div class="stat">
+          <div class="value" id="stat-saving">-</div>
+          <div class="label">Ahorro</div>
+        </div>
+      </div>
+
+      <div class="preview-grid" id="preview"></div>
+
+      <div class="btn-group mt-2">
+        <button class="btn btn-success hidden" id="btn-download">Descargar todo (ZIP)</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const qualitySlider = document.getElementById('quality');
+    const qualityVal = document.getElementById('quality-val');
+    const progressBar = document.getElementById('progress');
+    const statusEl = document.getElementById('status');
+    const statsEl = document.getElementById('stats');
+    const previewEl = document.getElementById('preview');
+    const btnDl = document.getElementById('btn-download');
+    let converted = [];
+
+    qualitySlider.addEventListener('input', () => {
+      qualityVal.textContent = qualitySlider.value + '%';
+    });
+
+    setupDropZone(dropZone, fileInput, handleFiles);
+
+    async function handleFiles(files) {
+      const imgs = Array.from(files).filter(f => /\.(jpe?g)$/i.test(f.name));
+      if (!imgs.length) {
+        statusEl.innerHTML = '<div class="alert alert-error">No se encontraron archivos JPEG</div>';
+        return;
+      }
+
+      converted = [];
+      previewEl.innerHTML = '';
+      show(progressBar);
+      hide(btnDl);
+      hide(statsEl);
+      const quality = parseInt(qualitySlider.value) / 100;
+      let totalOriginal = 0, totalConverted = 0;
+
+      statusEl.innerHTML = `<div class="alert alert-info">Convirtiendo ${imgs.length} imagen(es)...</div>`;
+
+      for (let i = 0; i < imgs.length; i++) {
+        try {
+          const dataUrl = await readAsDataURL(imgs[i]);
+          const img = await loadImage(dataUrl);
+          const blob = await convertImage(img, 'image/webp', quality);
+          const name = changeExt(imgs[i].name, '.webp');
+          converted.push({ name, data: blob });
+
+          totalOriginal += imgs[i].size;
+          totalConverted += blob.size;
+
+          const url = URL.createObjectURL(blob);
+          const item = document.createElement('div');
+          item.className = 'preview-item';
+          item.innerHTML = `<img src="${url}" alt="${name}"><div class="label">${name} (${formatBytes(blob.size)})</div>`;
+          previewEl.appendChild(item);
+        } catch (err) {
+          console.error(err);
+        }
+        updateProgress(progressBar, Math.round(((i + 1) / imgs.length) * 100));
+      }
+
+      const saving = totalOriginal > 0 ? Math.round((1 - totalConverted / totalOriginal) * 100) : 0;
+      document.getElementById('stat-original').textContent = formatBytes(totalOriginal);
+      document.getElementById('stat-converted').textContent = formatBytes(totalConverted);
+      document.getElementById('stat-saving').textContent = saving + '%';
+      show(statsEl);
+
+      statusEl.innerHTML = `<div class="alert alert-success">${converted.length} imagen(es) convertida(s)</div>`;
+
+      if (converted.length === 1) {
+        btnDl.textContent = 'Descargar WebP';
+        show(btnDl);
+      } else if (converted.length > 1) {
+        btnDl.textContent = 'Descargar todo (ZIP)';
+        show(btnDl);
+      }
+    }
+
+    btnDl.addEventListener('click', async () => {
+      if (converted.length === 1) {
+        downloadBlob(converted[0].data, converted[0].name);
+      } else {
+        await downloadZip(converted, 'jpeg-a-webp.zip');
+      }
+    });
+  </script>
+</body>
+</html>

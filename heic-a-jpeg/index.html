@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEIC a JPEG - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>HEIC a JPEG</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <div class="drop-zone" id="drop-zone">
+        <div class="icon">&#128247;</div>
+        <p>Arrastra archivos HEIC aqui</p>
+        <p class="hint">o haz clic para seleccionar</p>
+      </div>
+      <input type="file" id="file-input" accept=".heic,.heif" multiple>
+
+      <div class="progress-bar hidden mt-2" id="progress">
+        <div class="fill" style="width:0%"></div>
+      </div>
+
+      <div id="status" class="mt-1"></div>
+
+      <div class="preview-grid" id="preview"></div>
+
+      <div class="btn-group mt-2">
+        <button class="btn btn-success hidden" id="btn-download">Descargar todo (ZIP)</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const progressBar = document.getElementById('progress');
+    const statusEl = document.getElementById('status');
+    const previewEl = document.getElementById('preview');
+    const btnDl = document.getElementById('btn-download');
+    let converted = [];
+
+    setupDropZone(dropZone, fileInput, handleFiles);
+
+    async function handleFiles(files) {
+      const heicFiles = Array.from(files).filter(f =>
+        f.name.toLowerCase().endsWith('.heic') || f.name.toLowerCase().endsWith('.heif')
+      );
+      if (!heicFiles.length) {
+        statusEl.innerHTML = '<div class="alert alert-error">No se encontraron archivos HEIC</div>';
+        return;
+      }
+
+      converted = [];
+      previewEl.innerHTML = '';
+      show(progressBar);
+      hide(btnDl);
+      statusEl.innerHTML = `<div class="alert alert-info">Convirtiendo ${heicFiles.length} archivo(s)...</div>`;
+
+      for (let i = 0; i < heicFiles.length; i++) {
+        try {
+          const blob = await heic2any({ blob: heicFiles[i], toType: 'image/jpeg', quality: 0.92 });
+          const resultBlob = Array.isArray(blob) ? blob[0] : blob;
+          const name = changeExt(heicFiles[i].name, '.jpg');
+          converted.push({ name, data: resultBlob });
+
+          const url = URL.createObjectURL(resultBlob);
+          const item = document.createElement('div');
+          item.className = 'preview-item';
+          item.innerHTML = `<img src="${url}" alt="${name}"><div class="label">${name} (${formatBytes(resultBlob.size)})</div>`;
+          previewEl.appendChild(item);
+        } catch (err) {
+          const item = document.createElement('div');
+          item.className = 'preview-item';
+          item.innerHTML = `<div class="label" style="position:static;background:var(--color-error);color:#fff;padding:1rem;">Error: ${heicFiles[i].name}</div>`;
+          previewEl.appendChild(item);
+        }
+        updateProgress(progressBar, Math.round(((i + 1) / heicFiles.length) * 100));
+      }
+
+      statusEl.innerHTML = `<div class="alert alert-success">${converted.length} de ${heicFiles.length} convertido(s)</div>`;
+
+      if (converted.length === 1) {
+        btnDl.textContent = 'Descargar JPEG';
+        show(btnDl);
+      } else if (converted.length > 1) {
+        btnDl.textContent = 'Descargar todo (ZIP)';
+        show(btnDl);
+      }
+    }
+
+    btnDl.addEventListener('click', async () => {
+      if (converted.length === 1) {
+        downloadBlob(converted[0].data, converted[0].name);
+      } else {
+        await downloadZip(converted, 'heic-a-jpeg.zip');
+      }
+    });
+  </script>
+</body>
+</html>

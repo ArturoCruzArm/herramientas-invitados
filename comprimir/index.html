@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compresor de Fotos - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>Compresor de Fotos</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <div class="drop-zone" id="drop-zone">
+        <div class="icon">&#128230;</div>
+        <p>Arrastra fotos aqui</p>
+        <p class="hint">JPEG, PNG o WebP</p>
+      </div>
+      <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple>
+
+      <div class="form-row mt-2">
+        <div class="form-group">
+          <label for="max-width">Ancho maximo (px)</label>
+          <input type="number" id="max-width" value="1920" min="100" max="10000" step="100">
+        </div>
+        <div class="form-group">
+          <label for="format">Formato de salida</label>
+          <select id="format">
+            <option value="image/webp">WebP</option>
+            <option value="image/jpeg">JPEG</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="range-group">
+        <label>
+          <span>Calidad</span>
+          <span id="quality-val">85%</span>
+        </label>
+        <input type="range" id="quality" min="10" max="100" value="85" step="5">
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary hidden" id="btn-compress">Comprimir</button>
+      </div>
+
+      <div class="progress-bar hidden mt-2" id="progress">
+        <div class="fill" style="width:0%"></div>
+      </div>
+
+      <div id="status" class="mt-1"></div>
+
+      <div class="stats hidden" id="stats">
+        <div class="stat">
+          <div class="value" id="stat-count">-</div>
+          <div class="label">Fotos</div>
+        </div>
+        <div class="stat">
+          <div class="value" id="stat-original">-</div>
+          <div class="label">Original</div>
+        </div>
+        <div class="stat">
+          <div class="value" id="stat-compressed">-</div>
+          <div class="label">Comprimido</div>
+        </div>
+        <div class="stat">
+          <div class="value" id="stat-saving">-</div>
+          <div class="label">Ahorro</div>
+        </div>
+      </div>
+
+      <div class="btn-group mt-2">
+        <button class="btn btn-success hidden" id="btn-download">Descargar ZIP</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const qualitySlider = document.getElementById('quality');
+    const qualityVal = document.getElementById('quality-val');
+    const btnCompress = document.getElementById('btn-compress');
+    const progressBar = document.getElementById('progress');
+    const statusEl = document.getElementById('status');
+    const statsEl = document.getElementById('stats');
+    const btnDl = document.getElementById('btn-download');
+    let selectedFiles = [];
+    let compressed = [];
+
+    qualitySlider.addEventListener('input', () => {
+      qualityVal.textContent = qualitySlider.value + '%';
+    });
+
+    setupDropZone(dropZone, fileInput, files => {
+      selectedFiles = Array.from(files).filter(f => /\.(jpe?g|png|webp)$/i.test(f.name));
+      if (selectedFiles.length) {
+        statusEl.innerHTML = `<div class="alert alert-info">${selectedFiles.length} foto(s) seleccionada(s)</div>`;
+        show(btnCompress);
+      }
+    });
+
+    btnCompress.addEventListener('click', compressAll);
+
+    async function compressAll() {
+      if (!selectedFiles.length) return;
+      compressed = [];
+      show(progressBar);
+      hide(btnDl);
+      hide(statsEl);
+      hide(btnCompress);
+
+      const quality = parseInt(qualitySlider.value) / 100;
+      const maxW = parseInt(document.getElementById('max-width').value) || 1920;
+      const format = document.getElementById('format').value;
+      const ext = format === 'image/webp' ? '.webp' : '.jpg';
+      let totalOrig = 0, totalComp = 0;
+
+      statusEl.innerHTML = `<div class="alert alert-info">Comprimiendo...</div>`;
+
+      for (let i = 0; i < selectedFiles.length; i++) {
+        try {
+          const dataUrl = await readAsDataURL(selectedFiles[i]);
+          const img = await loadImage(dataUrl);
+          const blob = await convertImage(img, format, quality, maxW);
+          const name = changeExt(selectedFiles[i].name, ext);
+          compressed.push({ name, data: blob });
+          totalOrig += selectedFiles[i].size;
+          totalComp += blob.size;
+        } catch (err) {
+          console.error(err);
+        }
+        updateProgress(progressBar, Math.round(((i + 1) / selectedFiles.length) * 100));
+      }
+
+      const saving = totalOrig > 0 ? Math.round((1 - totalComp / totalOrig) * 100) : 0;
+      document.getElementById('stat-count').textContent = compressed.length;
+      document.getElementById('stat-original').textContent = formatBytes(totalOrig);
+      document.getElementById('stat-compressed').textContent = formatBytes(totalComp);
+      document.getElementById('stat-saving').textContent = saving + '%';
+      show(statsEl);
+
+      statusEl.innerHTML = `<div class="alert alert-success">Listo - ${compressed.length} foto(s) comprimida(s)</div>`;
+      if (compressed.length) show(btnDl);
+    }
+
+    btnDl.addEventListener('click', async () => {
+      if (compressed.length === 1) {
+        downloadBlob(compressed[0].data, compressed[0].name);
+      } else {
+        await downloadZip(compressed, 'fotos-comprimidas.zip');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de QR - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>Generador de QR</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <div class="form-group">
+        <label for="qr-url">URL o texto</label>
+        <input type="url" id="qr-url" placeholder="https://ejemplo.com" value="">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="qr-color">Color del QR</label>
+          <input type="color" id="qr-color" value="#064420">
+        </div>
+        <div class="form-group">
+          <label for="qr-bg">Color de fondo</label>
+          <input type="color" id="qr-bg" value="#ffffff">
+        </div>
+        <div class="form-group">
+          <label for="qr-size">Tamano (px)</label>
+          <input type="number" id="qr-size" value="300" min="100" max="1000" step="50">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="qr-text-top">Texto superior (opcional)</label>
+        <input type="text" id="qr-text-top" placeholder="Titulo arriba del QR">
+      </div>
+
+      <div class="form-group">
+        <label for="qr-text-bottom">Texto inferior (opcional)</label>
+        <input type="text" id="qr-text-bottom" placeholder="Texto abajo del QR">
+      </div>
+
+      <div class="btn-group mt-2">
+        <button class="btn btn-primary" id="btn-generate">Generar QR</button>
+        <button class="btn btn-success hidden" id="btn-download">Descargar PNG</button>
+      </div>
+
+      <div id="qr-preview" class="text-center mt-2"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const btnGen = document.getElementById('btn-generate');
+    const btnDl = document.getElementById('btn-download');
+    const preview = document.getElementById('qr-preview');
+    let finalCanvas = null;
+
+    btnGen.addEventListener('click', generate);
+
+    function generate() {
+      const url = document.getElementById('qr-url').value.trim();
+      if (!url) { alert('Ingresa una URL o texto'); return; }
+
+      const color = document.getElementById('qr-color').value;
+      const bg = document.getElementById('qr-bg').value;
+      const size = parseInt(document.getElementById('qr-size').value) || 300;
+      const textTop = document.getElementById('qr-text-top').value.trim();
+      const textBottom = document.getElementById('qr-text-bottom').value.trim();
+
+      preview.innerHTML = '';
+      const tempDiv = document.createElement('div');
+      preview.appendChild(tempDiv);
+
+      new QRCode(tempDiv, {
+        text: url,
+        width: size,
+        height: size,
+        colorDark: color,
+        colorLight: bg,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      setTimeout(() => {
+        const qrCanvas = tempDiv.querySelector('canvas');
+        if (!qrCanvas) return;
+
+        const padding = 30;
+        const fontSize = Math.round(size * 0.06);
+        const lineH = fontSize * 1.5;
+        const topH = textTop ? lineH + 10 : 0;
+        const bottomH = textBottom ? lineH + 10 : 0;
+
+        finalCanvas = document.createElement('canvas');
+        finalCanvas.width = size + padding * 2;
+        finalCanvas.height = size + padding * 2 + topH + bottomH;
+        const ctx = finalCanvas.getContext('2d');
+
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+
+        ctx.fillStyle = color;
+        ctx.font = `bold ${fontSize}px "Segoe UI", sans-serif`;
+        ctx.textAlign = 'center';
+
+        if (textTop) {
+          ctx.fillText(textTop, finalCanvas.width / 2, padding + fontSize);
+        }
+
+        ctx.drawImage(qrCanvas, padding, padding + topH, size, size);
+
+        if (textBottom) {
+          ctx.fillText(textBottom, finalCanvas.width / 2, padding + topH + size + fontSize + 5);
+        }
+
+        preview.innerHTML = '';
+        finalCanvas.style.maxWidth = '100%';
+        preview.appendChild(finalCanvas);
+        show(btnDl);
+      }, 200);
+    }
+
+    btnDl.addEventListener('click', () => {
+      if (!finalCanvas) return;
+      finalCanvas.toBlob(blob => downloadBlob(blob, 'codigo-qr.png'), 'image/png');
+    });
+  </script>
+</body>
+</html>

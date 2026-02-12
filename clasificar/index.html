@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clasificar Fotos - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <style>
+    .action-buttons { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; }
+    .action-buttons .btn { min-width: 120px; font-size: 1.1rem; padding: 0.8rem 2rem; }
+    .photo-name { text-align: center; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-text-light); }
+    .rotate-controls { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>Clasificar Fotos</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <!-- Paso 1: Seleccionar fotos -->
+      <div id="step-load">
+        <div class="drop-zone" id="drop-zone">
+          <div class="icon">&#9989;</div>
+          <p>Arrastra fotos aqui</p>
+          <p class="hint">o haz clic para seleccionar</p>
+        </div>
+        <input type="file" id="file-input" accept="image/*" multiple>
+      </div>
+
+      <!-- Paso 2: Clasificar -->
+      <div id="step-classify" class="hidden">
+        <div id="status" class="mb-1"></div>
+
+        <div class="progress-bar" id="progress">
+          <div class="fill" style="width:0%"></div>
+        </div>
+
+        <div class="photo-name" id="photo-name"></div>
+
+        <div class="rotate-controls">
+          <button class="btn btn-outline" id="btn-rotate" title="Rotar 90 grados">&#8635; Rotar</button>
+        </div>
+
+        <div class="photo-viewer">
+          <img id="current-photo" src="" alt="Foto actual">
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-danger" id="btn-no">NO (N)</button>
+          <button class="btn btn-outline" id="btn-undo" disabled>Deshacer (Z)</button>
+          <button class="btn btn-success" id="btn-yes">SI (S)</button>
+        </div>
+
+        <div class="keyboard-hint">
+          Teclas: <kbd>S</kbd> = SI &nbsp; <kbd>N</kbd> = NO &nbsp; <kbd>Z</kbd> = Deshacer &nbsp; <kbd>R</kbd> = Rotar
+        </div>
+
+        <div class="stats mt-2" id="stats">
+          <div class="stat">
+            <div class="value" id="stat-si">0</div>
+            <div class="label">SI</div>
+          </div>
+          <div class="stat">
+            <div class="value" id="stat-no">0</div>
+            <div class="label">NO</div>
+          </div>
+          <div class="stat">
+            <div class="value" id="stat-remaining">0</div>
+            <div class="label">Restantes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paso 3: Descargar -->
+      <div id="step-done" class="hidden">
+        <div class="alert alert-success text-center" id="done-msg"></div>
+        <div class="stats mt-2">
+          <div class="stat">
+            <div class="value" id="final-si">0</div>
+            <div class="label">SI</div>
+          </div>
+          <div class="stat">
+            <div class="value" id="final-no">0</div>
+            <div class="label">NO</div>
+          </div>
+        </div>
+        <div class="btn-group mt-2" style="justify-content:center">
+          <button class="btn btn-success" id="btn-download">Descargar ZIP</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const stepLoad = document.getElementById('step-load');
+    const stepClassify = document.getElementById('step-classify');
+    const stepDone = document.getElementById('step-done');
+
+    let photos = [];
+    let currentIdx = 0;
+    let classifications = []; // { file, choice: 'SI'|'NO' }
+    let rotation = 0;
+
+    setupDropZone(dropZone, fileInput, handleFiles);
+
+    function handleFiles(files) {
+      photos = Array.from(files).filter(f => f.type.startsWith('image/'));
+      if (!photos.length) return;
+      photos.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+      currentIdx = 0;
+      classifications = [];
+      rotation = 0;
+      hide(stepLoad);
+      show(stepClassify);
+      showPhoto();
+    }
+
+    async function showPhoto() {
+      if (currentIdx >= photos.length) {
+        finalize();
+        return;
+      }
+      rotation = 0;
+      const file = photos[currentIdx];
+      const url = await readAsDataURL(file);
+      document.getElementById('current-photo').src = url;
+      document.getElementById('current-photo').style.transform = '';
+      document.getElementById('photo-name').textContent = `${file.name} (${currentIdx + 1} de ${photos.length})`;
+      updateProgress(document.getElementById('progress'), Math.round((currentIdx / photos.length) * 100));
+      updateStats();
+      document.getElementById('btn-undo').disabled = classifications.length === 0;
+    }
+
+    function classify(choice) {
+      if (currentIdx >= photos.length) return;
+      classifications.push({ file: photos[currentIdx], choice });
+      currentIdx++;
+      showPhoto();
+    }
+
+    function undo() {
+      if (!classifications.length) return;
+      const last = classifications.pop();
+      currentIdx--;
+      showPhoto();
+    }
+
+    function rotatePhoto() {
+      rotation = (rotation + 90) % 360;
+      document.getElementById('current-photo').style.transform = `rotate(${rotation}deg)`;
+    }
+
+    function updateStats() {
+      const si = classifications.filter(c => c.choice === 'SI').length;
+      const no = classifications.filter(c => c.choice === 'NO').length;
+      document.getElementById('stat-si').textContent = si;
+      document.getElementById('stat-no').textContent = no;
+      document.getElementById('stat-remaining').textContent = photos.length - currentIdx;
+    }
+
+    function finalize() {
+      hide(stepClassify);
+      show(stepDone);
+      const si = classifications.filter(c => c.choice === 'SI').length;
+      const no = classifications.filter(c => c.choice === 'NO').length;
+      document.getElementById('done-msg').textContent = `Clasificacion completa: ${photos.length} fotos procesadas`;
+      document.getElementById('final-si').textContent = si;
+      document.getElementById('final-no').textContent = no;
+    }
+
+    document.getElementById('btn-yes').addEventListener('click', () => classify('SI'));
+    document.getElementById('btn-no').addEventListener('click', () => classify('NO'));
+    document.getElementById('btn-undo').addEventListener('click', undo);
+    document.getElementById('btn-rotate').addEventListener('click', rotatePhoto);
+
+    document.addEventListener('keydown', e => {
+      if (stepClassify.classList.contains('hidden')) return;
+      const key = e.key.toLowerCase();
+      if (key === 's') classify('SI');
+      else if (key === 'n') classify('NO');
+      else if (key === 'z') undo();
+      else if (key === 'r') rotatePhoto();
+    });
+
+    document.getElementById('btn-download').addEventListener('click', async () => {
+      const zip = new JSZip();
+      const siFolder = zip.folder('SI');
+      const noFolder = zip.folder('NO');
+
+      for (const c of classifications) {
+        const buf = await readAsArrayBuffer(c.file);
+        const folder = c.choice === 'SI' ? siFolder : noFolder;
+        folder.file(c.file.name, buf);
+      }
+
+      const blob = await zip.generateAsync({ type: 'blob' });
+      downloadBlob(blob, 'fotos-clasificadas.zip');
+    });
+  </script>
+</body>
+</html>

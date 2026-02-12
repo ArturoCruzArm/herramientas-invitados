@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebP a JPEG - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>WebP a JPEG</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <div class="drop-zone" id="drop-zone">
+        <div class="icon">&#128247;</div>
+        <p>Arrastra imagenes WebP aqui</p>
+        <p class="hint">o haz clic para seleccionar</p>
+      </div>
+      <input type="file" id="file-input" accept=".webp" multiple>
+
+      <div class="progress-bar hidden mt-2" id="progress">
+        <div class="fill" style="width:0%"></div>
+      </div>
+
+      <div id="status" class="mt-1"></div>
+
+      <div class="preview-grid" id="preview"></div>
+
+      <div class="btn-group mt-2">
+        <button class="btn btn-success hidden" id="btn-download">Descargar todo (ZIP)</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const progressBar = document.getElementById('progress');
+    const statusEl = document.getElementById('status');
+    const previewEl = document.getElementById('preview');
+    const btnDl = document.getElementById('btn-download');
+    let converted = [];
+
+    setupDropZone(dropZone, fileInput, handleFiles);
+
+    async function handleFiles(files) {
+      const imgs = Array.from(files).filter(f => /\.webp$/i.test(f.name));
+      if (!imgs.length) {
+        statusEl.innerHTML = '<div class="alert alert-error">No se encontraron archivos WebP</div>';
+        return;
+      }
+
+      converted = [];
+      previewEl.innerHTML = '';
+      show(progressBar);
+      hide(btnDl);
+
+      statusEl.innerHTML = `<div class="alert alert-info">Convirtiendo ${imgs.length} imagen(es)...</div>`;
+
+      for (let i = 0; i < imgs.length; i++) {
+        try {
+          const dataUrl = await readAsDataURL(imgs[i]);
+          const img = await loadImage(dataUrl);
+          const blob = await convertImage(img, 'image/jpeg', 0.95);
+          const name = changeExt(imgs[i].name, '.jpg');
+          converted.push({ name, data: blob });
+
+          const url = URL.createObjectURL(blob);
+          const item = document.createElement('div');
+          item.className = 'preview-item';
+          item.innerHTML = `<img src="${url}" alt="${name}"><div class="label">${name} (${formatBytes(blob.size)})</div>`;
+          previewEl.appendChild(item);
+        } catch (err) {
+          console.error(err);
+        }
+        updateProgress(progressBar, Math.round(((i + 1) / imgs.length) * 100));
+      }
+
+      statusEl.innerHTML = `<div class="alert alert-success">${converted.length} imagen(es) convertida(s)</div>`;
+
+      if (converted.length === 1) {
+        btnDl.textContent = 'Descargar JPEG';
+        show(btnDl);
+      } else if (converted.length > 1) {
+        btnDl.textContent = 'Descargar todo (ZIP)';
+        show(btnDl);
+      }
+    }
+
+    btnDl.addEventListener('click', async () => {
+      if (converted.length === 1) {
+        downloadBlob(converted[0].data, converted[0].name);
+      } else {
+        await downloadZip(converted, 'webp-a-jpeg.zip');
+      }
+    });
+  </script>
+</body>
+</html>

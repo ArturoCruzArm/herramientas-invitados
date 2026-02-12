@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparar Fotos - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <style>
+    .compare-container {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: stretch;
+      margin: 1rem 0;
+      min-height: 300px;
+    }
+    .compare-side {
+      flex: 1;
+      max-width: 48%;
+      text-align: center;
+      cursor: pointer;
+      border: 3px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .compare-side:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-hover);
+    }
+    .compare-side img {
+      width: 100%;
+      flex: 1;
+      object-fit: contain;
+      background: var(--color-bg);
+    }
+    .compare-side .photo-label {
+      padding: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--color-bg);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .single-photo { max-width: 60%; margin: 0 auto; }
+    .single-photo img { max-height: 60vh; width: 100%; object-fit: contain; border-radius: var(--radius); }
+    .action-buttons { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; }
+    .action-buttons .btn { min-width: 120px; font-size: 1.05rem; padding: 0.7rem 1.5rem; }
+    @media (max-width: 600px) {
+      .compare-container { flex-direction: column; }
+      .compare-side { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>Comparar Fotos</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <!-- Paso 1: Seleccionar fotos -->
+      <div id="step-load">
+        <div class="drop-zone" id="drop-zone">
+          <div class="icon">&#8644;</div>
+          <p>Arrastra fotos aqui</p>
+          <p class="hint">Se compararan de dos en dos para elegir la mejor</p>
+        </div>
+        <input type="file" id="file-input" accept="image/*" multiple>
+      </div>
+
+      <!-- Paso 2: Comparar -->
+      <div id="step-compare" class="hidden">
+        <div id="status" class="mb-1"></div>
+
+        <div class="progress-bar" id="progress">
+          <div class="fill" style="width:0%"></div>
+        </div>
+
+        <!-- Modo dos fotos -->
+        <div id="mode-pair">
+          <div class="compare-container">
+            <div class="compare-side" id="side-left">
+              <img id="img-left" src="" alt="Foto izquierda">
+              <div class="photo-label" id="label-left"></div>
+            </div>
+            <div class="compare-side" id="side-right">
+              <img id="img-right" src="" alt="Foto derecha">
+              <div class="photo-label" id="label-right"></div>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="btn btn-success" id="btn-left">&#8592; Izquierda (A)</button>
+            <button class="btn btn-outline" id="btn-undo-pair" disabled>Deshacer (Z)</button>
+            <button class="btn btn-success" id="btn-right">Derecha (D) &#8594;</button>
+          </div>
+          <div class="keyboard-hint">
+            <kbd>A</kbd> o <kbd>&#8592;</kbd> = Izquierda &nbsp;
+            <kbd>D</kbd> o <kbd>&#8594;</kbd> = Derecha &nbsp;
+            <kbd>Z</kbd> = Deshacer
+          </div>
+        </div>
+
+        <!-- Modo una foto (cuando queda impar) -->
+        <div id="mode-single" class="hidden">
+          <div class="single-photo">
+            <p class="photo-name text-center mb-1" id="single-name"></p>
+            <img id="img-single" src="" alt="Foto unica">
+          </div>
+          <div class="action-buttons">
+            <button class="btn btn-danger" id="btn-single-no">NO (N)</button>
+            <button class="btn btn-success" id="btn-single-yes">SI (S)</button>
+          </div>
+          <div class="keyboard-hint">
+            <kbd>S</kbd> = SI &nbsp; <kbd>N</kbd> = NO
+          </div>
+        </div>
+
+        <div class="stats mt-2">
+          <div class="stat">
+            <div class="value" id="stat-si">0</div>
+            <div class="label">SI</div>
+          </div>
+          <div class="stat">
+            <div class="value" id="stat-no">0</div>
+            <div class="label">NO</div>
+          </div>
+          <div class="stat">
+            <div class="value" id="stat-remaining">0</div>
+            <div class="label">Restantes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paso 3: Descargar -->
+      <div id="step-done" class="hidden">
+        <div class="alert alert-success text-center" id="done-msg"></div>
+        <div class="stats mt-2">
+          <div class="stat">
+            <div class="value" id="final-si">0</div>
+            <div class="label">SI</div>
+          </div>
+          <div class="stat">
+            <div class="value" id="final-no">0</div>
+            <div class="label">NO</div>
+          </div>
+        </div>
+        <div class="btn-group mt-2" style="justify-content:center">
+          <button class="btn btn-success" id="btn-download">Descargar ZIP</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const stepLoad = document.getElementById('step-load');
+    const stepCompare = document.getElementById('step-compare');
+    const stepDone = document.getElementById('step-done');
+    const modePair = document.getElementById('mode-pair');
+    const modeSingle = document.getElementById('mode-single');
+
+    let photos = [];
+    let pairIdx = 0; // index into pairs array
+    let pairs = [];  // [[file1, file2], ...]
+    let singleFile = null;
+    let results = []; // { file, choice }
+    let history = []; // for undo: { type: 'pair'|'single', pairIdx, result1, result2 }
+    let inSingleMode = false;
+
+    setupDropZone(dropZone, fileInput, handleFiles);
+
+    function handleFiles(files) {
+      photos = Array.from(files).filter(f => f.type.startsWith('image/'));
+      if (photos.length < 2) {
+        alert('Se necesitan al menos 2 fotos');
+        return;
+      }
+      photos.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+      // Create pairs
+      pairs = [];
+      singleFile = null;
+      for (let i = 0; i < photos.length - 1; i += 2) {
+        pairs.push([photos[i], photos[i + 1]]);
+      }
+      if (photos.length % 2 === 1) {
+        singleFile = photos[photos.length - 1];
+      }
+
+      pairIdx = 0;
+      results = [];
+      history = [];
+      inSingleMode = false;
+
+      hide(stepLoad);
+      show(stepCompare);
+      showCurrentPair();
+    }
+
+    async function showCurrentPair() {
+      if (pairIdx >= pairs.length) {
+        if (singleFile && !inSingleMode) {
+          inSingleMode = true;
+          showSingle();
+        } else {
+          finalize();
+        }
+        return;
+      }
+
+      inSingleMode = false;
+      show(modePair);
+      hide(modeSingle);
+
+      const [left, right] = pairs[pairIdx];
+      const [urlL, urlR] = await Promise.all([readAsDataURL(left), readAsDataURL(right)]);
+      document.getElementById('img-left').src = urlL;
+      document.getElementById('img-right').src = urlR;
+      document.getElementById('label-left').textContent = left.name;
+      document.getElementById('label-right').textContent = right.name;
+
+      document.getElementById('status').innerHTML =
+        `<div class="alert alert-info">Par ${pairIdx + 1} de ${pairs.length}${singleFile ? ' + 1 individual' : ''}</div>`;
+
+      updateProgress(document.getElementById('progress'),
+        Math.round((pairIdx / (pairs.length + (singleFile ? 1 : 0))) * 100));
+      updateStats();
+      document.getElementById('btn-undo-pair').disabled = history.length === 0;
+    }
+
+    async function showSingle() {
+      hide(modePair);
+      show(modeSingle);
+      const url = await readAsDataURL(singleFile);
+      document.getElementById('img-single').src = url;
+      document.getElementById('single-name').textContent = singleFile.name;
+      document.getElementById('status').innerHTML =
+        '<div class="alert alert-info">Foto individual restante</div>';
+      updateProgress(document.getElementById('progress'),
+        Math.round((pairs.length / (pairs.length + 1)) * 100));
+      updateStats();
+    }
+
+    function choosePair(side) {
+      if (pairIdx >= pairs.length) return;
+      const [left, right] = pairs[pairIdx];
+      const si = side === 'left' ? left : right;
+      const no = side === 'left' ? right : left;
+      results.push({ file: si, choice: 'SI' });
+      results.push({ file: no, choice: 'NO' });
+      history.push({ type: 'pair', pairIdx: pairIdx });
+      pairIdx++;
+      showCurrentPair();
+    }
+
+    function chooseSingle(choice) {
+      if (!singleFile) return;
+      results.push({ file: singleFile, choice });
+      history.push({ type: 'single' });
+      inSingleMode = false;
+      singleFile = null;
+      finalize();
+    }
+
+    function undoLast() {
+      if (!history.length) return;
+      const last = history.pop();
+      if (last.type === 'pair') {
+        results.splice(-2, 2);
+        pairIdx--;
+        showCurrentPair();
+      } else if (last.type === 'single') {
+        results.pop();
+        singleFile = results.length > 0 ? null : photos[photos.length - 1];
+        // restore singleFile from original
+        singleFile = photos[photos.length - 1];
+        inSingleMode = true;
+        showSingle();
+      }
+    }
+
+    function updateStats() {
+      const si = results.filter(r => r.choice === 'SI').length;
+      const no = results.filter(r => r.choice === 'NO').length;
+      const remaining = photos.length - results.length;
+      document.getElementById('stat-si').textContent = si;
+      document.getElementById('stat-no').textContent = no;
+      document.getElementById('stat-remaining').textContent = remaining;
+    }
+
+    function finalize() {
+      hide(stepCompare);
+      show(stepDone);
+      const si = results.filter(r => r.choice === 'SI').length;
+      const no = results.filter(r => r.choice === 'NO').length;
+      document.getElementById('done-msg').textContent = `Comparacion completa: ${photos.length} fotos procesadas`;
+      document.getElementById('final-si').textContent = si;
+      document.getElementById('final-no').textContent = no;
+    }
+
+    // Event listeners
+    document.getElementById('side-left').addEventListener('click', () => choosePair('left'));
+    document.getElementById('side-right').addEventListener('click', () => choosePair('right'));
+    document.getElementById('btn-left').addEventListener('click', () => choosePair('left'));
+    document.getElementById('btn-right').addEventListener('click', () => choosePair('right'));
+    document.getElementById('btn-undo-pair').addEventListener('click', undoLast);
+    document.getElementById('btn-single-yes').addEventListener('click', () => chooseSingle('SI'));
+    document.getElementById('btn-single-no').addEventListener('click', () => chooseSingle('NO'));
+
+    document.addEventListener('keydown', e => {
+      if (stepCompare.classList.contains('hidden')) return;
+
+      if (!inSingleMode) {
+        if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') choosePair('left');
+        else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') choosePair('right');
+        else if (e.key === 'z' || e.key === 'Z') undoLast();
+      } else {
+        if (e.key === 's' || e.key === 'S') chooseSingle('SI');
+        else if (e.key === 'n' || e.key === 'N') chooseSingle('NO');
+      }
+    });
+
+    document.getElementById('btn-download').addEventListener('click', async () => {
+      const zip = new JSZip();
+      const siFolder = zip.folder('SI');
+      const noFolder = zip.folder('NO');
+
+      for (const r of results) {
+        const buf = await readAsArrayBuffer(r.file);
+        const folder = r.choice === 'SI' ? siFolder : noFolder;
+        folder.file(r.file.name, buf);
+      }
+
+      const blob = await zip.generateAsync({ type: 'blob' });
+      downloadBlob(blob, 'fotos-comparadas.zip');
+    });
+  </script>
+</body>
+</html>

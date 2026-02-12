@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extraer ZIPs - Herramientas Foro 7</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a href="../" class="back-link" title="Volver">&larr;</a>
+    <h1>Extraer ZIPs</h1>
+  </header>
+
+  <main>
+    <div class="tool-container">
+      <div class="drop-zone" id="drop-zone">
+        <div class="icon">&#128194;</div>
+        <p>Arrastra archivos ZIP aqui</p>
+        <p class="hint">o haz clic para seleccionar</p>
+      </div>
+      <input type="file" id="file-input" accept=".zip" multiple>
+
+      <div class="form-group mt-2">
+        <label for="prefix">Prefijo para nombres (ej: foto7)</label>
+        <input type="text" id="prefix" value="foto7" placeholder="foto7">
+      </div>
+
+      <div class="progress-bar hidden mt-1" id="progress">
+        <div class="fill" style="width:0%"></div>
+      </div>
+
+      <div id="status" class="mt-1"></div>
+
+      <div class="stats hidden" id="stats">
+        <div class="stat">
+          <div class="value" id="stat-zips">-</div>
+          <div class="label">ZIPs procesados</div>
+        </div>
+        <div class="stat">
+          <div class="value" id="stat-photos">-</div>
+          <div class="label">Fotos extraidas</div>
+        </div>
+      </div>
+
+      <ul class="file-list hidden" id="file-list"></ul>
+
+      <div class="btn-group mt-2">
+        <button class="btn btn-primary hidden" id="btn-extract">Extraer fotos</button>
+        <button class="btn btn-success hidden" id="btn-download">Descargar ZIP consolidado</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Foro 7 &mdash; Herramientas para procesamiento de fotos
+  </footer>
+
+  <script src="../js/common.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const progressBar = document.getElementById('progress');
+    const statusEl = document.getElementById('status');
+    const statsEl = document.getElementById('stats');
+    const fileListEl = document.getElementById('file-list');
+    const btnExtract = document.getElementById('btn-extract');
+    const btnDl = document.getElementById('btn-download');
+    let zipFiles = [];
+    let extracted = [];
+
+    setupDropZone(dropZone, fileInput, files => {
+      zipFiles = Array.from(files).filter(f => /\.zip$/i.test(f.name));
+      if (zipFiles.length) {
+        statusEl.innerHTML = `<div class="alert alert-info">${zipFiles.length} archivo(s) ZIP seleccionado(s)</div>`;
+        show(btnExtract);
+        hide(btnDl);
+        hide(statsEl);
+        hide(fileListEl);
+      }
+    });
+
+    btnExtract.addEventListener('click', extractAll);
+
+    async function extractAll() {
+      if (!zipFiles.length) return;
+      extracted = [];
+      fileListEl.innerHTML = '';
+      show(progressBar);
+      hide(btnExtract);
+      hide(btnDl);
+
+      const prefix = document.getElementById('prefix').value.trim() || 'foto';
+      let counter = 1;
+      let zipsProcessed = 0;
+
+      statusEl.innerHTML = '<div class="alert alert-info">Extrayendo fotos...</div>';
+
+      for (let i = 0; i < zipFiles.length; i++) {
+        try {
+          const buf = await readAsArrayBuffer(zipFiles[i]);
+          const zip = await JSZip.loadAsync(buf);
+          const entries = Object.keys(zip.files).filter(name => {
+            const n = name.toLowerCase();
+            return !zip.files[name].dir && /\.(jpe?g|png|webp|heic)$/i.test(n) && !n.startsWith('__macosx');
+          });
+
+          for (const entry of entries) {
+            const data = await zip.files[entry].async('blob');
+            const ext = '.' + getExt(entry);
+            const newName = `${prefix}_${String(counter).padStart(4, '0')}${ext}`;
+            extracted.push({ name: newName, data });
+            counter++;
+          }
+          zipsProcessed++;
+        } catch (err) {
+          console.error('Error con ZIP:', zipFiles[i].name, err);
+        }
+        updateProgress(progressBar, Math.round(((i + 1) / zipFiles.length) * 100));
+      }
+
+      document.getElementById('stat-zips').textContent = zipsProcessed;
+      document.getElementById('stat-photos').textContent = extracted.length;
+      show(statsEl);
+
+      fileListEl.innerHTML = extracted.map(f =>
+        `<li><span>${f.name}</span><span>${formatBytes(f.data.size)}</span></li>`
+      ).join('');
+      show(fileListEl);
+
+      statusEl.innerHTML = `<div class="alert alert-success">${extracted.length} foto(s) extraida(s) de ${zipsProcessed} ZIP(s)</div>`;
+      if (extracted.length) show(btnDl);
+    }
+
+    btnDl.addEventListener('click', async () => {
+      await downloadZip(extracted, 'fotos-extraidas.zip');
+    });
+  </script>
+</body>
+</html>
