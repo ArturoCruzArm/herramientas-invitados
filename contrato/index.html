@@ -132,6 +132,7 @@
     <div id="app-content">
       <!-- SECCION 1: FORMULARIO -->
       <div class="tool-container" id="form-view">
+        <div id="empresa-badge" style="background:var(--color-primary);color:#fff;padding:0.4rem 1rem;border-radius:6px;display:inline-block;font-weight:600;font-size:0.9rem;margin-bottom:1rem;"></div>
         <h2>Datos del contrato</h2>
 
         <div class="form-section">
@@ -317,14 +318,34 @@
 
   <script>
     // ===== Gate de acceso =====
-    const CLAVE = '1234';
+    const EMPRESAS = {
+      '1234': {
+        nombre: 'Foro 7 Producciones',
+        responsable: 'Foro 7 Producciones',
+        telefono: '477 920 3776',
+        direccion: 'Padilla 112, Cumbres de Arbide, Leon, Gto.',
+        subtitulo: 'Fotografia y Video Profesional'
+      },
+      '4321': {
+        nombre: 'Producciones Luzel',
+        responsable: 'Luz Elena Armenta Neri',
+        telefono: '477 228 0761',
+        direccion: 'Padilla 112, Cumbres de Arbide, Leon, Gto.',
+        subtitulo: 'Fotografia y Video Profesional'
+      }
+    };
+
+    let empresaActiva = null;
     const claveInput = document.getElementById('clave-input');
     const claveError = document.getElementById('clave-error');
 
     function intentarAcceso() {
-      if (claveInput.value === CLAVE) {
+      const empresa = EMPRESAS[claveInput.value];
+      if (empresa) {
+        empresaActiva = empresa;
         document.getElementById('login-gate').style.display = 'none';
         document.getElementById('app-content').style.display = 'block';
+        document.getElementById('empresa-badge').textContent = empresa.nombre;
       } else {
         claveError.style.display = 'block';
         claveInput.value = '';
@@ -532,10 +553,12 @@
       costRows += `<tr><td class="label">Apartado recibido (${metodoPago.toLowerCase()})</td><td style="text-align:right">${formatMoneda(apartado)}</td></tr>`;
       costRows += `<tr style="font-weight:bold"><td class="label">SALDO RESTANTE</td><td style="text-align:right">${formatMoneda(restante)}</td></tr>`;
 
+      const emp = empresaActiva;
+
       const html = `
         <h1>CONTRATO DE SERVICIOS</h1>
-        <p class="subtitle">Foro 7 Producciones &mdash; Fotografia y Video Profesional<br>
-        Padilla 112, Cumbres de Arbide, Leon, Gto. &bull; Tel: 477 920 3776</p>
+        <p class="subtitle">${emp.nombre} &mdash; ${emp.subtitulo}<br>
+        ${emp.direccion} &bull; Tel: ${emp.telefono}</p>
 
         <h2>${sec++}. DATOS DEL CLIENTE</h2>
         <table>
@@ -570,7 +593,7 @@
         <h2>${sec++}. FORMA DE PAGO</h2>
         <p class="clausula">El cliente ha entregado un apartado de <strong>${formatMoneda(apartado)}</strong> en fecha <strong>${formatFecha(fechaApartado)}</strong> mediante <strong>${metodoPago.toLowerCase()}</strong>. El saldo restante de <strong>${formatMoneda(restante)}</strong> debera liquidarse a mas tardar el dia del evento, antes del inicio de los servicios contratados.</p>
 
-        <h2>${sec++}. COMPROMISOS DE FORO 7 PRODUCCIONES</h2>
+        <h2>${sec++}. COMPROMISOS DE ${emp.nombre.toUpperCase()}</h2>
         <p class="clausula"><strong>a)</strong> Presentarse puntualmente en los lugares y horarios acordados con el equipo profesional necesario para la cobertura del evento.</p>
         <p class="clausula"><strong>b)</strong> Entregar el material fotografico y de video en un plazo no mayor a <strong>60 dias habiles</strong> posteriores al evento.</p>
         <p class="clausula"><strong>c)</strong> Garantizar la calidad profesional de todos los productos y servicios incluidos en el paquete contratado.</p>
@@ -580,7 +603,7 @@
         <p class="clausula"><strong>a)</strong> Liquidar el saldo restante en tiempo y forma segun lo establecido en la clausula de forma de pago.</p>
         <p class="clausula"><strong>b)</strong> Informar con al menos <strong>15 dias de anticipacion</strong> cualquier cambio en la fecha, hora o lugar del evento.</p>
         <p class="clausula"><strong>c)</strong> En caso de cancelacion, el monto del apartado <strong>no sera reembolsable</strong>. Si la cancelacion se realiza con menos de 7 dias de anticipacion, se cobrara el 50% del costo total.</p>
-        <p class="clausula"><strong>d)</strong> Facilitar el acceso y las condiciones necesarias para que el equipo de Foro 7 Producciones pueda realizar su trabajo adecuadamente.</p>
+        <p class="clausula"><strong>d)</strong> Facilitar el acceso y las condiciones necesarias para que el equipo de ${emp.nombre} pueda realizar su trabajo adecuadamente.</p>
         <p class="clausula"><strong>e)</strong> Recoger el material entregable en un plazo no mayor a 30 dias despues de ser notificado de su disponibilidad.</p>
 
         ${notas ? `<h2>${sec++}. ACUERDOS ESPECIALES</h2><p class="clausula">${notas}</p>` : ''}
@@ -589,7 +612,7 @@
 
         <div class="firmas">
           <div class="firma">
-            <div class="linea">Foro 7 Producciones<br><small>El prestador de servicios</small></div>
+            <div class="linea">${emp.responsable}<br><small>${emp.nombre} &mdash; El prestador de servicios</small></div>
           </div>
           <div class="firma">
             <div class="linea">${cliente}<br><small>El cliente</small></div>
