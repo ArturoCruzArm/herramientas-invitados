@@ -336,14 +336,16 @@
         responsable: 'Foro 7 Producciones',
         telefono: '477 920 3776',
         direccion: 'Padilla 112, Cumbres de Arbide, Leon, Gto.',
-        subtitulo: 'Fotografia y Video Profesional'
+        subtitulo: 'Fotografia y Video Profesional',
+        web: 'foro7.invitados.org'
       },
       '4321': {
         nombre: 'Producciones Luzel',
         responsable: 'Luz Elena Armenta Neri',
         telefono: '477 228 0761',
         direccion: 'Padilla 112, Cumbres de Arbide, Leon, Gto.',
-        subtitulo: 'Fotografia y Video Profesional'
+        subtitulo: 'Fotografia y Video Profesional',
+        web: ''
       }
     };
 
@@ -581,7 +583,7 @@
       const html = `
         <h1>CONTRATO DE SERVICIOS</h1>
         <p class="subtitle">${emp.nombre} &mdash; ${emp.subtitulo}<br>
-        ${emp.direccion} &bull; Tel: ${emp.telefono}</p>
+        ${emp.direccion} &bull; Tel: ${emp.telefono}${emp.web ? ' &bull; ' + emp.web : ''}</p>
 
         <h2>${sec++}. DATOS DEL CLIENTE</h2>
         <table>
