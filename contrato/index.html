@@ -195,6 +195,21 @@
           <h3>Paquete</h3>
           <p style="font-size:0.82rem;color:var(--color-text-light);margin-bottom:0.5rem;">Selecciona un paquete. Puedes ajustar el precio haciendo clic en el monto.</p>
           <div id="paquetes-list">
+            <div class="paquete-option" data-paquete="paqueteb">
+              <h4>Paquete B $<input type="number" class="precio-edit" data-paquete="paqueteb" value="9000" min="0" step="100"> MXN</h4>
+              <ul>
+                <li>Grabacion de video del evento</li>
+                <li>Pelicula master 2:50 hr en USB formato FHD</li>
+                <li>Duplicado de pelicula en USB</li>
+                <li>Clip de video resumen del evento</li>
+                <li>Seguimiento fotografico - 85 fotos 6x8" (15x20 cm)</li>
+                <li>Ampliacion 50x40 cm retocada en marco faldon</li>
+                <li>Clip de video de todas las fotografias editado y musicalizado</li>
+                <li>Maquina de CO2 para lanzar papel picado</li>
+                <li>Iluminacion para vals</li>
+                <li>Dron - video grabado en formato FHD</li>
+              </ul>
+            </div>
             <div class="paquete-option" data-paquete="fotografia">
               <h4>Paquete de Fotografia 📹📸😃 $<input type="number" class="precio-edit" data-paquete="fotografia" value="5000" min="0" step="100"> MXN</h4>
               <ul>
@@ -372,6 +387,21 @@
 
     // ===== Datos de paquetes =====
     const PAQUETES = {
+      paqueteb: {
+        nombre: 'Paquete B',
+        incluye: [
+          'Grabacion de video del evento',
+          'Pelicula master de 2:50 hr en memoria USB formato FHD',
+          'Duplicado de pelicula en memoria USB',
+          'Clip de video resumen del evento',
+          'Seguimiento fotografico - 85 fotografias 6x8" (15x20 cm)',
+          'Ampliacion de 50x40 cm retocada en marco faldon',
+          'Clip de video de todas las fotografias tomadas en el evento, editado y musicalizado',
+          'Maquina de CO2 para lanzar papel picado',
+          'Iluminacion para vals',
+          'Dron - video grabado en formato FHD'
+        ]
+      },
       fotografia: {
         nombre: 'Paquete de Fotografia',
         incluye: [
@@ -526,13 +556,11 @@
 
     function formatMoneda(n) { return '$' + n.toLocaleString() + ' MXN'; }
 
+    const BLANK = '<span style="display:inline-block;min-width:180px;border-bottom:1px solid #000;">&nbsp;</span>';
+
     // ===== Generar contrato =====
     document.getElementById('btn-generar').addEventListener('click', () => {
-      if (!selectedPaquete) { alert('Selecciona un paquete'); return; }
-      if (!document.getElementById('cliente-nombre').value.trim()) { alert('Ingresa el nombre del cliente'); return; }
-      if (!document.getElementById('evento-fecha').value) { alert('Ingresa la fecha del evento'); return; }
-
-      const paq = PAQUETES[selectedPaquete];
+      const paq = selectedPaquete ? PAQUETES[selectedPaquete] : null;
       const precioPaquete = getPrecioPaquete(selectedPaquete);
       const extrasCheckbox = getExtrasCheckbox();
       const conceptos = getConceptosAdicionales();
@@ -567,7 +595,7 @@
 
       let sec = 1;
 
-      let costRows = `<tr><td class="label">${paq.nombre}</td><td style="text-align:right">${formatMoneda(precioPaquete)}</td></tr>`;
+      let costRows = `<tr><td class="label">${paq ? paq.nombre : 'Paquete contratado'}</td><td style="text-align:right">${formatMoneda(precioPaquete)}</td></tr>`;
       allExtras.filter(e => e.precio > 0).forEach(e => {
         costRows += `<tr><td class="label">${e.label}</td><td style="text-align:right">${formatMoneda(e.precio)}</td></tr>`;
       });
@@ -587,26 +615,23 @@
 
         <h2>${sec++}. DATOS DEL CLIENTE</h2>
         <table>
-          <tr><td class="label">Nombre:</td><td>${cliente}</td></tr>
-          <tr><td class="label">Telefono:</td><td>${telefono || '—'}</td></tr>
-          ${email ? `<tr><td class="label">Correo:</td><td>${email}</td></tr>` : ''}
+          <tr><td class="label">Nombre:</td><td>${cliente || BLANK}</td></tr>
+          <tr><td class="label">Telefono:</td><td>${telefono || BLANK}</td></tr>
+          <tr><td class="label">Correo:</td><td>${email || BLANK}</td></tr>
         </table>
 
         <h2>${sec++}. DATOS DEL EVENTO</h2>
         <table>
           <tr><td class="label">Tipo de evento:</td><td>${tipoEvento}</td></tr>
-          <tr><td class="label">Festejado(a):</td><td>${festejado || '—'}</td></tr>
+          <tr><td class="label">Festejado(a):</td><td>${festejado || BLANK}</td></tr>
           <tr><td class="label">Fecha:</td><td>${formatFecha(fechaEvento)}</td></tr>
-          <tr><td class="label">Hora de inicio:</td><td>${horaEvento} hrs</td></tr>
-          <tr><td class="label">Ceremonia:</td><td>${lugarCeremonia || '—'}</td></tr>
-          <tr><td class="label">Recepcion:</td><td>${lugarRecepcion || '—'}</td></tr>
+          <tr><td class="label">Hora de inicio:</td><td>${horaEvento || BLANK} hrs</td></tr>
+          <tr><td class="label">Ceremonia:</td><td>${lugarCeremonia || BLANK}</td></tr>
+          <tr><td class="label">Recepcion:</td><td>${lugarRecepcion || BLANK}</td></tr>
         </table>
 
-        <h2>${sec++}. PAQUETE CONTRATADO: ${paq.nombre.toUpperCase()}</h2>
-        <p>El presente paquete incluye:</p>
-        <ul>
-          ${paq.incluye.map(item => `<li>${item}</li>`).join('')}
-        </ul>
+        <h2>${sec++}. PAQUETE CONTRATADO: ${paq ? paq.nombre.toUpperCase() : BLANK}</h2>
+        ${paq ? `<p>El presente paquete incluye:</p><ul>${paq.incluye.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
 
         ${hasExtras ? `<h2>${sec++}. SERVICIOS ADICIONALES</h2>${extrasListHTML}` : ''}
 
@@ -640,7 +665,7 @@
             <div class="linea">${emp.responsable}<br><small>${emp.nombre} &mdash; El prestador de servicios</small></div>
           </div>
           <div class="firma">
-            <div class="linea">${cliente}<br><small>El cliente</small></div>
+            <div class="linea">${cliente || '&nbsp;'}<br><small>El cliente</small></div>
           </div>
         </div>
       `;
