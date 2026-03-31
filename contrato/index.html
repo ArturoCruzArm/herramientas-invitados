@@ -641,7 +641,7 @@
         </table>
 
         <h2>${sec++}. FORMA DE PAGO</h2>
-        <p class="clausula">El cliente ha entregado un apartado de <strong>${formatMoneda(apartado)}</strong> en fecha <strong>${formatFecha(fechaApartado)}</strong> mediante <strong>${metodoPago.toLowerCase()}</strong>. El saldo restante de <strong>${formatMoneda(restante)}</strong> debera liquidarse a mas tardar el dia del evento, antes del inicio de los servicios contratados.</p>
+        <p class="clausula">El cliente ha entregado un apartado de <strong>${formatMoneda(apartado)}</strong> en fecha <strong>${formatFecha(fechaApartado)}</strong> mediante <strong>${metodoPago.toLowerCase()}</strong>. El saldo restante de <strong>${formatMoneda(restante)}</strong> debera liquidarse a mas tardar <strong>8 dias antes del evento</strong>.</p>
 
         <h2>${sec++}. COMPROMISOS DE ${emp.nombre.toUpperCase()}</h2>
         <p class="clausula"><strong>a)</strong> Presentarse puntualmente en los lugares y horarios acordados con el equipo profesional necesario para la cobertura del evento.</p>
@@ -653,7 +653,7 @@
         <p class="clausula"><strong>a)</strong> Liquidar el saldo restante en tiempo y forma segun lo establecido en la clausula de forma de pago.</p>
         <p class="clausula"><strong>b)</strong> Informar con al menos <strong>15 dias de anticipacion</strong> cualquier cambio en la fecha, hora o lugar del evento.</p>
         <p class="clausula"><strong>c)</strong> En caso de cancelacion, el monto del apartado <strong>no sera reembolsable</strong>. Si la cancelacion se realiza con menos de 7 dias de anticipacion, se cobrara el 50% del costo total.</p>
-        <p class="clausula"><strong>d)</strong> Facilitar el acceso y las condiciones necesarias para que el equipo de ${emp.nombre} pueda realizar su trabajo adecuadamente.</p>
+        <p class="clausula"><strong>d)</strong> Facilitar el acceso y las condiciones necesarias para que el equipo de ${emp.nombre} pueda realizar su trabajo adecuadamente, incluyendo <strong>2 lugares reservados en alguna de las mesas del evento</strong> para el equipo de trabajo.</p>
         <p class="clausula"><strong>e)</strong> Recoger el material entregable en un plazo no mayor a 30 dias despues de ser notificado de su disponibilidad.</p>
 
         ${notas ? `<h2>${sec++}. ACUERDOS ESPECIALES</h2><p class="clausula">${notas}</p>` : ''}
