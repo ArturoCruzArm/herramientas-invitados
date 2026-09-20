@@ -107,6 +107,123 @@
       .print-actions, .site-header, .site-footer { display: none !important; }
       @page { size: letter; margin: 10mm; }
     }
+
+    /* ===== Constructor de paquete personalizado ===== */
+    #builder-view { display: none; }
+    .builder-grupo {
+      border: 1px solid var(--color-border); border-radius: 8px;
+      margin-bottom: 0.8rem; overflow: hidden; background: var(--color-surface);
+    }
+    .builder-grupo > summary {
+      background: var(--color-bg); padding: 0.6rem 0.9rem; cursor: pointer;
+      font-weight: 600; font-size: 0.95rem; color: var(--color-primary);
+      list-style: none; display: flex; justify-content: space-between; align-items: center;
+    }
+    .builder-grupo > summary::-webkit-details-marker { display: none; }
+    .builder-grupo > summary::after { content: '\25BC'; font-size: 0.7rem; opacity: 0.6; }
+    .builder-grupo[open] > summary::after { content: '\25B2'; }
+    .builder-grupo .grupo-count {
+      background: var(--color-primary); color: #fff; border-radius: 10px;
+      padding: 0 0.5rem; font-size: 0.72rem; margin-left: auto; margin-right: 0.6rem;
+    }
+    .builder-grupo .grupo-count[data-n="0"] { display: none; }
+    .builder-body { padding: 0.5rem 0.7rem 0.8rem; }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: 26px minmax(150px, 1.6fr) 78px auto 110px 30px;
+      gap: 0.4rem; align-items: center;
+      padding: 0.45rem 0.2rem; border-bottom: 1px dashed var(--color-border);
+    }
+    .item-row:last-child { border-bottom: none; }
+    .item-row.is-on { background: rgba(6,68,32,0.05); border-radius: 6px; }
+    .item-row input[type="checkbox"] { accent-color: var(--color-primary); width: 18px; height: 18px; }
+    .item-row .item-label { font-size: 0.88rem; line-height: 1.25; }
+    .item-row .item-label small { display: block; color: var(--color-text-light); font-size: 0.72rem; }
+    .item-row input[type="number"], .item-row input[type="text"], .item-row select {
+      padding: 0.3rem 0.4rem; font-size: 0.82rem; border: 1px solid var(--color-border);
+      border-radius: 6px; background: #fff; width: 100%; min-width: 0;
+    }
+    .item-row .item-opts { display: flex; gap: 0.3rem; flex-wrap: wrap; min-width: 0; }
+    .item-row .item-opts select { width: auto; min-width: 110px; flex: 1 1 110px; }
+    .item-row .item-precio { text-align: right; }
+    .item-row .btn-remove {
+      background: none; border: none; color: var(--color-error);
+      font-size: 1.3rem; cursor: pointer; line-height: 1; padding: 0;
+    }
+    .item-row[data-libre="1"] .item-label { padding: 0; }
+    .item-row .col-head { font-size: 0.68rem; color: var(--color-text-light); text-transform: uppercase; letter-spacing: 0.04em; }
+    .item-row.row-head { padding: 0.15rem 0.2rem; border-bottom: 1px solid var(--color-border); }
+    @media (max-width: 640px) {
+      .item-row { grid-template-columns: 26px 1fr 30px; grid-template-areas: 'chk lbl del' '. opt opt' '. cant cant' '. pre pre'; }
+      .item-row > input[type="checkbox"] { grid-area: chk; }
+      .item-row .item-label { grid-area: lbl; }
+      .item-row .item-cant { grid-area: cant; }
+      .item-row .item-opts { grid-area: opt; }
+      .item-row .item-precio { grid-area: pre; }
+      .item-row .btn-remove { grid-area: del; }
+      .item-row .col-head { display: none; }
+    }
+
+    .builder-bar {
+      position: sticky; bottom: 0; background: var(--color-surface);
+      border-top: 2px solid var(--color-primary); padding: 0.7rem;
+      display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;
+      margin: 0 -1rem -1rem; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 10;
+    }
+    .builder-bar .bar-info { flex: 1; font-size: 0.88rem; min-width: 150px; }
+    .builder-bar .bar-info strong { color: var(--color-primary); font-size: 1.1rem; }
+
+    .preview-box {
+      background: var(--color-bg); border-left: 3px solid var(--color-primary);
+      padding: 0.7rem 0.9rem; border-radius: 6px; margin: 0.8rem 0;
+      font-size: 0.84rem; max-height: 200px; overflow-y: auto;
+    }
+    .preview-box ul { margin: 0.2rem 0 0 1.1rem; }
+    .preview-box li { margin-bottom: 0.15rem; }
+    .preview-box .vacio { color: var(--color-text-light); font-style: italic; }
+
+    .paquete-option.personalizado { border-style: dashed; border-color: var(--color-accent); }
+    .paquete-option.personalizado.selected { border-style: solid; border-color: var(--color-primary); }
+    .badge-custom {
+      background: var(--color-accent); color: #3a2c00; border-radius: 4px;
+      padding: 0 0.4rem; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    }
+
+    /* ===== Clausulas de proteccion ===== */
+    .clausula-item {
+      display: flex; gap: 0.5rem; align-items: flex-start;
+      padding: 0.45rem 0.5rem; border-radius: 6px;
+    }
+    .clausula-item:hover { background: var(--color-bg); }
+    .clausula-item input[type="checkbox"] { accent-color: var(--color-primary); margin-top: 0.25rem; width: 17px; height: 17px; flex: none; }
+    .clausula-item .cl-texto { font-size: 0.86rem; }
+    .clausula-item .cl-texto b { display: block; font-size: 0.9rem; }
+    .clausula-item .cl-texto small { color: var(--color-text-light); font-size: 0.76rem; }
+    .clausula-item.critica b::after { content: ' \2605'; color: var(--color-accent); }
+    .clausula-item .cl-detalle { margin-top: 0.25rem; }
+    .clausula-item .cl-detalle summary {
+      font-size: 0.74rem; color: var(--color-primary); cursor: pointer;
+      text-decoration: underline; list-style: none;
+    }
+    .clausula-item .cl-detalle summary::-webkit-details-marker { display: none; }
+    .clausula-item .cl-cuerpo {
+      font-size: 0.78rem; text-align: justify; color: var(--color-text-light);
+      background: #fff; border: 1px solid var(--color-border); border-radius: 6px;
+      padding: 0.5rem 0.6rem; margin-top: 0.3rem;
+    }
+    .clausula-item .cl-nota {
+      font-size: 0.76rem; background: #fff8e1; border-left: 3px solid var(--color-accent);
+      padding: 0.45rem 0.6rem; margin-top: 0.3rem; border-radius: 0 6px 6px 0; color: #5a4600;
+    }
+    .clausula-item label { cursor: pointer; }
+    .aviso-legal {
+      background: #fff8e1; border: 1px solid var(--color-accent); border-radius: 8px;
+      padding: 0.7rem 0.9rem; font-size: 0.8rem; color: #5a4600; margin-bottom: 0.8rem;
+    }
+
+    #contract-print .clausula-proteccion { margin: 5pt 0; text-align: justify; font-size: 10pt; }
+    #contract-print .nota-legal { font-size: 8.5pt; color: #444; font-style: italic; margin-top: 3pt; }
   </style>
 </head>
 <body>
@@ -254,6 +371,10 @@
               </ul>
             </div>
           </div>
+          <div style="margin-top:0.7rem;display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+            <button class="btn btn-outline" id="btn-personalizar" style="font-size:0.9rem;">&#9998; Personalizar paquete</button>
+            <span style="font-size:0.78rem;color:var(--color-text-light);">Arma el paquete a la medida: numero de fotos, tamanos, ampliaciones, horas de video y lo que necesites.</span>
+          </div>
         </div>
 
         <div class="form-section">
@@ -314,6 +435,36 @@
         </div>
 
         <div class="form-section">
+          <h3>Clausulas de proteccion</h3>
+          <div class="aviso-legal">
+            Las marcadas con <strong>&#9733;</strong> son las que mas te protegen ante danos a tu equipo y reclamos.
+            Estan redactadas para ser <strong>defendibles en Mexico</strong>: no intentan liberarte de toda
+            responsabilidad (eso lo anula el art. 90 fr. II de la LFPC), sino delimitar que si depende de ti y que no.
+            <strong>Revisalas con un abogado antes de usarlas en serie.</strong>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="clausula-hora-extra">Costo de hora extra ($)</label>
+              <input type="number" id="clausula-hora-extra" value="800" min="0" step="100">
+            </div>
+            <div class="form-group">
+              <label for="clausula-entrega-dias">Plazo de entrega (dias habiles)</label>
+              <input type="number" id="clausula-entrega-dias" value="60" min="1" step="5">
+            </div>
+            <div class="form-group">
+              <label for="clausula-resguardo-meses">Resguardo del material (meses)</label>
+              <input type="number" id="clausula-resguardo-meses" value="6" min="1" step="1">
+            </div>
+          </div>
+          <div style="display:flex;gap:0.5rem;margin:0.6rem 0;flex-wrap:wrap;">
+            <button class="btn btn-outline" id="btn-cl-todas" style="font-size:0.78rem;padding:0.3rem 0.7rem;">Marcar todas</button>
+            <button class="btn btn-outline" id="btn-cl-ninguna" style="font-size:0.78rem;padding:0.3rem 0.7rem;">Desmarcar todas</button>
+            <button class="btn btn-outline" id="btn-cl-criticas" style="font-size:0.78rem;padding:0.3rem 0.7rem;">Solo las criticas &#9733;</button>
+          </div>
+          <div id="clausulas-list"></div>
+        </div>
+
+        <div class="form-section">
           <h3>Notas adicionales (opcional)</h3>
           <div class="form-group">
             <textarea id="notas" rows="3" style="width:100%;padding:0.6rem;border:1px solid var(--color-border);border-radius:8px;font-family:inherit;font-size:0.95rem;" placeholder="Cualquier acuerdo especial..."></textarea>
@@ -322,6 +473,46 @@
 
         <div class="btn-group" style="justify-content:center">
           <button class="btn btn-primary" id="btn-generar" style="font-size:1.1rem;padding:0.8rem 2.5rem;">Generar Contrato</button>
+        </div>
+      </div>
+
+      <!-- SECCION 1B: CONSTRUCTOR DE PAQUETE PERSONALIZADO -->
+      <div class="tool-container" id="builder-view">
+        <h2>Personalizar paquete</h2>
+        <p style="font-size:0.85rem;color:var(--color-text-light);margin-bottom:0.8rem;">
+          Marca lo que incluye el paquete y ajusta cantidad, tamano y precio de cada concepto.
+          Lo que dejes sin marcar no aparece en el contrato.
+        </p>
+
+        <div class="form-row" style="align-items:flex-end;">
+          <div class="form-group">
+            <label for="custom-nombre">Nombre del paquete</label>
+            <input type="text" id="custom-nombre" value="Paquete Personalizado" placeholder="Ej: Paquete Master XV">
+          </div>
+          <div class="form-group">
+            <label for="custom-base">Cargo base / ajuste ($)</label>
+            <input type="number" id="custom-base" value="0" step="100">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="custom-preset">Partir de un paquete existente</label>
+          <select id="custom-preset">
+            <option value="">(empezar en blanco)</option>
+          </select>
+        </div>
+
+        <div id="builder-grupos"></div>
+
+        <h3 style="font-size:0.95rem;color:var(--color-primary);margin:1rem 0 0.4rem;">Vista previa de lo que se imprimira</h3>
+        <div class="preview-box" id="builder-preview"></div>
+
+        <div class="builder-bar">
+          <div class="bar-info">
+            <span id="builder-count">0</span> conceptos &bull; Precio sugerido: <strong>$<span id="builder-total">0</span></strong>
+          </div>
+          <button class="btn btn-outline" id="btn-builder-cancelar">Cancelar</button>
+          <button class="btn btn-primary" id="btn-builder-aceptar">Aceptar personalizacion</button>
         </div>
       </div>
 
@@ -447,19 +638,257 @@
       }
     };
 
+
+    // =====================================================================
+    // CATALOGO DE CONCEPTOS PARA PAQUETE PERSONALIZADO
+    // tpl admite {cant}, {nombreDeOpcion} y {p:singular|plural}
+    // =====================================================================
+    const CATALOGO = [
+      { grupo: 'Fotografia impresa', items: [
+        { id: 'fotos_impresas', label: 'Fotografias impresas', cant: 100, precio: 0,
+          tpl: '{cant} {p:fotografia|fotografias} {p:impresa|impresas} en formato {tam}',
+          opts: { tam: { label: 'Tamano', values: ['5x7" (13x18 cm)', '6x8" (15x20 cm)', '4x6" (10x15 cm)', '8x10" (20x25 cm)', '8x12" (20x30 cm)'] } } },
+        { id: 'ampliacion', label: 'Ampliacion', cant: 1, precio: 0,
+          tpl: '{cant} {p:ampliacion|ampliaciones} de {tam} {acabado}',
+          opts: { tam: { label: 'Tamano', values: ['11x14" (28x36 cm)', '40x50 cm', '50x40 cm', '50x60 cm', '60x80 cm', '70x100 cm'] },
+                  acabado: { label: 'Acabado', values: ['con marco', 'retocada en marco faldon', 'con marco faldon', 'montada en bastidor', 'sin marco (solo impresion)'] } } },
+        { id: 'fotolibro', label: 'Fotolibro', cant: 1, precio: 0,
+          tpl: '{cant} {p:fotolibro|fotolibros} de lujo {tam}, {paginas} paginas',
+          opts: { tam: { label: 'Tamano', values: ['20x30 cm', '30x30 cm', '30x60 cm', '40x60 cm'] },
+                  paginas: { label: 'Paginas', values: ['20', '30', '40', '60'] } } },
+        { id: 'caja', label: 'Caja para fotografias', cant: 1, precio: 0,
+          tpl: '{cant} caja {tipo}',
+          opts: { tipo: { label: 'Tipo', values: ['impresa para las fotografias', 'de madera para fotografias', 'de madera grabada', 'impresa para USB y fotografias'] } } },
+        { id: 'digitales', label: 'Fotografias en digital', sinCant: true, precio: 0,
+          tpl: 'Todas las fotografias del evento en digital, {entrega}',
+          opts: { entrega: { label: 'Entrega', values: ['en memoria USB', 'en galeria web descargable', 'en USB y galeria web'] } } },
+        { id: 'collage', label: 'Mi historia en fotos / collage de crecimiento', sinCant: true, precio: 0,
+          tpl: 'Collage de crecimiento "Mi historia en fotos"' },
+      ] },
+      { grupo: 'Sesiones y cobertura', items: [
+        { id: 'sesion', label: 'Sesion fotografica', cant: 1, precio: 0,
+          tpl: '{cant} {p:sesion fotografica|sesiones fotograficas} {momento}, en {locs} {p@locs:locacion|locaciones}',
+          opts: { momento: { label: 'Momento', values: ['previa al evento', 'el dia del evento', 'previa y el dia del evento'] },
+                  locs: { label: 'Locaciones', values: ['1', '2', '3'] } } },
+        { id: 'cob_ceremonia', label: 'Cobertura de ceremonia / misa', cant: 1, precio: 0,
+          tpl: 'Cobertura de {cant} {p:hora|horas} en la ceremonia religiosa o civil' },
+        { id: 'cob_fiesta', label: 'Cobertura de recepcion', cant: 6, precio: 0,
+          tpl: 'Cobertura de {cant} {p:hora|horas} en la recepcion' },
+        { id: 'cob_preparativos', label: 'Cobertura de preparativos', cant: 2, precio: 0,
+          tpl: 'Cobertura de {cant} {p:hora|horas} de preparativos en casa' },
+      ] },
+      { grupo: 'Video', items: [
+        { id: 'pelicula', label: 'Pelicula master', cant: 2, precio: 0,
+          tpl: 'Pelicula master de {cant} {p:hora|horas} aprox. en memoria USB, formato {formato}',
+          opts: { formato: { label: 'Formato', values: ['FHD 1080p', '4K UHD'] } } },
+        { id: 'duplicado', label: 'Duplicado de la pelicula', cant: 1, precio: 0,
+          tpl: '{cant} {p:duplicado|duplicados} de la pelicula en memoria USB' },
+        { id: 'clip_resumen', label: 'Clip resumen del evento', cant: 1, precio: 0,
+          tpl: '{cant} clip de video resumen del evento, editado y musicalizado' },
+        { id: 'videoclip_sesion', label: 'Videoclip de la sesion', cant: 1, precio: 0,
+          tpl: '{cant} {p:videoclip|videoclips} de la sesion fotografica, editado y musicalizado' },
+        { id: 'clip_fotos', label: 'Clip con todas las fotos', sinCant: true, precio: 0,
+          tpl: 'Clip de video con todas las fotografias del evento, editado y musicalizado' },
+        { id: 'proyeccion', label: 'Proyeccion en el salon', sinCant: true, precio: 0,
+          tpl: 'Proyeccion en el salon: collage de crecimiento y videoclip de la sesion' },
+        { id: 'dron', label: 'Tomas aereas con dron', sinCant: true, precio: 0,
+          tpl: 'Tomas aereas con dron, video en formato {formato}',
+          opts: { formato: { label: 'Formato', values: ['FHD 1080p', '4K UHD'] } } },
+        { id: 'canciones', label: 'Canciones producidas', cant: 6, precio: 0,
+          tpl: '{cant} {p:cancion producida|canciones producidas} para la edicion del material' },
+      ] },
+      { grupo: 'Efectos y servicios en el evento', items: [
+        { id: 'co2', label: 'Maquina de CO2', sinCant: true, precio: 0,
+          tpl: 'Maquina de CO2 para lanzar papel picado' },
+        { id: 'ilum_vals', label: 'Iluminacion para el vals', sinCant: true, precio: 0,
+          tpl: 'Iluminacion profesional para el vals' },
+        { id: 'cabina', label: 'Cabina de fotos', cant: 3, precio: 0,
+          tpl: '{cant} {p:hora|horas} de cabina de fotos con impresion en sitio' },
+        { id: 'pantalla', label: 'Pantalla y proyector', sinCant: true, precio: 0,
+          tpl: 'Pantalla y proyector para la proyeccion durante el evento' },
+      ] },
+      { grupo: 'Entregables digitales y extras', items: [
+        { id: 'invitacion_web', label: 'Invitacion web', sinCant: true, precio: 0,
+          tpl: 'Invitacion web personalizada con confirmacion de asistencia' },
+        { id: 'usb_extra', label: 'Memorias USB adicionales', cant: 1, precio: 0,
+          tpl: '{cant} {p:memoria USB adicional|memorias USB adicionales} con el material completo' },
+        { id: 'galeria', label: 'Galeria web privada', sinCant: true, precio: 0,
+          tpl: 'Galeria web privada para seleccion y descarga, vigente {meses} meses',
+          opts: { meses: { label: 'Vigencia', values: ['3', '6', '12'] } } },
+        { id: 'retoque', label: 'Retoque avanzado', cant: 10, precio: 0,
+          tpl: '{cant} {p:fotografia|fotografias} con retoque avanzado de piel y fondo' },
+      ] },
+    ];
+
+    // Paquetes existentes traducidos a conceptos del catalogo
+    const PRESETS = {
+      paqueteb: [
+        { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 6 },
+        { id: 'pelicula', cant: 3, opts: { formato: 'FHD 1080p' } },
+        { id: 'duplicado', cant: 1 }, { id: 'clip_resumen', cant: 1 },
+        { id: 'fotos_impresas', cant: 85, opts: { tam: '6x8" (15x20 cm)' } },
+        { id: 'ampliacion', cant: 1, opts: { tam: '50x40 cm', acabado: 'retocada en marco faldon' } },
+        { id: 'clip_fotos' }, { id: 'co2' }, { id: 'ilum_vals' },
+        { id: 'dron', opts: { formato: 'FHD 1080p' } }, { id: 'collage' },
+      ],
+      fotografia: [
+        { id: 'sesion', cant: 1, opts: { momento: 'previa al evento', locs: '1' } },
+        { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 6 },
+        { id: 'fotos_impresas', cant: 100, opts: { tam: '5x7" (13x18 cm)' } },
+        { id: 'ampliacion', cant: 1, opts: { tam: '50x60 cm', acabado: 'con marco' } },
+        { id: 'caja', cant: 1, opts: { tipo: 'impresa para las fotografias' } },
+        { id: 'digitales', opts: { entrega: 'en memoria USB' } }, { id: 'collage' },
+      ],
+      basico: [
+        { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 4 },
+        { id: 'fotos_impresas', cant: 50, opts: { tam: '5x7" (13x18 cm)' } },
+        { id: 'pelicula', cant: 2, opts: { formato: '4K UHD' } },
+        { id: 'ampliacion', cant: 1, opts: { tam: '11x14" (28x36 cm)', acabado: 'con marco' } },
+        { id: 'caja', cant: 1, opts: { tipo: 'impresa para USB y fotografias' } },
+        { id: 'collage' },
+      ],
+      completo: [
+        { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 6 },
+        { id: 'fotos_impresas', cant: 100, opts: { tam: '5x7" (13x18 cm)' } },
+        { id: 'pelicula', cant: 3, opts: { formato: '4K UHD' } },
+        { id: 'proyeccion' },
+        { id: 'ampliacion', cant: 1, opts: { tam: '50x60 cm', acabado: 'con marco' } },
+        { id: 'collage' },
+      ],
+      premium: [
+        { id: 'sesion', cant: 2, opts: { momento: 'previa y el dia del evento', locs: '2' } },
+        { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 8 },
+        { id: 'fotos_impresas', cant: 200, opts: { tam: '5x7" (13x18 cm)' } },
+        { id: 'fotolibro', cant: 1, opts: { tam: '30x60 cm', paginas: '30' } },
+        { id: 'pelicula', cant: 3, opts: { formato: '4K UHD' } },
+        { id: 'proyeccion' },
+        { id: 'ampliacion', cant: 1, opts: { tam: '60x80 cm', acabado: 'con marco' } },
+        { id: 'caja', cant: 1, opts: { tipo: 'de madera para fotografias' } },
+        { id: 'collage' },
+      ],
+    };
+
+    // =====================================================================
+    // CLAUSULAS DE PROTECCION
+    // {E} = nombre de la empresa, {HORA_EXTRA}, {DIAS}, {MESES}
+    // critica: las que mas te protegen ante dano a equipo y reclamos
+    // =====================================================================
+    const CLAUSULAS = [
+      { id: 'efectos', critica: true, def: true,
+        titulo: 'Equipos de efectos especiales: laser, humo, chispas y pirotecnia',
+        resumen: 'El cliente responde si su DJ, el salon o un invitado te queman el sensor.',
+        texto: 'EL CLIENTE manifiesta que conoce, y hara del conocimiento del recinto, del DJ, del grupo musical y de cualquier proveedor de efectos especiales contratado por el o por el recinto, que los equipos de laser, humo denso, chispas frias, CO2 y pirotecnia deben operarse sin dirigir haces, chispas o descargas hacia el area de trabajo, los invitados ni el equipo fotografico y de video. La radiacion laser dana de forma permanente e irreparable los sensores de camara y las lentes; dicho dano no es cubierto por la garantia de ningun fabricante y no es perceptible a simple vista en el momento en que ocurre. En caso de dano al equipo de {E} causado por EL CLIENTE, por sus invitados o por los proveedores contratados por el o por el recinto, EL CLIENTE respondera por la reparacion o reposicion del equipo afectado conforme al presupuesto del centro de servicio autorizado, asi como por la renta del equipo sustituto necesario para concluir la cobertura. {E} podra suspender la grabacion o la toma fotografica en el area afectada mientras persista el riesgo, sin que dicha suspension constituya incumplimiento del presente contrato, y lo hara del conocimiento de EL CLIENTE en el momento.',
+        nota: 'Se apoya en la responsabilidad civil por hecho propio y por las personas de las que se responde (Codigo Civil del Estado de Guanajuato, arts. 1399 y 1402) y en la NOM-013-STPS-1993 sobre radiaciones no ionizantes. No cae en la prohibicion del art. 90 fr. III de la LFPC porque no traslada al consumidor una responsabilidad del proveedor: le atribuye la suya propia.' },
+
+      { id: 'condiciones', critica: true, def: true,
+        titulo: 'Condiciones minimas de trabajo',
+        resumen: 'Acceso, luz, alimentos y lugar seguro para el equipo.',
+        texto: 'EL CLIENTE se obliga a proporcionar al personal de {E}: acceso libre y oportuno a los lugares de la ceremonia y de la recepcion; al menos un contacto de energia electrica de 110 V disponible durante todo el evento; dos lugares sentados con alimentos en alguna de las mesas del evento; y un espacio seguro para resguardar el equipo. Cuando el evento se realice total o parcialmente en exteriores, EL CLIENTE proveera un area techada o un resguardo para el equipo en caso de lluvia. La falta de estas condiciones puede reducir el material obtenido sin responsabilidad para {E}.' },
+
+      { id: 'restricciones', def: true,
+        titulo: 'Restricciones del recinto y de la ceremonia',
+        resumen: 'Si el templo prohibe flash o te fija un lugar, no es tu culpa.',
+        texto: '{E} no sera responsable por tomas no obtenidas a causa de restricciones impuestas por el templo, el recinto o sus coordinadores, tales como prohibicion de flash, prohibicion de acceso a determinadas areas, ubicaciones fijas obligatorias o limites de horario, ni por condiciones de iluminacion ajenas a su control. En esos supuestos se entregara el mejor material tecnicamente posible dentro de las condiciones permitidas.' },
+
+      { id: 'terceros', def: true,
+        titulo: 'Interferencia de invitados y de otros proveedores',
+        resumen: 'Celulares, tios con tablet y otro fotografo tapando la toma.',
+        texto: 'EL CLIENTE reconoce que la presencia de otros fotografos, videografos o invitados con telefonos, tabletas o camaras puede obstruir fisicamente momentos clave del evento. {E} no sera responsable por tomas perdidas o parcialmente obstruidas por la intervencion de terceros. Si EL CLIENTE desea una ceremonia libre de dispositivos, debera anunciarlo por si mismo o a traves del oficiante al inicio de la misma.' },
+
+      { id: 'retrasos', critica: true, def: true,
+        titulo: 'Retrasos del evento y horas extra',
+        resumen: 'Tu reloj corre desde la hora contratada, no desde que empiezan.',
+        texto: 'La cobertura contratada corre a partir de la hora de inicio pactada en este contrato, aun cuando el evento comience despues por causas ajenas a {E}. El tiempo adicional que EL CLIENTE solicite se cobrara a razon de {HORA_EXTRA} por hora o fraccion, pagadero el mismo dia del evento y sujeto a la disponibilidad del personal. {E} hara del conocimiento de EL CLIENTE el inicio del tiempo extra antes de generarlo.' },
+
+      { id: 'falla_equipo', critica: true, def: true,
+        titulo: 'Fallas tecnicas y limite de responsabilidad',
+        resumen: 'Si falla el equipo, defines TU el remedio, en vez de que lo defina un juez.',
+        texto: '{E} trabaja con equipo de respaldo y realiza copias del material en mas de un dispositivo. No obstante, ante falla, robo o perdida del equipo o de los archivos por causas no imputables a la negligencia de {E}, y una vez agotados los respaldos disponibles, la responsabilidad de {E} se limitara, a eleccion de EL CLIENTE, a: (i) repetir la sesion o el servicio que resulte materialmente repetible; (ii) bonificar la parte proporcional del servicio no prestado, bonificacion que en ningun caso sera menor al veinte por ciento del precio pagado por ese concepto; o (iii) devolver lo pagado por el concepto no entregado. Lo anterior se entiende sin perjuicio de la indemnizacion que legalmente corresponda por danos y perjuicios.',
+        nota: 'El minimo de 20% y la salvedad de danos y perjuicios provienen del art. 92 TER de la LFPC. Una clausula que dijera "no me hago responsable de nada" se tendria por no puesta conforme al art. 90 fr. II y te dejaria sin ningun limite pactado.' },
+
+      { id: 'fuerza_mayor', critica: true, def: true,
+        titulo: 'Caso fortuito y fuerza mayor',
+        resumen: 'Lluvia, apagon, bloqueo, enfermedad: se reprograma, no se indemniza.',
+        texto: 'Ninguna de las partes sera responsable por el incumplimiento derivado de caso fortuito o fuerza mayor, entendiendo por tales los fenomenos meteorologicos, los cortes de energia electrica, los bloqueos o cierres de vialidades, los siniestros, la enfermedad grave o el accidente del personal, las disposiciones de autoridad y la suspension general de actividades. En estos supuestos el servicio se reprogramara a una fecha de comun acuerdo, sin penalizacion para ninguna de las partes. Si el impedimento es atribuible a {E} y la fecha no admite reprogramacion, {E} podra sustituir a su personal por profesionales de nivel equivalente o devolver las cantidades recibidas por los servicios no prestados.' },
+
+      { id: 'reserva_fecha', critica: true, def: true,
+        titulo: 'Reserva de fecha, cancelacion y reprogramacion',
+        resumen: 'Justifica por que el apartado NO se devuelve: cubres un solo evento al dia.',
+        texto: '{E} cubre un solo evento por dia, por lo que al celebrarse este contrato bloquea la fecha del evento y rechaza cualquier otra contratacion para ese mismo dia. Por esa razon, el monto entregado como apartado tiene naturaleza de pena convencional por reserva de fecha y no sera reembolsable en caso de cancelacion por parte de EL CLIENTE. Si la cancelacion ocurre dentro de los treinta dias naturales previos al evento, EL CLIENTE cubrira ademas el cincuenta por ciento del saldo pendiente. La reprogramacion a una fecha distinta se aceptara sin costo por una sola ocasion, siempre que se solicite con mas de treinta dias naturales de anticipacion y {E} tenga disponibilidad en la nueva fecha.',
+        nota: 'Explicar la exclusividad de fecha es lo que vuelve defendible el "no reembolsable": deja de parecer una prestacion desproporcionada de las que prohibe el art. 85 de la LFPC y pasa a ser la compensacion de un dano real y demostrable.' },
+
+      { id: 'liquidacion', def: true,
+        titulo: 'Liquidacion del saldo',
+        resumen: 'Si no liquidan 8 dias antes, no te presentas.',
+        texto: 'El saldo debera liquidarse a mas tardar ocho dias naturales antes de la fecha del evento. La falta de liquidacion en ese plazo faculta a {E} a no presentarse al evento sin responsabilidad alguna, conservando las cantidades recibidas como pena convencional por la reserva de la fecha.' },
+
+      { id: 'conducta', def: true,
+        titulo: 'Seguridad y trato al personal',
+        resumen: 'Si hay agresion o riesgo, te retiras sin devolver nada.',
+        texto: '{E} podra retirar a su personal y su equipo del evento, sin reembolso y sin responsabilidad, cuando se presenten agresiones fisicas o verbales, acoso, amenazas, rinas, uso de armas o cualquier condicion que ponga en riesgo la integridad del personal o del equipo. En ese caso se entregara el material obtenido hasta el momento del retiro.' },
+
+      { id: 'derechos_autor', critica: true, def: true,
+        titulo: 'Derechos de autor y licencia de uso',
+        resumen: 'Las fotos son tuyas; el cliente recibe licencia de uso personal.',
+        texto: '{E} conserva la titularidad de los derechos patrimoniales de autor sobre las fotografias y videos producidos, en terminos de la Ley Federal del Derecho de Autor. EL CLIENTE recibe una licencia perpetua, gratuita y no exclusiva para usar, reproducir, imprimir y publicar el material con fines personales y familiares, incluidas sus redes sociales. Queda prohibida la venta, cesion o explotacion comercial del material por parte de EL CLIENTE o de terceros, asi como su publicacion suprimiendo el credito de {E}. No se entregan archivos en bruto, descartes ni proyectos de edicion.' },
+
+      { id: 'portafolio', def: true, excluye: 'portafolio_no',
+        titulo: 'Uso promocional del material (el cliente SI autoriza)',
+        resumen: 'Tu permiso para portafolio, redes y concursos.',
+        texto: 'EL CLIENTE autoriza a {E} a utilizar imagenes y fragmentos de video del evento en su portafolio, sitio web, redes sociales, material impreso y concursos del ramo. En terminos del articulo 87 de la Ley Federal del Derecho de Autor, al dejarse fotografiar mediante pago se presume otorgado este consentimiento en los terminos y para los fines aqui pactados. EL CLIENTE podra revocar esta autorizacion mediante aviso por escrito, sin efecto retroactivo sobre el material ya publicado o impreso.',
+        nota: 'El art. 87 de la LFDA es el que te da la presuncion de consentimiento cuando hubo pago de por medio. Dejar por escrito la revocacion hacia adelante evita el reclamo de "nunca di permiso".' },
+
+      { id: 'portafolio_no', def: false, excluye: 'portafolio',
+        titulo: 'Uso promocional del material (el cliente NO autoriza)',
+        resumen: 'Usala cuando el cliente pide privacidad. Suele ir con costo extra.',
+        texto: 'EL CLIENTE no autoriza el uso promocional del material. {E} se obliga a no publicar imagenes ni video del evento en portafolio, sitio web, redes sociales ni material impreso, y conservara el material unicamente para efectos de resguardo y entrega.' },
+
+      { id: 'respaldo', def: true,
+        titulo: 'Respaldo y conservacion del material',
+        resumen: 'Pones fecha limite a tu obligacion de guardar los archivos.',
+        texto: '{E} resguardara el material digital del evento durante {MESES} meses contados a partir de la fecha de entrega. Transcurrido ese plazo podra eliminarlo definitivamente sin responsabilidad alguna. EL CLIENTE se obliga a respaldar por su cuenta el material recibido; la reposicion de memorias USB o de archivos solicitada despues del plazo de resguardo tendra costo adicional y estara sujeta a disponibilidad.' },
+
+      { id: 'entrega', def: true,
+        titulo: 'Entrega, revisiones y recoleccion',
+        resumen: 'Una ronda de cambios, no cinco. Y fecha limite para recoger.',
+        texto: 'El material se entregara en un plazo no mayor a {DIAS} dias habiles posteriores al evento. EL CLIENTE tendra derecho a una ronda de correcciones sobre la edicion de video, consistente en cambios de orden, cortes o musica, dentro de los quince dias naturales siguientes a la entrega del primer corte; las correcciones posteriores o los cambios de concepto se cotizaran por separado. EL CLIENTE debera recoger el material fisico dentro de los treinta dias naturales siguientes a la notificacion de su disponibilidad; transcurridos seis meses sin ser recogido, {E} podra disponer de el.' },
+
+      { id: 'seleccion', def: true,
+        titulo: 'Seleccion e impresion de fotografias',
+        resumen: 'Si no seleccionan a tiempo, seleccionas tu e imprimes.',
+        texto: 'La seleccion de las fotografias a imprimir corresponde a EL CLIENTE y debera realizarse dentro de los treinta dias naturales siguientes a la entrega de la galeria digital. Si no la realiza en ese plazo, {E} podra efectuar la seleccion con criterio profesional y proceder a la impresion, sin que ello genere derecho a reimpresion sin costo. Los colores impresos pueden presentar variaciones respecto de los mostrados en pantallas no calibradas; dicha variacion no constituye defecto del producto.' },
+
+      { id: 'criterio', def: true,
+        titulo: 'Criterio creativo y estilo',
+        resumen: 'Contrataron tu estilo; la edicion es criterio profesional tuyo.',
+        texto: 'EL CLIENTE manifiesta haber revisado el trabajo previo de {E} y aceptar su estilo fotografico y de edicion. La seleccion de tomas, los encuadres, la correccion de color y la musicalizacion corresponden al criterio profesional de {E}. Las diferencias de apreciacion sobre el estilo no constituyen incumplimiento ni defecto del servicio.' },
+
+      { id: 'datos', def: true,
+        titulo: 'Proteccion de datos personales',
+        resumen: 'Aviso de privacidad basico dentro del contrato.',
+        texto: 'Los datos personales de EL CLIENTE se tratan unicamente para la prestacion del servicio, su facturacion y el contacto relacionado con el evento, conforme a la Ley Federal de Proteccion de Datos Personales en Posesion de los Particulares. No se comparten con terceros, salvo con los proveedores estrictamente necesarios para elaborar los entregables, tales como el laboratorio de impresion o el taller de enmarcado.' },
+
+      { id: 'jurisdiccion', def: true,
+        titulo: 'Solucion de controversias',
+        resumen: 'Conciliacion primero; tribunales de Leon despues.',
+        texto: 'Para cualquier controversia derivada de este contrato, las partes buscaran primero una solucion directa y, en su caso, acudiran a la conciliacion ante la Procuraduria Federal del Consumidor o ante el Centro Estatal de Justicia Alternativa. De no llegarse a un acuerdo, ambas partes se someten a los tribunales de la ciudad de Leon, Guanajuato. Ninguna disposicion de este contrato implica renuncia a los derechos que la Ley Federal de Proteccion al Consumidor concede a EL CLIENTE.',
+        nota: 'El art. 90 fr. VI de la LFPC anula cualquier clausula que obligue al consumidor a renunciar a la ley o lo someta a tribunales extranjeros. Reconocerlo de forma expresa le quita un argumento facil a quien quiera tumbar el contrato completo.' },
+    ];
+
     let selectedPaquete = null;
 
     // ===== Seleccion de paquete =====
-    document.querySelectorAll('.paquete-option').forEach(el => {
+    function bindPaqueteOption(el) {
       el.addEventListener('click', e => {
-        // No seleccionar si hizo clic en el input de precio
-        if (e.target.classList.contains('precio-edit')) return;
-        document.querySelectorAll('.paquete-option').forEach(e => e.classList.remove('selected'));
+        // No seleccionar si hizo clic en el input de precio o en un boton de la tarjeta
+        if (e.target.classList.contains('precio-edit') || e.target.closest('button')) return;
+        document.querySelectorAll('.paquete-option').forEach(o => o.classList.remove('selected'));
         el.classList.add('selected');
         selectedPaquete = el.dataset.paquete;
         updateResumen();
       });
-    });
+    }
+    document.querySelectorAll('.paquete-option').forEach(bindPaqueteOption);
 
     // Actualizar al cambiar precio de paquete
     document.querySelectorAll('.precio-edit').forEach(input => {
@@ -470,6 +899,334 @@
     function getPrecioPaquete(key) {
       const input = document.querySelector(`.precio-edit[data-paquete="${key}"]`);
       return input ? (parseInt(input.value) || 0) : 0;
+    }
+
+
+    // =====================================================================
+    // CONSTRUCTOR DE PAQUETE PERSONALIZADO
+    // =====================================================================
+    const ITEM_BY_ID = {};
+    CATALOGO.forEach(g => g.items.forEach(it => { ITEM_BY_ID[it.id] = it; }));
+
+    // Convierte una plantilla en la linea que se imprime en el contrato.
+    function frase(tpl, cant, opts) {
+      return tpl
+        .replace(/\{p@(\w+):([^|}]*)\|([^}]*)\}/g, (m, k, s, p) => (parseInt(opts[k]) === 1 ? s : p))
+        .replace(/\{p:([^|}]*)\|([^}]*)\}/g, (m, s, p) => (cant === 1 ? s : p))
+        .replace(/\{cant\}/g, cant)
+        .replace(/\{(\w+)\}/g, (m, k) => (opts[k] !== undefined ? opts[k] : ''))
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+    }
+
+    // Los tamanos llevan comillas (5x7") y romperian los atributos HTML
+    function escAttr(t) {
+      return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    let libreCounter = 0;
+
+    function filaItem(it) {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      row.dataset.id = it.id;
+
+      const optsHTML = it.opts
+        ? Object.keys(it.opts).map(k => {
+            const o = it.opts[k];
+            return `<select class="item-opt" data-key="${k}" title="${escAttr(o.label)}">` +
+              o.values.map(v => `<option value="${escAttr(v)}">${escAttr(v)}</option>`).join('') + '</select>';
+          }).join('')
+        : '';
+
+      row.innerHTML = `
+        <input type="checkbox" class="item-check">
+        <div class="item-label">${it.label}${it.hint ? `<small>${it.hint}</small>` : ''}</div>
+        <div class="item-cant">${it.sinCant ? '<span class="col-head">incluido</span>'
+          : `<input type="number" class="item-num" value="${it.cant}" min="1" step="1">`}</div>
+        <div class="item-opts">${optsHTML}</div>
+        <div class="item-precio"><input type="number" class="item-pre" value="${it.precio || ''}" min="0" step="50" placeholder="$ precio"></div>
+        <span></span>
+      `;
+      bindFila(row);
+      return row;
+    }
+
+    function filaLibre(texto, cant, precio) {
+      libreCounter++;
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      row.dataset.libre = '1';
+      row.dataset.id = 'libre_' + libreCounter;
+      row.innerHTML = `
+        <input type="checkbox" class="item-check" checked>
+        <div class="item-label"><input type="text" class="item-texto" placeholder="Describe el concepto tal como debe aparecer en el contrato" value="${(texto || '').replace(/"/g, '&quot;')}"></div>
+        <div class="item-cant"><input type="number" class="item-num" value="${cant || 1}" min="1" step="1"></div>
+        <div class="item-opts"><span class="col-head">Se imprime: "N x tu texto"</span></div>
+        <div class="item-precio"><input type="number" class="item-pre" value="${precio || ''}" min="0" step="50" placeholder="$ precio"></div>
+        <button class="btn-remove" title="Quitar">&times;</button>
+      `;
+      bindFila(row);
+      row.querySelector('.btn-remove').addEventListener('click', () => { row.remove(); updateBuilder(); });
+      return row;
+    }
+
+    function bindFila(row) {
+      row.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', () => {
+          row.classList.toggle('is-on', row.querySelector('.item-check').checked);
+          updateBuilder();
+        });
+        el.addEventListener('change', () => {
+          row.classList.toggle('is-on', row.querySelector('.item-check').checked);
+          updateBuilder();
+        });
+      });
+    }
+
+    function renderBuilder() {
+      const cont = document.getElementById('builder-grupos');
+      cont.innerHTML = '';
+      CATALOGO.forEach((g, i) => {
+        const det = document.createElement('details');
+        det.className = 'builder-grupo';
+        if (i < 3) det.open = true;
+        det.innerHTML = `<summary>${g.grupo}<span class="grupo-count" data-n="0">0</span></summary><div class="builder-body"></div>`;
+        const body = det.querySelector('.builder-body');
+        const head = document.createElement('div');
+        head.className = 'item-row row-head';
+        head.innerHTML = '<span></span><span class="col-head">Concepto</span>' +
+          '<span class="col-head">Cantidad</span><span class="col-head">Tamano / variante</span>' +
+          '<span class="col-head" style="text-align:right">Precio</span><span></span>';
+        body.appendChild(head);
+        g.items.forEach(it => body.appendChild(filaItem(it)));
+        cont.appendChild(det);
+      });
+
+      const det = document.createElement('details');
+      det.className = 'builder-grupo';
+      det.open = true;
+      det.innerHTML = `<summary>Otro (escribelo tu)<span class="grupo-count" data-n="0">0</span></summary>
+        <div class="builder-body"><div id="libres-list"></div>
+        <button class="btn btn-outline" id="btn-add-libre" style="font-size:0.82rem;margin-top:0.5rem;">+ Agregar concepto libre</button></div>`;
+      cont.appendChild(det);
+      det.querySelector('#btn-add-libre').addEventListener('click', () => {
+        const row = filaLibre('', 1, 0);
+        document.getElementById('libres-list').appendChild(row);
+        row.querySelector('.item-texto').focus();
+        updateBuilder();
+      });
+    }
+
+    // Lee el estado del constructor y devuelve las lineas listas para el contrato
+    function readBuilder() {
+      const out = [];
+      document.querySelectorAll('#builder-grupos .item-row').forEach(row => {
+        const chk = row.querySelector('.item-check');
+        if (!chk || !chk.checked) return;
+        const numEl = row.querySelector('.item-num');
+        const cant = numEl ? (parseInt(numEl.value) || 1) : 1;
+        const precio = parseInt(row.querySelector('.item-pre').value) || 0;
+
+        if (row.dataset.libre === '1') {
+          const t = row.querySelector('.item-texto').value.trim();
+          if (!t) return;
+          out.push({ texto: cant > 1 ? `${cant} ${t}` : t, precio });
+          return;
+        }
+        const it = ITEM_BY_ID[row.dataset.id];
+        if (!it) return;
+        const opts = {};
+        row.querySelectorAll('.item-opt').forEach(s => { opts[s.dataset.key] = s.value; });
+        out.push({ texto: frase(it.tpl, cant, opts), precio });
+      });
+      return out;
+    }
+
+    function updateBuilder() {
+      document.querySelectorAll('#builder-grupos .builder-grupo').forEach(g => {
+        const n = g.querySelectorAll('.item-check:checked').length;
+        const badge = g.querySelector('.grupo-count');
+        badge.textContent = n; badge.dataset.n = n;
+      });
+      const items = readBuilder();
+      const base = parseInt(document.getElementById('custom-base').value) || 0;
+      const total = items.reduce((s, i) => s + i.precio, 0) + base;
+      document.getElementById('builder-count').textContent = items.length;
+      document.getElementById('builder-total').textContent = total.toLocaleString();
+      const prev = document.getElementById('builder-preview');
+      prev.innerHTML = items.length
+        ? '<ul>' + items.map(i => `<li>${i.texto}${i.precio ? ` <span style="color:var(--color-text-light)">(${formatMoneda(i.precio)})</span>` : ''}</li>`).join('') + '</ul>'
+        : '<span class="vacio">Todavia no marcas ningun concepto.</span>';
+      return { items, total };
+    }
+
+    function cargarPreset(key) {
+      document.querySelectorAll('#builder-grupos .item-row[data-libre="1"]').forEach(r => r.remove());
+      document.querySelectorAll('#builder-grupos .item-row').forEach(row => {
+        const chk = row.querySelector('.item-check');
+        if (!chk) return;
+        chk.checked = false;
+        row.classList.remove('is-on');
+      });
+      const preset = PRESETS[key];
+      if (preset) {
+        preset.forEach(p => {
+          const row = document.querySelector(`#builder-grupos .item-row[data-id="${p.id}"]`);
+          if (!row) return;
+          row.querySelector('.item-check').checked = true;
+          row.classList.add('is-on');
+          const num = row.querySelector('.item-num');
+          if (num && p.cant) num.value = p.cant;
+          if (p.opts) {
+            row.querySelectorAll('.item-opt').forEach(s => {
+              if (p.opts[s.dataset.key] !== undefined) s.value = p.opts[s.dataset.key];
+            });
+          }
+        });
+        const precioBase = getPrecioPaquete(key);
+        document.getElementById('custom-base').value = precioBase;
+        document.getElementById('custom-nombre').value = PAQUETES[key].nombre + ' (personalizado)';
+      }
+      updateBuilder();
+    }
+
+    function abrirBuilder() {
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('contract-view').style.display = 'none';
+      document.getElementById('builder-view').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    function cerrarBuilder() {
+      document.getElementById('builder-view').style.display = 'none';
+      document.getElementById('form-view').style.display = '';
+      window.scrollTo(0, 0);
+    }
+
+    // Crea (o actualiza) la tarjeta del paquete personalizado en la lista
+    function aplicarPersonalizacion() {
+      const { items, total } = updateBuilder();
+      if (!items.length) { alert('Marca al menos un concepto antes de aceptar.'); return; }
+      const nombre = document.getElementById('custom-nombre').value.trim() || 'Paquete Personalizado';
+
+      PAQUETES.personalizado = { nombre, incluye: items.map(i => i.texto) };
+
+      let card = document.querySelector('.paquete-option[data-paquete="personalizado"]');
+      if (!card) {
+        card = document.createElement('div');
+        card.className = 'paquete-option personalizado';
+        card.dataset.paquete = 'personalizado';
+        document.getElementById('paquetes-list').prepend(card);
+        bindPaqueteOption(card);
+      }
+      card.innerHTML = `
+        <h4><span class="badge-custom">a la medida</span> <span id="custom-card-nombre"></span>
+          $<input type="number" class="precio-edit" data-paquete="personalizado" min="0" step="100"> MXN</h4>
+        <ul></ul>
+        <button class="btn btn-outline btn-editar-custom" style="font-size:0.78rem;padding:0.25rem 0.7rem;margin-top:0.4rem;">Editar conceptos</button>
+      `;
+      card.querySelector('#custom-card-nombre').textContent = nombre;
+      card.querySelector('ul').innerHTML = items.map(i => `<li>${i.texto}</li>`).join('');
+      const precioInput = card.querySelector('.precio-edit');
+      precioInput.value = total;
+      precioInput.addEventListener('input', updateResumen);
+      precioInput.addEventListener('click', e => e.stopPropagation());
+      card.querySelector('.btn-editar-custom').addEventListener('click', e => {
+        e.stopPropagation();
+        abrirBuilder();
+      });
+
+      document.querySelectorAll('.paquete-option').forEach(e => e.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedPaquete = 'personalizado';
+
+      cerrarBuilder();
+      updateResumen();
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    renderBuilder();
+    (function llenarPresets() {
+      const sel = document.getElementById('custom-preset');
+      Object.keys(PRESETS).forEach(k => {
+        const o = document.createElement('option');
+        o.value = k; o.textContent = PAQUETES[k].nombre;
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change', () => cargarPreset(sel.value));
+    })();
+
+    document.getElementById('custom-base').addEventListener('input', updateBuilder);
+    document.getElementById('btn-personalizar').addEventListener('click', () => {
+      if (!PAQUETES.personalizado && selectedPaquete && PRESETS[selectedPaquete]) {
+        document.getElementById('custom-preset').value = selectedPaquete;
+        cargarPreset(selectedPaquete);
+      }
+      abrirBuilder();
+    });
+    document.getElementById('btn-builder-cancelar').addEventListener('click', cerrarBuilder);
+    document.getElementById('btn-builder-aceptar').addEventListener('click', aplicarPersonalizacion);
+    updateBuilder();
+
+    // =====================================================================
+    // CLAUSULAS DE PROTECCION - UI
+    // =====================================================================
+    function renderClausulas() {
+      const cont = document.getElementById('clausulas-list');
+      cont.innerHTML = CLAUSULAS.map(c => `
+        <div class="clausula-item${c.critica ? ' critica' : ''}">
+          <input type="checkbox" class="cl-check" id="cl-${c.id}" data-id="${c.id}"${c.def ? ' checked' : ''}>
+          <span class="cl-texto">
+            <label for="cl-${c.id}"><b>${c.titulo}</b><small>${c.resumen}</small></label>
+            <details class="cl-detalle"><summary>Ver texto${c.nota ? ' y por que funciona' : ''}</summary>
+              <p class="cl-cuerpo">${c.texto.replace(/\{E\}/g, 'FORO 7')}</p>
+              ${c.nota ? `<p class="cl-nota"><strong>Por que aguanta:</strong> ${c.nota}</p>` : ''}
+            </details>
+          </span>
+        </div>
+      `).join('');
+      cont.querySelectorAll('.cl-check').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const c = CLAUSULAS.find(x => x.id === cb.dataset.id);
+          if (c && c.excluye && cb.checked) {
+            const otro = cont.querySelector(`.cl-check[data-id="${c.excluye}"]`);
+            if (otro) otro.checked = false;
+          }
+        });
+      });
+    }
+    renderClausulas();
+
+    function setClausulas(fn) {
+      document.querySelectorAll('#clausulas-list .cl-check').forEach(cb => {
+        const c = CLAUSULAS.find(x => x.id === cb.dataset.id);
+        cb.checked = fn(c);
+      });
+    }
+    document.getElementById('btn-cl-todas').addEventListener('click', () => setClausulas(c => c.id !== 'portafolio_no'));
+    document.getElementById('btn-cl-ninguna').addEventListener('click', () => setClausulas(() => false));
+    document.getElementById('btn-cl-criticas').addEventListener('click', () => setClausulas(c => !!c.critica));
+
+    // Devuelve las clausulas marcadas con los datos ya sustituidos
+    function getClausulasContrato(emp) {
+      const horaExtra = parseInt(document.getElementById('clausula-hora-extra').value) || 0;
+      const dias = parseInt(document.getElementById('clausula-entrega-dias').value) || 60;
+      const meses = parseInt(document.getElementById('clausula-resguardo-meses').value) || 6;
+      const marcadas = [];
+      document.querySelectorAll('#clausulas-list .cl-check:checked').forEach(cb => {
+        const c = CLAUSULAS.find(x => x.id === cb.dataset.id);
+        if (!c) return;
+        marcadas.push({
+          titulo: c.titulo.replace(/ \((el cliente (SI|NO) autoriza)\)/, ''),
+          texto: c.texto
+            .replace(/\{E\}/g, emp.nombre.toUpperCase())
+            .replace(/\{HORA_EXTRA\}/g, formatMoneda(horaExtra))
+            .replace(/\{DIAS\}/g, dias)
+            .replace(/\{MESES\}/g, meses)
+        });
+      });
+      return marcadas;
     }
 
     // ===== Conceptos adicionales dinamicos =====
@@ -607,6 +1364,13 @@
       costRows += `<tr style="font-weight:bold"><td class="label">SALDO RESTANTE</td><td style="text-align:right">${formatMoneda(restante)}</td></tr>`;
 
       const emp = empresaActiva;
+      const clausulas = getClausulasContrato(emp);
+      const letras = 'abcdefghijklmnopqrstuvwxyz';
+      const clausulasBloque = () => clausulas.length
+        ? `<h2>${sec++}. CONDICIONES GENERALES Y CLAUSULAS DE PROTECCION</h2>` +
+          clausulas.map((c, i) => `<p class="clausula-proteccion"><strong>${letras[i] || (i + 1)})</strong> <strong>${c.titulo}.</strong> ${c.texto}</p>`).join('') +
+          `<p class="clausula-proteccion" style="margin-top:8pt">EL CLIENTE declara haber leido y comprendido las condiciones anteriores antes de firmar. Rubrica de EL CLIENTE en esta seccion: _______________________</p>`
+        : '';
 
       const html = `
         <h1>CONTRATO DE SERVICIOS</h1>
@@ -656,6 +1420,8 @@
         <p class="clausula"><strong>d)</strong> Facilitar el acceso y las condiciones necesarias para que el equipo de ${emp.nombre} pueda realizar su trabajo adecuadamente, incluyendo <strong>2 lugares reservados en alguna de las mesas del evento</strong> para el equipo de trabajo.</p>
         <p class="clausula"><strong>e)</strong> Recoger el material entregable en un plazo no mayor a 30 dias despues de ser notificado de su disponibilidad.</p>
 
+        ${clausulasBloque()}
+
         ${notas ? `<h2>${sec++}. ACUERDOS ESPECIALES</h2><p class="clausula">${notas}</p>` : ''}
 
         <p class="clausula" style="margin-top:15pt">Ambas partes manifiestan estar de acuerdo con los terminos de este contrato y lo firman en la ciudad de <strong>Leon, Guanajuato</strong>, a <strong>${formatFecha(fechaApartado)}</strong>.</p>
@@ -679,6 +1445,7 @@
     // ===== Botones =====
     document.getElementById('btn-volver').addEventListener('click', () => {
       document.getElementById('form-view').style.display = '';
+      document.getElementById('builder-view').style.display = 'none';
       document.getElementById('contract-view').style.display = 'none';
     });
 
