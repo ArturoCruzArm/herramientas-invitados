@@ -83,7 +83,14 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Se revisan todas las fotos tomadas y se entregan todas las buenas: se descartan repetidas, desenfocadas u ojos cerrados. Llevan un ajuste general de luz y color en lote, sin edición individual. Se entregan en promedio unas 100 fotos por hora de cobertura, según el ritmo del evento."
+   "detalle": "Se revisan todas las fotos tomadas y se entregan todas las buenas: se descartan repetidas, desenfocadas u ojos cerrados. Llevan un ajuste general de luz y color en lote, sin edición individual. Se entregan en promedio unas 100 fotos por hora de cobertura, según el ritmo del evento.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ],
+   "excluye": [
+    "fotoEdit"
+   ]
   },
   {
    "id": "fotoEdit",
@@ -94,7 +101,14 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "foto",
-   "detalle": "Edición de cada foto entregada, una por una, en Lightroom: luz, color, tono de piel natural, enderezado y encuadre. No incluye retoque de cuerpo ni de piel a detalle (ese retoque se hace en Photoshop solo en ampliaciones y portadas)."
+   "detalle": "Edición de cada foto entregada, una por una, en Lightroom: luz, color, tono de piel natural, enderezado y encuadre. No incluye retoque de cuerpo ni de piel a detalle (ese retoque se hace en Photoshop solo en ampliaciones y portadas). Ya incluye la selección de las fotos.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ],
+   "excluye": [
+    "fotoSel"
+   ]
   },
   {
    "id": "vidComp",
@@ -105,7 +119,10 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "video",
-   "detalle": "Video de todo el evento editado: ceremonia y fiesta en orden, sin tiempos muertos, con el audio real limpio (votos, mensajes, discursos y la música del lugar) y títulos de inicio y cierre. Se entrega en YouTube privado y, si se contrata la USB, en archivo. Su duración depende de la cobertura (normalmente de 1 a 4 horas)."
+   "detalle": "Video de todo el evento editado: ceremonia y fiesta en orden, sin tiempos muertos, con el audio real limpio (votos, mensajes, discursos y la música del lugar) y títulos de inicio y cierre. Se entrega en YouTube privado y, si se contrata la USB, en archivo. Su duración depende de la cobertura (normalmente de 1 a 4 horas). Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
+   "requiere": [
+    "cobVideo"
+   ]
   },
   {
    "id": "panel",
@@ -127,7 +144,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Página privada donde el cliente ve todas las fotos y marca cuáles quiere para impresión, ampliación, fotolibro y álbum digital. Lo marcado se guarda en línea y puede revisarlo la familia desde varios celulares. Se habilita cuando el paquete está liquidado."
+   "detalle": "Página privada donde el cliente ve todas las fotos y marca cuáles quiere para impresión, ampliación, fotolibro y álbum digital. Lo marcado se guarda en línea y puede revisarlo la familia desde varios celulares. Se habilita cuando el paquete está liquidado.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "album",
@@ -138,7 +159,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Galería privada con todas las fotos entregadas, para verlas, compartirlas por WhatsApp y descargarlas en buena resolución. Se habilita cuando el paquete está liquidado y se mantiene durante el periodo de resguardo del material."
+   "detalle": "Galería privada con todas las fotos entregadas, para verlas, compartirlas por WhatsApp y descargarlas en buena resolución. Se habilita cuando el paquete está liquidado y se mantiene durante el periodo de resguardo del material.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "youtube",
@@ -149,7 +174,14 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Los videos se suben a YouTube como privados o no listados (solo los ve quien tiene el enlace), con título, descripción, capítulos para ir directo a cada momento y miniatura diseñada. No se publican abiertamente ni se monetizan; el cliente puede pedir que se retiren cuando lo desee."
+   "detalle": "Los videos se suben a YouTube como privados o no listados (solo los ve quien tiene el enlace), con título, descripción, capítulos para ir directo a cada momento y miniatura diseñada. No se publican abiertamente ni se monetizan; el cliente puede pedir que se retiren cuando lo desee.",
+   "requiereUno": [
+    "vidComp",
+    "resumen",
+    "pelicula",
+    "clip",
+    "reel"
+   ]
   },
   {
    "id": "invWeb",
@@ -171,7 +203,10 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Los invitados confirman su asistencia desde la invitación y cada uno recibe un pase con código QR y el número de lugares asignados. El cliente ve en tiempo real quién confirmó y cuántos asistirán."
+   "detalle": "Los invitados confirman su asistencia desde la invitación y cada uno recibe un pase con código QR y el número de lugares asignados. El cliente ve en tiempo real quién confirmó y cuántos asistirán.",
+   "requiere": [
+    "invWeb"
+   ]
   },
   {
    "id": "invitados",
@@ -182,7 +217,10 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Lista de invitados en línea con su mesa asignada y plano del salón, para organizar lugares y saber cuántas personas hay en cada mesa."
+   "detalle": "Lista de invitados en línea con su mesa asignada y plano del salón, para organizar lugares y saber cuántas personas hay en cada mesa.",
+   "requiere": [
+    "rsvp"
+   ]
   },
   {
    "id": "acceso",
@@ -193,7 +231,10 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "El día del evento se escanea con un celular el QR de cada pase en la puerta: muestra la mesa y los lugares, y avisa si un pase ya se usó. La persona que recibe en la puerta la pone el cliente o el salón; Foro 7 deja el sistema listo y explica cómo usarlo."
+   "detalle": "El día del evento se escanea con un celular el QR de cada pase en la puerta: muestra la mesa y los lugares, y avisa si un pase ya se usó. La persona que recibe en la puerta la pone el cliente o el salón; Foro 7 deja el sistema listo y explica cómo usarlo.",
+   "requiere": [
+    "rsvp"
+   ]
   },
   {
    "id": "resumen",
@@ -204,18 +245,24 @@
    "precioXh": 150,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Video corto, normalmente de 3 a 5 minutos, con lo mejor del día montado al ritmo de una canción original creada para el evento. Ideal para compartir en redes y con la familia."
+   "detalle": "Video corto, normalmente de 3 a 5 minutos, con lo mejor del día montado al ritmo de una canción original creada para el evento. Ideal para compartir en redes y con la familia. Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
+   "requiere": [
+    "cobVideo"
+   ]
   },
   {
    "id": "pelicula",
-   "nombre": "Película cinematográfica con tomas de dron y música original",
+   "nombre": "Película cinematográfica con música original",
    "grupo": "Videos adicionales",
    "unidad": "",
    "precio": 3000,
    "precioXh": 400,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Película cinematográfica del evento, de 15 a 50 minutos según la cobertura: cuenta la historia del día con las mejores tomas de video y dron, el audio de los votos y discursos, y música original. Lleva títulos y créditos."
+   "detalle": "Película cinematográfica del evento, de 15 a 50 minutos según la cobertura: cuenta la historia del día con las mejores tomas de video (y de dron, si se contrató el dron), el audio de los votos y discursos, y música original. Lleva títulos y créditos. Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
+   "requiere": [
+    "cobVideo"
+   ]
   },
   {
    "id": "clip",
@@ -226,7 +273,10 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Videoclip de 2 a 4 minutos con las fotos y el video de la sesión, musicalizado, para proyectarse durante la fiesta. Se entrega antes del evento, por lo que requiere que la sesión se haga con anticipación."
+   "detalle": "Videoclip de 2 a 4 minutos con las fotos y el video de la sesión, musicalizado, para proyectarse durante la fiesta. Se entrega antes del evento, por lo que requiere que la sesión se haga con anticipación. Se arma con las fotos y el video de la sesión previa; aquí solo se cobra la edición.",
+   "requiere": [
+    "sesionPrevia"
+   ]
   },
   {
    "id": "reel",
@@ -237,7 +287,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Video vertical de 30 a 60 segundos, pensado para Instagram, TikTok o estados de WhatsApp, con los momentos más emotivos y una canción."
+   "detalle": "Video vertical de 30 a 60 segundos, pensado para Instagram, TikTok o estados de WhatsApp, con los momentos más emotivos y una canción. Se arma con las tomas ya contratadas (evento o sesión); aquí solo se cobra la edición.",
+   "requiereUno": [
+    "cobVideo",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "cancion",
@@ -259,7 +313,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Impresión fotográfica profesional en tamaño 5×7 pulgadas (13×18 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional."
+   "detalle": "Impresión fotográfica profesional en tamaño 5×7 pulgadas (13×18 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "imp68",
@@ -270,7 +328,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Impresión fotográfica profesional en tamaño 6×8 pulgadas (15×20 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional."
+   "detalle": "Impresión fotográfica profesional en tamaño 6×8 pulgadas (15×20 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "cajaFotos",
@@ -281,7 +343,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Caja de presentación para guardar las fotos impresas, con portada diseñada con su foto y sus nombres."
+   "detalle": "Caja de presentación para guardar las fotos impresas, con portada diseñada con su foto y sus nombres.",
+   "requiereUno": [
+    "imp57",
+    "imp68"
+   ]
   },
   {
    "id": "ampCh",
@@ -292,7 +358,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Ampliación de 28×36 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco."
+   "detalle": "Ampliación de 28×36 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "ampMd",
@@ -303,7 +373,26 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Ampliación de 40×50 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco."
+   "detalle": "Ampliación de 40×50 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
+  },
+  {
+   "id": "ampXl",
+   "nombre": "Ampliación con marco 20×24\" (50×61 cm)",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 1500,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Ampliación de 20×24 pulgadas (50×61 cm) de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "ampGr",
@@ -314,7 +403,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Ampliación de 60×80 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco."
+   "detalle": "Ampliación de 60×80 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "libro",
@@ -325,7 +418,11 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Fotolibro de 12×24 pulgadas con 10 hojas (20 páginas) y alrededor de 100 fotos, con diseño a medida y portada retocada, en caja; incluye de regalo un mini fotolibro. Las fotos se eligen en el selector."
+   "detalle": "Fotolibro de 12×24 pulgadas con 10 hojas (20 páginas) y alrededor de 100 fotos, con diseño a medida y portada retocada, en caja; incluye de regalo un mini fotolibro. Las fotos se eligen en el selector.",
+   "requiereUno": [
+    "cobFoto",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "usb",
@@ -336,7 +433,12 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Memoria USB con todas las fotos y videos en alta resolución, en caja de presentación con portada diseñada."
+   "detalle": "Memoria USB con todas las fotos y videos en alta resolución, en caja de presentación con portada diseñada.",
+   "requiereUno": [
+    "cobFoto",
+    "cobVideo",
+    "sesionPrevia"
+   ]
   },
   {
    "id": "entrega",
@@ -347,7 +449,18 @@
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Entrega del material físico en persona dentro de León, en el domicilio o lugar que indique el cliente."
+   "detalle": "Entrega del material físico en persona dentro de León, en el domicilio o lugar que indique el cliente.",
+   "requiereUno": [
+    "imp57",
+    "imp68",
+    "cajaFotos",
+    "ampCh",
+    "ampMd",
+    "ampXl",
+    "ampGr",
+    "libro",
+    "usb"
+   ]
   }
  ]
 }

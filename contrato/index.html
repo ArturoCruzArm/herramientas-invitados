@@ -548,6 +548,12 @@
           <div class="form-group"><label for="lh-sesion">Sesion el mismo dia (h)</label><input type="number" id="lh-sesion" value="0" min="0" step="0.5"></div>
         </div>
         <div id="lista-items"><p style="color:var(--color-text-light)">Cargando la lista de servicios…</p></div>
+        <div class="checkbox-group" style="margin-top:0.8rem;">
+          <label><input type="checkbox" id="lista-def-todas"> Poner en el contrato la definicion de <strong>todos</strong> los servicios</label>
+        </div>
+        <p style="font-size:0.78rem;color:var(--color-text-light);margin-top:0.3rem;">
+          Si no la marcas, al contrato solo van las definiciones que abras con &#9432; (lo que el cliente pregunto).
+        </p>
         <div class="lista-res" id="lista-res"></div>
         <div class="builder-bar">
           <div class="bar-info"><span id="lista-count">0</span> conceptos &bull; Total: <strong>$<span id="lista-total">0</span></strong></div>
@@ -1215,7 +1221,39 @@
     // La lista se arma en la hoja de costos (D:\eventos\costos-foro7) y se publica aqui solo
     // con lo que ve el cliente: nombre, precio y reglas de descuento (sin costos internos).
     // =====================================================================
-    let LISTA = null;
+    // ── Reglas entre conceptos: nada se cobra dos veces y lo que depende de otra cosa la arrastra ──
+    // requiere: necesita todos · requiereUno: al menos uno (se marca el primero) · excluye: no van juntos
+    function ajustarSeleccion(sel, cat, id, marcado){
+      const por = Object.fromEntries(cat.map(c => [c.id, c]));
+      const nom = i => por[i] ? por[i].nombre : i;
+      const msgs = [];
+      const cumple = c => (c.requiere || []).filter(r => por[r]).every(r => +sel[r])
+                       && (!(c.requiereUno || []).some(r => por[r]) || (c.requiereUno || []).some(r => +sel[r]));
+      function satisfacer(i){
+        const c = por[i]; if (!c) return;
+        (c.requiere || []).forEach(r => { if (por[r] && !+sel[r]){ sel[r] = 1; msgs.push(`Se agregó «${nom(r)}»: lo necesita «${nom(i)}».`); satisfacer(r); } });
+        const uno = (c.requiereUno || []).filter(r => por[r]);
+        if (uno.length && !uno.some(r => +sel[r])){ sel[uno[0]] = 1; msgs.push(`Se agregó «${nom(uno[0])}»: lo necesita «${nom(i)}».`); satisfacer(uno[0]); }
+      }
+      if (marcado){
+        (por[id] && por[id].excluye || []).forEach(e => { if (+sel[e]){ sel[e] = 0; msgs.push(`Se quitó «${nom(e)}»: «${nom(id)}» ya lo incluye.`); } });
+        satisfacer(id);
+      }
+      // en cascada: lo que se quedo sin lo que necesita tambien se quita
+      let cambio = true;
+      while (cambio){
+        cambio = false;
+        cat.forEach(c => { if (+sel[c.id] && !cumple(c)){ sel[c.id] = 0; cambio = true; msgs.push(`Se quitó «${c.nombre}»: necesita algo que ya no está marcado.`); } });
+      }
+      return msgs;
+    }
+    function textoRequisitos(c, cat){
+      const nom = i => (cat.find(x => x.id === i) || {}).nombre;
+      const r = (c.requiere || []).map(nom).filter(Boolean), u = (c.requiereUno || []).map(nom).filter(Boolean);
+      return [r.length ? 'requiere ' + r.join(' y ') : '', u.length ? 'requiere ' + u.join(' o ') : ''].filter(Boolean).join(' · ');
+    }
+    let LISTA = null, LISTA_AVISOS = [];
+    const LISTA_ABIERTAS = new Set();   // definiciones que se abrieron con el icono: esas van al contrato
     const LISTA_SEL = { cobFoto: 1, cobVideo: 1, cobDron: 1, fotoSel: 1, vidComp: 1, panel: 1, selector: 1, album: 1, youtube: 1 };
     const lh = id => parseFloat(document.getElementById(id).value) || 0;
     const horasCob = () => lh('lh-arreglo') + lh('lh-misa') + lh('lh-salon') + lh('lh-sesion');
@@ -1268,22 +1306,26 @@
         const ctl = c.unidad
           ? `<input type="number" class="lista-cant" min="0" step="${c.unidad === 'foto' ? 10 : 1}" data-id="${c.id}" value="${q || ''}" placeholder="0">`
           : `<input type="checkbox" data-id="${c.id}"${q ? ' checked' : ''}>`;
-        const nota = c.extraHora ? `<small>incluye ${LISTA.horasIncluidas} h · +${pesos(c.extraHora)} por hora extra</small>`
-                   : c.precioXh ? `<small>${pesos(c.precio)} + ${pesos(c.precioXh)} por hora de cobertura</small>` : '';
-        const inf = c.detalle ? `<button type="button" class="inf" data-inf title="¿Que incluye?">&#9432;</button>` : '';
-        const def = c.detalle ? `<span class="def" hidden>${c.detalle}</span>` : '';
+        const req = textoRequisitos(c, LISTA.conceptos);
+        const nota = (req ? `<small>${req}</small>` : '') + (c.extraHora ? `<small>incluye ${LISTA.horasIncluidas} h · +${pesos(c.extraHora)} por hora extra</small>`
+                   : c.precioXh ? `<small>${pesos(c.precio)} + ${pesos(c.precioXh)} por hora de cobertura</small>` : '');
+        const inf = c.detalle ? `<button type="button" class="inf" data-inf="${c.id}" title="¿Que incluye?">&#9432;</button>` : '';
+        const def = c.detalle ? `<span class="def"${LISTA_ABIERTAS.has(c.id) ? '' : ' hidden'}>${c.detalle}</span>` : '';
         h += `<label class="lista-op${q ? ' on' : ''}">${c.unidad ? '<span></span>' : ctl}<span>${c.nombre}${inf}${nota}${def}</span><span class="pr">${c.unidad ? ctl + '<br>' : ''}${precio}</span></label>`;
       });
       box.innerHTML = h;
       box.querySelectorAll('[data-inf]').forEach(b => b.addEventListener('click', e => {
         e.preventDefault(); e.stopPropagation(); const d = b.parentElement.querySelector('.def'); d.hidden = !d.hidden;
+        d.hidden ? LISTA_ABIERTAS.delete(b.dataset.inf) : LISTA_ABIERTAS.add(b.dataset.inf);
       }));
       box.querySelectorAll('[data-id]').forEach(el => el.addEventListener('change', () => {
         LISTA_SEL[el.dataset.id] = el.type === 'checkbox' ? (el.checked ? 1 : 0) : Math.max(0, parseInt(el.value) || 0);
+        LISTA_AVISOS = ajustarSeleccion(LISTA_SEL, LISTA.conceptos, el.dataset.id, !!LISTA_SEL[el.dataset.id]);
         renderLista();
       }));
       const r = cotizarLista();
       document.getElementById('lista-res').innerHTML =
+        (LISTA_AVISOS.length ? `<div style="background:rgba(6,68,32,0.07);border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;font-size:0.82rem">${LISTA_AVISOS.join('<br>')}</div>` : '') +
         r.lineas.map(l => `<div class="ln"><span>${textoLinea(l)}</span><span>${l.precio ? pesos(l.precio) : 'Incluido'}</span></div>`).join('') +
         `<div class="ln" style="border-top:1px solid var(--color-border);margin-top:0.3rem;padding-top:0.3rem"><span>Subtotal</span><span>${pesos(r.sub)}</span></div>` +
         (r.descCombo ? `<div class="ln ahorro"><span>Descuento por juntar ${[...r.combo].join(' + ')}</span><span>-${pesos(r.descCombo)}</span></div>` : '') +
@@ -1317,7 +1359,9 @@
       const r = cotizarLista();
       if (!r.lineas.length) { alert('Marca al menos un concepto.'); return; }
       PAQUETES.lista = { nombre: 'Cotizacion a la medida', incluye: r.lineas.map(textoLinea),
-        definiciones: r.lineas.filter(l => l.c.detalle).map(l => ({ nombre: l.c.nombre, detalle: l.c.detalle })) };
+        definiciones: r.lineas
+          .filter(l => l.c.detalle && (document.getElementById('lista-def-todas').checked || LISTA_ABIERTAS.has(l.c.id)))
+          .map(l => ({ nombre: l.c.nombre, detalle: l.c.detalle })) };
       let card = document.querySelector('.paquete-option[data-paquete="lista"]');
       if (!card) {
         card = document.createElement('div');
