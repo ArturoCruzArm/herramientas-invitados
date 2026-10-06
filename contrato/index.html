@@ -123,6 +123,23 @@
     .lista-op small { display: block; color: var(--color-text-light); font-size: 0.75rem; }
     .lista-op .inf { border: 0; background: none; color: var(--color-primary); font-size: 1rem; cursor: pointer; padding: 0 0.3rem; }
     .lista-op .def { display: block; font-size: 0.8rem; color: var(--color-text); background: rgba(6,68,32,0.06); border-radius: 8px; padding: 0.5rem 0.6rem; margin-top: 0.35rem; line-height: 1.4; }
+    .lista-op .def[hidden] { display: none; }            /* sin esto el display:block le gana a "hidden" */
+    .lista-op > span:nth-child(2) { min-width: 0; overflow-wrap: anywhere; }
+    .lista-res .ln > span:first-child { min-width: 0; overflow-wrap: anywhere; padding-right: 0.5rem; }
+    @media (max-width: 640px) {
+      .lista-horas { grid-template-columns: 1fr 1fr; }
+      /* casilla + nombre arriba; precio (y cantidad) abajo a la derecha */
+      .lista-op { grid-template-columns: 26px 1fr; grid-template-areas: 'chk nom' '. pre'; row-gap: 0.2rem; }
+      .lista-op > :first-child { grid-area: chk; }
+      .lista-op > span:nth-child(2) { grid-area: nom; }
+      .lista-op .pr { grid-area: pre; text-align: left; }
+      .lista-op .pr br { display: none; }
+      .lista-op input.lista-cant { margin-right: 0.5rem; }
+      /* barra compacta: total arriba, los tres botones en una fila */
+      #lista-view .builder-bar { gap: 0.4rem; padding: 0.5rem; }
+      #lista-view .builder-bar .bar-info { flex: 1 1 100%; min-width: 0; }
+      #lista-view .builder-bar .btn { flex: 1 1 0; min-width: 0; padding: 0.5rem 0.3rem; font-size: 0.78rem; line-height: 1.15; }
+    }
     .lista-res { border: 1px solid var(--color-border); border-radius: 10px; padding: 0.8rem; margin-top: 1rem; font-size: 0.9rem; }
     .lista-res .ln { display: flex; justify-content: space-between; padding: 0.15rem 0; }
     .lista-res .ln.ahorro { color: #1b7a43; }
