@@ -110,6 +110,21 @@
 
     /* ===== Constructor de paquete personalizado ===== */
     #builder-view { display: none; }
+    /* ===== Cotizar por lista (catalogo.json) ===== */
+    #lista-view { display: none; }
+    .lista-horas { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.6rem; margin-bottom: 0.8rem; }
+    .lista-grupo { font-size: 0.9rem; color: var(--color-primary); margin: 1rem 0 0.3rem; }
+    .lista-op { display: grid; grid-template-columns: 26px 1fr auto; gap: 0.5rem; align-items: center; padding: 0.45rem 0.3rem; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; cursor: pointer; }
+    .lista-op.on { background: rgba(6,68,32,0.05); }
+    .lista-op input[type=checkbox] { width: 18px; height: 18px; }
+    .lista-op input.lista-cant { width: 70px; padding: 0.25rem; }
+    .lista-op .pr { text-align: right; white-space: nowrap; }
+    .lista-op .pr s { color: var(--color-text-light); font-size: 0.78rem; margin-right: 0.3rem; }
+    .lista-op small { display: block; color: var(--color-text-light); font-size: 0.75rem; }
+    .lista-res { border: 1px solid var(--color-border); border-radius: 10px; padding: 0.8rem; margin-top: 1rem; font-size: 0.9rem; }
+    .lista-res .ln { display: flex; justify-content: space-between; padding: 0.15rem 0; }
+    .lista-res .ln.ahorro { color: #1b7a43; }
+    .lista-res .ln.total { font-size: 1.15rem; font-weight: 700; border-top: 1px solid var(--color-border); margin-top: 0.3rem; padding-top: 0.4rem; }
     .builder-grupo {
       border: 1px solid var(--color-border); border-radius: 8px;
       margin-bottom: 0.8rem; overflow: hidden; background: var(--color-surface);
@@ -372,6 +387,7 @@
             </div>
           </div>
           <div style="margin-top:0.7rem;display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+            <button class="btn btn-primary" id="btn-lista" style="font-size:0.9rem;">&#9776; Cotizar por lista</button>
             <button class="btn btn-outline" id="btn-personalizar" style="font-size:0.9rem;">&#9998; Personalizar paquete</button>
             <span style="font-size:0.78rem;color:var(--color-text-light);">Arma el paquete a la medida: numero de fotos, tamanos, ampliaciones, horas de video y lo que necesites.</span>
           </div>
@@ -513,6 +529,29 @@
           </div>
           <button class="btn btn-outline" id="btn-builder-cancelar">Cancelar</button>
           <button class="btn btn-primary" id="btn-builder-aceptar">Aceptar personalizacion</button>
+        </div>
+      </div>
+
+      <!-- SECCION 1C: COTIZAR POR LISTA (lista de servicios de Foro 7, catalogo.json) -->
+      <div class="tool-container" id="lista-view">
+        <h2>Cotizar por lista</h2>
+        <p style="font-size:0.85rem;color:var(--color-text-light);margin-bottom:0.8rem;">
+          Marca con el cliente solo lo que quiere. Foto, video y dron bajan de precio al contratarse juntos,
+          y entre mas llevan, mas descuento. Con "Usar en el contrato" pasa todo al contrato con su desglose.
+        </p>
+        <div class="lista-horas">
+          <div class="form-group"><label for="lh-arreglo">Casa de la festejada (h)</label><input type="number" id="lh-arreglo" value="0" min="0" step="0.5"></div>
+          <div class="form-group"><label for="lh-misa">Ceremonia (h)</label><input type="number" id="lh-misa" value="1" min="0" step="0.5"></div>
+          <div class="form-group"><label for="lh-salon">Recepcion (h)</label><input type="number" id="lh-salon" value="6" min="0" step="0.5"></div>
+          <div class="form-group"><label for="lh-sesion">Sesion el mismo dia (h)</label><input type="number" id="lh-sesion" value="0" min="0" step="0.5"></div>
+        </div>
+        <div id="lista-items"><p style="color:var(--color-text-light)">Cargando la lista de servicios…</p></div>
+        <div class="lista-res" id="lista-res"></div>
+        <div class="builder-bar">
+          <div class="bar-info"><span id="lista-count">0</span> conceptos &bull; Total: <strong>$<span id="lista-total">0</span></strong></div>
+          <button class="btn btn-outline" id="btn-lista-cancelar">Cancelar</button>
+          <button class="btn btn-outline" id="btn-lista-wa">Copiar cotizacion (WhatsApp)</button>
+          <button class="btn btn-primary" id="btn-lista-usar">Usar en el contrato</button>
         </div>
       </div>
 
@@ -1168,6 +1207,170 @@
     document.getElementById('btn-builder-cancelar').addEventListener('click', cerrarBuilder);
     document.getElementById('btn-builder-aceptar').addEventListener('click', aplicarPersonalizacion);
     updateBuilder();
+
+    // =====================================================================
+    // COTIZAR POR LISTA — lista de servicios de Foro 7 (contrato/catalogo.json)
+    // La lista se arma en la hoja de costos (D:\eventos\costos-foro7) y se publica aqui solo
+    // con lo que ve el cliente: nombre, precio y reglas de descuento (sin costos internos).
+    // =====================================================================
+    let LISTA = null;
+    const LISTA_SEL = { cobFoto: 1, cobVideo: 1, cobDron: 1, fotoSel: 1, vidComp: 1, panel: 1, selector: 1, album: 1, youtube: 1 };
+    const lh = id => parseFloat(document.getElementById(id).value) || 0;
+    const horasCob = () => lh('lh-arreglo') + lh('lh-misa') + lh('lh-salon') + lh('lh-sesion');
+    const redondear = v => Math.round(v / (LISTA.redondeo || 1)) * (LISTA.redondeo || 1);
+    const pesos = n => '$' + Math.round(n).toLocaleString('es-MX');
+
+    function precioLista(c) {
+      const extra = Math.max(0, horasCob() - (LISTA.horasIncluidas || 0));
+      const v = c.precio + (c.precioXh || 0) * horasCob() + (c.extraHora || 0) * extra;
+      return c.unidad ? Math.ceil(v) : redondear(v);
+    }
+    function comboActivo() {
+      return new Set(LISTA.conceptos.filter(c => c.combo && LISTA_SEL[c.id]).map(c => c.combo));
+    }
+    function descCombo(combo) {
+      let d = 0;
+      (LISTA.combos || []).forEach(r => { if (r.servicios.every(s => combo.has(s))) d = Math.max(d, r.descuento); });
+      return d;
+    }
+    function cotizarLista() {
+      const combo = comboActivo(), dc = descCombo(combo), lineas = [];
+      let sub = 0, trasCombo = 0;
+      LISTA.conceptos.forEach(c => {
+        const q = LISTA_SEL[c.id] || 0; if (!q) return;
+        const p = precioLista(c) * q;
+        const pc = c.combo ? redondear(precioLista(c) * (1 - dc / 100)) * q : p;
+        sub += p; trasCombo += pc;
+        lineas.push({ c, q, precio: p });
+      });
+      let dv = 0;
+      (LISTA.volumen || []).forEach(r => { if (trasCombo >= r.desde) dv = Math.max(dv, r.descuento); });
+      const total = redondear(trasCombo * (1 - dv / 100));
+      return { lineas, sub, descCombo: sub - trasCombo, dv, descVol: trasCombo - total, total, combo };
+    }
+    // texto para el contrato: "50 fotos impresas 5x7", coberturas con sus horas
+    function textoLinea(l) {
+      const h = horasCob();
+      if (/^cob/.test(l.c.id) && l.c.extraHora) return `${l.c.nombre} (${h} ${h === 1 ? 'hora' : 'horas'} de cobertura)`;
+      return (l.c.unidad ? l.q + ' ' : '') + l.c.nombre;
+    }
+
+    function renderLista() {
+      const box = document.getElementById('lista-items');
+      const combo = comboActivo(), dc = descCombo(combo);
+      let h = '', g = null;
+      LISTA.conceptos.forEach(c => {
+        if (c.grupo !== g) { g = c.grupo; h += `<h3 class="lista-grupo">${g}</h3>`; }
+        const q = LISTA_SEL[c.id] || 0, p = precioLista(c), pc = c.combo ? redondear(p * (1 - dc / 100)) : p;
+        const precio = !p ? 'Incluido' : (pc < p ? `<s>${pesos(p)}</s>${pesos(pc)}` : pesos(p)) + (c.unidad ? ' c/u' : '');
+        const ctl = c.unidad
+          ? `<input type="number" class="lista-cant" min="0" step="${c.unidad === 'foto' ? 10 : 1}" data-id="${c.id}" value="${q || ''}" placeholder="0">`
+          : `<input type="checkbox" data-id="${c.id}"${q ? ' checked' : ''}>`;
+        const nota = c.extraHora ? `<small>incluye ${LISTA.horasIncluidas} h · +${pesos(c.extraHora)} por hora extra</small>`
+                   : c.precioXh ? `<small>${pesos(c.precio)} + ${pesos(c.precioXh)} por hora de cobertura</small>` : '';
+        h += `<label class="lista-op${q ? ' on' : ''}">${c.unidad ? '<span></span>' : ctl}<span>${c.nombre}${nota}</span><span class="pr">${c.unidad ? ctl + '<br>' : ''}${precio}</span></label>`;
+      });
+      box.innerHTML = h;
+      box.querySelectorAll('[data-id]').forEach(el => el.addEventListener('change', () => {
+        LISTA_SEL[el.dataset.id] = el.type === 'checkbox' ? (el.checked ? 1 : 0) : Math.max(0, parseInt(el.value) || 0);
+        renderLista();
+      }));
+      const r = cotizarLista();
+      document.getElementById('lista-res').innerHTML =
+        r.lineas.map(l => `<div class="ln"><span>${textoLinea(l)}</span><span>${l.precio ? pesos(l.precio) : 'Incluido'}</span></div>`).join('') +
+        `<div class="ln" style="border-top:1px solid var(--color-border);margin-top:0.3rem;padding-top:0.3rem"><span>Subtotal</span><span>${pesos(r.sub)}</span></div>` +
+        (r.descCombo ? `<div class="ln ahorro"><span>Descuento por juntar ${[...r.combo].join(' + ')}</span><span>-${pesos(r.descCombo)}</span></div>` : '') +
+        (r.descVol ? `<div class="ln ahorro"><span>Descuento extra (${r.dv}%)</span><span>-${pesos(r.descVol)}</span></div>` : '') +
+        `<div class="ln total"><span>Total</span><span>${pesos(r.total)}</span></div>`;
+      document.getElementById('lista-count').textContent = r.lineas.length;
+      document.getElementById('lista-total').textContent = r.total.toLocaleString('es-MX');
+    }
+
+    function abrirLista() {
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('contract-view').style.display = 'none';
+      document.getElementById('builder-view').style.display = 'none';
+      document.getElementById('lista-view').style.display = 'block';
+      window.scrollTo(0, 0);
+      if (LISTA) { renderLista(); return; }
+      fetch('catalogo.json', { cache: 'no-cache' })
+        .then(r => r.json())
+        .then(d => { LISTA = d; renderLista(); })
+        .catch(() => { document.getElementById('lista-items').innerHTML = '<p style="color:#b42318">No se pudo cargar la lista de servicios (catalogo.json).</p>'; });
+    }
+    function cerrarLista() {
+      document.getElementById('lista-view').style.display = 'none';
+      document.getElementById('form-view').style.display = '';
+      window.scrollTo(0, 0);
+    }
+
+    // Pasa la cotizacion al contrato: paquete "a la medida" al precio por separado y el ahorro como descuento
+    function usarListaEnContrato() {
+      if (!LISTA) return;
+      const r = cotizarLista();
+      if (!r.lineas.length) { alert('Marca al menos un concepto.'); return; }
+      PAQUETES.lista = { nombre: 'Cotizacion a la medida', incluye: r.lineas.map(textoLinea) };
+      let card = document.querySelector('.paquete-option[data-paquete="lista"]');
+      if (!card) {
+        card = document.createElement('div');
+        card.className = 'paquete-option personalizado';
+        card.dataset.paquete = 'lista';
+        document.getElementById('paquetes-list').prepend(card);
+        bindPaqueteOption(card);
+      }
+      card.innerHTML = `
+        <h4><span class="badge-custom">por lista</span> Cotizacion a la medida
+          $<input type="number" class="precio-edit" data-paquete="lista" min="0" step="100"> MXN</h4>
+        <ul>${r.lineas.map(l => `<li>${textoLinea(l)}</li>`).join('')}</ul>
+        <button class="btn btn-outline btn-editar-lista" style="font-size:0.78rem;padding:0.25rem 0.7rem;margin-top:0.4rem;">Editar la lista</button>`;
+      const precioInput = card.querySelector('.precio-edit');
+      precioInput.value = r.sub;
+      precioInput.addEventListener('input', updateResumen);
+      precioInput.addEventListener('click', e => e.stopPropagation());
+      card.querySelector('.btn-editar-lista').addEventListener('click', e => { e.stopPropagation(); abrirLista(); });
+
+      // el ahorro por juntar servicios y por monto va como descuento visible en el contrato
+      const ahorro = r.sub - r.total;
+      document.getElementById('descuento-monto').value = ahorro;
+      if (ahorro && !document.getElementById('descuento-motivo').value.trim())
+        document.getElementById('descuento-motivo').value = 'Descuento por contratar los servicios juntos';
+      // la hora extra del contrato = la de foto + video que se contrataron
+      const he = LISTA.conceptos.filter(c => /^cob/.test(c.id) && LISTA_SEL[c.id]).reduce((s, c) => s + (c.extraHora || 0), 0);
+      if (he) document.getElementById('clausula-hora-extra').value = he;
+
+      document.querySelectorAll('.paquete-option').forEach(e => e.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedPaquete = 'lista';
+      cerrarLista();
+      updateResumen();
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function textoWhatsAppLista() {
+      const r = cotizarLista();
+      const festejado = document.getElementById('evento-nombre').value.trim();
+      const tipo = document.getElementById('evento-tipo').value;
+      return [`*Cotizacion ${empresaActiva ? empresaActiva.nombre : 'Foro 7'}*${festejado ? ' — ' + tipo + ' ' + festejado : ''}`,
+        `Cobertura: ${horasCob()} h`, '',
+        ...r.lineas.map(l => `• ${textoLinea(l)} — ${l.precio ? pesos(l.precio) : 'incluido'}`), '',
+        `Subtotal: ${pesos(r.sub)}`,
+        ...(r.descCombo ? [`Descuento por juntar servicios: -${pesos(r.descCombo)}`] : []),
+        ...(r.descVol ? [`Descuento extra: -${pesos(r.descVol)}`] : []),
+        `*Total: ${pesos(r.total)}*` + (r.sub > r.total ? ` (ahorras ${pesos(r.sub - r.total)})` : ''),
+        '', empresaActiva ? `${empresaActiva.nombre} · ${empresaActiva.telefono}` : ''].join('\n');
+    }
+
+    ['lh-arreglo', 'lh-misa', 'lh-salon', 'lh-sesion'].forEach(id =>
+      document.getElementById(id).addEventListener('input', () => LISTA && renderLista()));
+    document.getElementById('btn-lista').addEventListener('click', abrirLista);
+    document.getElementById('btn-lista-cancelar').addEventListener('click', cerrarLista);
+    document.getElementById('btn-lista-usar').addEventListener('click', usarListaEnContrato);
+    document.getElementById('btn-lista-wa').addEventListener('click', async e => {
+      const txt = textoWhatsAppLista();
+      try { await navigator.clipboard.writeText(txt); e.target.textContent = '¡Copiado!'; }
+      catch (err) { prompt('Copia el texto:', txt); }
+      setTimeout(() => e.target.textContent = 'Copiar cotizacion (WhatsApp)', 1500);
+    });
 
     // =====================================================================
     // CLAUSULAS DE PROTECCION - UI

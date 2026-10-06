@@ -1,0 +1,44 @@
+{
+ "version": "2026-10-06",
+ "horasIncluidas": 4,
+ "redondeo": 100,
+ "combos": [
+  {"servicios": ["foto", "video"], "descuento": 10},
+  {"servicios": ["foto", "video", "dron"], "descuento": 15}
+ ],
+ "volumen": [
+  {"desde": 12000, "descuento": 5},
+  {"desde": 20000, "descuento": 10}
+ ],
+ "conceptos": [
+  {"id": "cobFoto", "nombre": "Fotografía de principio a fin", "grupo": "Cobertura del evento", "unidad": "", "precio": 1700, "precioXh": 0, "extraHora": 500, "combo": "foto"},
+  {"id": "cobVideo", "nombre": "Video de principio a fin", "grupo": "Cobertura del evento", "unidad": "", "precio": 1700, "precioXh": 0, "extraHora": 500, "combo": "video"},
+  {"id": "cobDron", "nombre": "Tomas aéreas con dron", "grupo": "Cobertura del evento", "unidad": "", "precio": 1700, "precioXh": 0, "extraHora": 0, "combo": "dron"},
+  {"id": "sesionPrevia", "nombre": "Sesión de fotos y video en otro día", "grupo": "Cobertura del evento", "unidad": "", "precio": 2300, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "fotoSel", "nombre": "Todas las fotos del evento, seleccionadas", "grupo": "Edición", "unidad": "", "precio": 0, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "fotoEdit", "nombre": "Todas tus fotos editadas una por una", "grupo": "Edición", "unidad": "", "precio": 600, "precioXh": 0, "extraHora": 0, "combo": "foto"},
+  {"id": "vidComp", "nombre": "Video completo de tu evento, editado y con audio limpio", "grupo": "Edición", "unidad": "", "precio": 600, "precioXh": 0, "extraHora": 0, "combo": "video"},
+  {"id": "panel", "nombre": "Panel de tu evento: preparativos, contrato, pagos y fechas importantes en línea", "grupo": "Página web del evento", "unidad": "", "precio": 0, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "selector", "nombre": "Selector de fotos: eliges tus favoritas para imprimir, ampliar y para el fotolibro", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "album", "nombre": "Álbum web privado: todas tus fotos para ver, compartir y descargar", "grupo": "Página web del evento", "unidad": "", "precio": 500, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "youtube", "nombre": "Tus videos en YouTube con enlace privado, capítulos y descripción", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "invWeb", "nombre": "Invitación web con tu propia dirección (nombres.invitados.org), cuenta regresiva y mapas", "grupo": "Página web del evento", "unidad": "", "precio": 1000, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "rsvp", "nombre": "Confirmación de asistencia en línea y pase con QR para cada invitado", "grupo": "Página web del evento", "unidad": "", "precio": 400, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "invitados", "nombre": "Lista de invitados y plano de mesas", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "acceso", "nombre": "Control de acceso en la puerta escaneando el QR", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "resumen", "nombre": "Video resumen: lo mejor de tu día en una canción", "grupo": "Videos adicionales", "unidad": "", "precio": 1200, "precioXh": 150, "extraHora": 0, "combo": ""},
+  {"id": "pelicula", "nombre": "Película cinematográfica con tomas de dron y música original", "grupo": "Videos adicionales", "unidad": "", "precio": 3000, "precioXh": 400, "extraHora": 0, "combo": ""},
+  {"id": "clip", "nombre": "Videoclip para proyectar en tu fiesta", "grupo": "Videos adicionales", "unidad": "", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "reel", "nombre": "Reel vertical para Instagram / TikTok", "grupo": "Videos adicionales", "unidad": "", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "cancion", "nombre": "Canción original con sus nombres", "grupo": "Videos adicionales", "unidad": "canción", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "imp57", "nombre": "fotos impresas 5×7\"", "grupo": "Impresos y entrega", "unidad": "foto", "precio": 12, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "imp68", "nombre": "fotos impresas 6×8\"", "grupo": "Impresos y entrega", "unidad": "foto", "precio": 15, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "cajaFotos", "nombre": "Caja de presentación para tus fotos", "grupo": "Impresos y entrega", "unidad": "", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "ampCh", "nombre": "Ampliación con marco 28×36 cm", "grupo": "Impresos y entrega", "unidad": "", "precio": 800, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "ampMd", "nombre": "Ampliación con marco 40×50 cm", "grupo": "Impresos y entrega", "unidad": "", "precio": 1200, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "ampGr", "nombre": "Ampliación con marco 60×80 cm", "grupo": "Impresos y entrega", "unidad": "", "precio": 1900, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "libro", "nombre": "Fotolibro 12×24\" con caja y mini fotolibro de regalo", "grupo": "Impresos y entrega", "unidad": "", "precio": 3600, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "usb", "nombre": "USB con todas tus fotos y videos, en caja de presentación", "grupo": "Impresos y entrega", "unidad": "", "precio": 600, "precioXh": 0, "extraHora": 0, "combo": ""},
+  {"id": "entrega", "nombre": "Entrega en persona", "grupo": "Impresos y entrega", "unidad": "", "precio": 400, "precioXh": 0, "extraHora": 0, "combo": ""}
+ ]
+}
