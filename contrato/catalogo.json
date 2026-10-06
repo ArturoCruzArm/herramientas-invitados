@@ -29,6 +29,16 @@
    "descuento": 10
   }
  ],
+ "secciones": [
+  "Fotografía",
+  "Video",
+  "Dron",
+  "Sesiones",
+  "Proyección en el salón",
+  "Página web del evento",
+  "Entregables físicos",
+  "Traslados y viáticos"
+ ],
  "conceptos": [
   {
    "id": "equipoFoto",
@@ -60,26 +70,29 @@
     "fotoSel",
     "edEquipoFoto",
     "selector",
-    "album",
-    "usb",
-    "cajaUsb"
+    "album"
+   ],
+   "avisa": [
+    "fotoSel",
+    "fotoEdit"
    ]
   },
   {
    "id": "fotoSel",
-   "nombre": "Todas las fotos del evento, seleccionadas",
+   "nombre": "Editor de fotos: selección de las mejores fotos con ajuste general",
    "grupo": "Fotografía",
    "unidad": "",
-   "precio": 0,
+   "precio": 250,
    "precioXh": 0,
    "extraHora": 0,
-   "combo": "",
-   "detalle": "Se revisan todas las fotos tomadas y se entregan todas las buenas: se descartan repetidas, desenfocadas u ojos cerrados. Llevan un ajuste general de luz y color en lote, sin edición individual. Se entregan en promedio unas 100 fotos por hora de cobertura, según el ritmo del evento.",
+   "combo": "foto",
+   "detalle": "El editor revisa todas las fotos tomadas y selecciona las buenas (descarta repetidas, desenfocadas u ojos cerrados); llevan un ajuste general de luz y color en lote, sin edición individual. Se entregan en promedio unas 100 fotos por hora de cobertura. El fotógrafo toma las fotos; la selección y edición es un trabajo aparte.",
    "cat": "edicion",
    "requiereUno": [
     "cobFoto",
     "equipoFoto",
-    "sesionPrevia"
+    "sesPrevFoto",
+    "sesPostFoto"
    ],
    "requiere": [
     "edEquipoFoto"
@@ -90,19 +103,20 @@
   },
   {
    "id": "fotoEdit",
-   "nombre": "Todas tus fotos editadas una por una",
+   "nombre": "Editor de fotos: todas tus fotos editadas una por una",
    "grupo": "Fotografía",
    "unidad": "",
    "precio": 450,
    "precioXh": 0,
    "extraHora": 0,
    "combo": "foto",
-   "detalle": "Edición de cada foto entregada, una por una, en Lightroom: luz, color, tono de piel natural, enderezado y encuadre. No incluye retoque de cuerpo ni de piel a detalle (ese retoque se hace en Photoshop solo en ampliaciones y portadas). Ya incluye la selección de las fotos.",
+   "detalle": "El editor edita cada foto entregada, una por una, en Lightroom: luz, color, tono de piel natural, enderezado y encuadre. Ya incluye la selección. No incluye retoque de cuerpo ni de piel a detalle (ese retoque se hace en Photoshop solo en ampliaciones y portadas).",
    "cat": "edicion",
    "requiereUno": [
     "cobFoto",
     "equipoFoto",
-    "sesionPrevia"
+    "sesPrevFoto",
+    "sesPostFoto"
    ],
    "requiere": [
     "edEquipoFoto"
@@ -110,9 +124,7 @@
    "excluye": [
     "fotoSel"
    ],
-   "sugiere": [
-    "trEdicion"
-   ]
+   "alternativa": "fotoSel"
   },
   {
    "id": "edEquipoFoto",
@@ -125,6 +137,70 @@
    "combo": "foto",
    "detalle": "Uso del equipo de edición para las fotos: computadora de trabajo, monitor, licencias de edición (Lightroom y Photoshop) y almacenamiento con respaldo del material.",
    "cat": "equipo",
+   "requiereUno": [
+    "fotoSel",
+    "fotoEdit"
+   ]
+  },
+  {
+   "id": "fotoWhats",
+   "nombre": "Entrega de las fotos por WhatsApp o enlace de descarga",
+   "grupo": "Fotografía",
+   "unidad": "",
+   "precio": 0,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Las fotos editadas se envían por WhatsApp o con un enlace de descarga, en buena resolución. Es la forma más rápida de recibirlas.",
+   "cat": "web",
+   "requiereUno": [
+    "fotoSel",
+    "fotoEdit"
+   ]
+  },
+  {
+   "id": "fotoTraspaso",
+   "nombre": "Traspaso de las fotos a tu propia memoria USB",
+   "grupo": "Fotografía",
+   "unidad": "",
+   "precio": 100,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "El cliente trae su propia memoria USB y se le copian todas las fotos en alta resolución.",
+   "cat": "web",
+   "requiereUno": [
+    "fotoSel",
+    "fotoEdit"
+   ]
+  },
+  {
+   "id": "selector",
+   "nombre": "Selector de fotos: eliges tus favoritas para imprimir, ampliar y para el fotolibro",
+   "grupo": "Fotografía",
+   "unidad": "",
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Página privada donde el cliente ve todas las fotos y marca cuáles quiere para impresión, ampliación, fotolibro y álbum digital. Lo marcado se guarda en línea y puede revisarlo la familia desde varios celulares. Se habilita cuando el paquete está liquidado.",
+   "cat": "web",
+   "requiereUno": [
+    "fotoSel",
+    "fotoEdit"
+   ]
+  },
+  {
+   "id": "album",
+   "nombre": "Álbum web privado: todas tus fotos para ver, compartir y descargar",
+   "grupo": "Fotografía",
+   "unidad": "",
+   "precio": 500,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Galería privada con todas las fotos entregadas, para verlas, compartirlas por WhatsApp y descargarlas en buena resolución. Se habilita cuando el paquete está liquidado y se mantiene durante el periodo de resguardo del material.",
+   "cat": "web",
    "requiereUno": [
     "fotoSel",
     "fotoEdit"
@@ -159,25 +235,101 @@
    "sugiere": [
     "vidComp",
     "edEquipoVideo",
+    "youtube",
+    "disMiniaturas",
     "usb",
     "cajaUsb",
-    "youtube"
+    "disCajaUsb"
+   ],
+   "avisa": [
+    "vidComp",
+    "resumen",
+    "pelicula",
+    "reel"
    ]
   },
   {
    "id": "vidComp",
-   "nombre": "Video completo de tu evento, editado y con audio limpio",
+   "nombre": "Edición básica: video completo de tu evento, con audio limpio",
    "grupo": "Video",
    "unidad": "",
    "precio": 450,
    "precioXh": 0,
    "extraHora": 0,
    "combo": "video",
-   "detalle": "Video de todo el evento editado: ceremonia y fiesta en orden, sin tiempos muertos, con el audio real limpio (votos, mensajes, discursos y la música del lugar) y títulos de inicio y cierre. Se entrega en YouTube privado y, si se contrata la USB, en archivo. Su duración depende de la cobertura (normalmente de 1 a 4 horas). Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
+   "detalle": "Edición básica del video de todo el evento: ceremonia y fiesta en orden, sin tiempos muertos, con el audio real limpio (votos, mensajes, discursos y la música del lugar) y títulos de inicio y cierre. El video grabado siempre lleva su edición. Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
    "cat": "edicion",
    "requiereUno": [
     "cobVideo",
     "equipoVideo"
+   ],
+   "requiere": [
+    "edEquipoVideo"
+   ],
+   "sugiere": [
+    "trEdicion"
+   ]
+  },
+  {
+   "id": "resumen",
+   "nombre": "Edición: video resumen con lo mejor de tu día en una canción",
+   "grupo": "Video",
+   "unidad": "",
+   "precio": 1200,
+   "precioXh": 150,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Video corto, normalmente de 3 a 5 minutos, con lo mejor del día montado al ritmo de una canción original creada para el evento. Ideal para compartir en redes y con la familia. Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
+   "cat": "edicion",
+   "requiereUno": [
+    "cobVideo",
+    "equipoVideo"
+   ],
+   "requiere": [
+    "edEquipoVideo"
+   ],
+   "sugiere": [
+    "trEdicion"
+   ]
+  },
+  {
+   "id": "pelicula",
+   "nombre": "Edición: película cinematográfica con música original",
+   "grupo": "Video",
+   "unidad": "",
+   "precio": 3000,
+   "precioXh": 400,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Película cinematográfica del evento, de 15 a 50 minutos según la cobertura: cuenta la historia del día con las mejores tomas de video (y de dron, si se contrató el dron), el audio de los votos y discursos, y música original. Lleva títulos y créditos. Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
+   "cat": "edicion",
+   "requiereUno": [
+    "cobVideo",
+    "equipoVideo"
+   ],
+   "requiere": [
+    "edEquipoVideo"
+   ],
+   "sugiere": [
+    "trEdicion"
+   ]
+  },
+  {
+   "id": "reel",
+   "nombre": "Edición: reel vertical para Instagram / TikTok",
+   "grupo": "Video",
+   "unidad": "",
+   "precio": 700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Video vertical de 30 a 60 segundos, pensado para Instagram, TikTok o estados de WhatsApp, con los momentos más emotivos y una canción. Se arma con las tomas ya contratadas (evento o sesión); aquí solo se cobra la edición.",
+   "cat": "edicion",
+   "requiereUno": [
+    "cobVideo",
+    "equipoVideo",
+    "sesPrevVideo",
+    "sesPostVideo"
    ],
    "requiere": [
     "edEquipoVideo"
@@ -197,6 +349,65 @@
    "combo": "video",
    "detalle": "Uso del equipo de edición para los videos: computadora de trabajo, licencias de edición, música original y almacenamiento con respaldo del material.",
    "cat": "equipo",
+   "requiereUno": [
+    "vidComp",
+    "resumen",
+    "pelicula",
+    "reel",
+    "clip",
+    "historia",
+    "titulos",
+    "edDron"
+   ]
+  },
+  {
+   "id": "youtube",
+   "nombre": "Entrega del video en YouTube con enlace privado, capítulos y descripción",
+   "grupo": "Video",
+   "unidad": "",
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "El video se entrega en YouTube como privado o no listado (solo lo ve quien tiene el enlace), con título, descripción y capítulos para ir directo a cada momento. No se publica abiertamente ni se monetiza; el cliente puede pedir que se retire cuando lo desee.",
+   "cat": "web",
+   "requiereUno": [
+    "vidComp",
+    "resumen",
+    "pelicula",
+    "reel",
+    "clip"
+   ],
+   "sugiere": [
+    "disMiniaturas"
+   ]
+  },
+  {
+   "id": "disMiniaturas",
+   "nombre": "Diseño de miniaturas personalizadas para YouTube",
+   "grupo": "Video",
+   "unidad": "",
+   "precio": 100,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Diseño personalizado de la imagen de portada (miniatura) de cada video en YouTube, con una foto del evento y sus nombres.",
+   "cat": "edicion",
+   "requiere": [
+    "youtube"
+   ]
+  },
+  {
+   "id": "vidTraspaso",
+   "nombre": "Traspaso del video a tu propia memoria USB",
+   "grupo": "Video",
+   "unidad": "",
+   "precio": 100,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "El cliente trae su propia memoria USB y se le copian los videos en alta resolución.",
+   "cat": "web",
    "requiereUno": [
     "vidComp",
     "resumen",
@@ -230,21 +441,184 @@
    "cat": "personal",
    "requiere": [
     "equipoDron"
+   ],
+   "sugiere": [
+    "edDron"
    ]
   },
   {
-   "id": "sesionPrevia",
-   "nombre": "Sesión de fotos y video en otro día",
-   "grupo": "Sesión previa",
+   "id": "edDron",
+   "nombre": "Edición de las tomas de dron integradas a tus videos",
+   "grupo": "Dron",
    "unidad": "",
-   "precio": 2050,
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "dron",
+   "detalle": "Edición adicional a la básica: se seleccionan, estabilizan y corrigen de color las tomas aéreas, y se integran a los videos contratados. No es lo mismo una edición básica que una edición con dron.",
+   "cat": "edicion",
+   "requiereUno": [
+    "cobDron",
+    "sesPrevDron",
+    "sesPostDron"
+   ],
+   "requiere": [
+    "edEquipoVideo"
+   ]
+  },
+  {
+   "id": "sesPrevFoto",
+   "nombre": "Sesión previa: fotografía (fotógrafo y equipo)",
+   "grupo": "Sesiones",
+   "unidad": "hora",
+   "precio": 450,
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Sesión de fotos y video en un día distinto al evento, de hasta 2 horas, en una locación dentro de León (exteriores o lugar acordado). Incluye las fotos seleccionadas en la galería web y el material para el videoclip de proyección si también se contrata. Las entradas a lugares con costo o permisos especiales corren por cuenta del cliente.",
+   "detalle": "Sesión previa en un día distinto al evento, cobrada por hora y por servicio. Fotografía, video y dron se hacen en serie, uno después de otro (por ejemplo 1 hora de fotos, 1 de video y 1 de dron), no al mismo tiempo. Esta parte es de fotografía: fotógrafo y equipo, por hora.",
    "cat": "personal",
    "sugiere": [
     "trSesionPrevia"
+   ]
+  },
+  {
+   "id": "sesPrevVideo",
+   "nombre": "Sesión previa: video (videógrafo y equipo)",
+   "grupo": "Sesiones",
+   "unidad": "hora",
+   "precio": 450,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Sesión previa en un día distinto al evento, cobrada por hora y por servicio. Fotografía, video y dron se hacen en serie, uno después de otro (por ejemplo 1 hora de fotos, 1 de video y 1 de dron), no al mismo tiempo. Esta parte es de video: videógrafo y equipo, por hora.",
+   "cat": "personal",
+   "sugiere": [
+    "trSesionPrevia"
+   ]
+  },
+  {
+   "id": "sesPrevDron",
+   "nombre": "Sesión previa: tomas con dron (piloto y dron)",
+   "grupo": "Sesiones",
+   "unidad": "hora",
+   "precio": 500,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Sesión previa en un día distinto al evento, cobrada por hora y por servicio. Fotografía, video y dron se hacen en serie, uno después de otro (por ejemplo 1 hora de fotos, 1 de video y 1 de dron), no al mismo tiempo. Esta parte es de dron: piloto y dron, por hora; se vuela solo si el clima y el lugar lo permiten.",
+   "cat": "personal",
+   "sugiere": [
+    "trSesionPrevia"
+   ]
+  },
+  {
+   "id": "sesPostFoto",
+   "nombre": "Sesión posterior: fotografía (fotógrafo y equipo)",
+   "grupo": "Sesiones",
+   "unidad": "hora",
+   "precio": 450,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Sesión posterior (después del evento) en un día distinto al evento, cobrada por hora y por servicio. Fotografía, video y dron se hacen en serie, uno después de otro (por ejemplo 1 hora de fotos, 1 de video y 1 de dron), no al mismo tiempo. Esta parte es de fotografía: fotógrafo y equipo, por hora.",
+   "cat": "personal",
+   "sugiere": [
+    "trSesionPost"
+   ]
+  },
+  {
+   "id": "sesPostVideo",
+   "nombre": "Sesión posterior: video (videógrafo y equipo)",
+   "grupo": "Sesiones",
+   "unidad": "hora",
+   "precio": 450,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Sesión posterior (después del evento) en un día distinto al evento, cobrada por hora y por servicio. Fotografía, video y dron se hacen en serie, uno después de otro (por ejemplo 1 hora de fotos, 1 de video y 1 de dron), no al mismo tiempo. Esta parte es de video: videógrafo y equipo, por hora.",
+   "cat": "personal",
+   "sugiere": [
+    "trSesionPost"
+   ]
+  },
+  {
+   "id": "sesPostDron",
+   "nombre": "Sesión posterior: tomas con dron (piloto y dron)",
+   "grupo": "Sesiones",
+   "unidad": "hora",
+   "precio": 500,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Sesión posterior (después del evento) en un día distinto al evento, cobrada por hora y por servicio. Fotografía, video y dron se hacen en serie, uno después de otro (por ejemplo 1 hora de fotos, 1 de video y 1 de dron), no al mismo tiempo. Esta parte es de dron: piloto y dron, por hora; se vuela solo si el clima y el lugar lo permiten.",
+   "cat": "personal",
+   "sugiere": [
+    "trSesionPost"
+   ]
+  },
+  {
+   "id": "clip",
+   "nombre": "Videoclip de la sesión para proyectar en tu fiesta",
+   "grupo": "Proyección en el salón",
+   "unidad": "",
+   "precio": 700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Videoclip de 2 a 4 minutos con las fotos y el video de la sesión previa, para proyectarse durante la fiesta. Se entrega antes del evento, por lo que la sesión debe hacerse con anticipación. La canción original se cotiza aparte.",
+   "cat": "edicion",
+   "requiereUno": [
+    "sesPrevFoto",
+    "sesPrevVideo"
+   ],
+   "requiere": [
+    "edEquipoVideo"
+   ],
+   "sugiere": [
+    "cancion",
+    "titulos"
+   ]
+  },
+  {
+   "id": "cancion",
+   "nombre": "Música original: canción creada con sus nombres",
+   "grupo": "Proyección en el salón",
+   "unidad": "canción",
+   "precio": 700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Canción original creada para el evento, con sus nombres y su historia, para el videoclip, el vals o la entrada. Se entrega en archivo de audio para que el DJ o el grupo la toque.",
+   "cat": "edicion"
+  },
+  {
+   "id": "historia",
+   "nombre": "Mi historia en fotos: montaje con fotos de su vida en orden cronológico",
+   "grupo": "Proyección en el salón",
+   "unidad": "",
+   "precio": 500,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "\"Mi historia en fotos\": montaje en video con las fotos de su vida en orden cronológico, de la niñez a hoy, para proyectarse en el salón. El cliente comparte sus fotos con anticipación.",
+   "cat": "edicion",
+   "requiere": [
+    "edEquipoVideo"
+   ]
+  },
+  {
+   "id": "titulos",
+   "nombre": "Títulos y textos para la proyección en el salón",
+   "grupo": "Proyección en el salón",
+   "unidad": "",
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Títulos y textos para la proyección en el salón: nombres, fecha, frases y dedicatorias, con el mismo diseño de los videos.",
+   "cat": "edicion",
+   "requiere": [
+    "edEquipoVideo"
    ]
   },
   {
@@ -258,40 +632,6 @@
    "combo": "",
    "detalle": "Página privada del evento con los preparativos, el contrato, los pagos y las fechas importantes, para consultarlos en cualquier momento desde el celular. Sin costo.",
    "cat": "web"
-  },
-  {
-   "id": "selector",
-   "nombre": "Selector de fotos: eliges tus favoritas para imprimir, ampliar y para el fotolibro",
-   "grupo": "Página web del evento",
-   "unidad": "",
-   "precio": 300,
-   "precioXh": 0,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Página privada donde el cliente ve todas las fotos y marca cuáles quiere para impresión, ampliación, fotolibro y álbum digital. Lo marcado se guarda en línea y puede revisarlo la familia desde varios celulares. Se habilita cuando el paquete está liquidado.",
-   "cat": "web",
-   "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
-   ]
-  },
-  {
-   "id": "album",
-   "nombre": "Álbum web privado: todas tus fotos para ver, compartir y descargar",
-   "grupo": "Página web del evento",
-   "unidad": "",
-   "precio": 500,
-   "precioXh": 0,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Galería privada con todas las fotos entregadas, para verlas, compartirlas por WhatsApp y descargarlas en buena resolución. Se habilita cuando el paquete está liquidado y se mantiene durante el periodo de resguardo del material.",
-   "cat": "web",
-   "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
-   ]
   },
   {
    "id": "invWeb",
@@ -351,163 +691,67 @@
    ]
   },
   {
-   "id": "youtube",
-   "nombre": "Tus videos en YouTube con enlace privado, capítulos y descripción",
-   "grupo": "Entrega",
-   "unidad": "",
-   "precio": 300,
-   "precioXh": 0,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Los videos se suben a YouTube como privados o no listados (solo los ve quien tiene el enlace), con título, descripción, capítulos para ir directo a cada momento y miniatura diseñada. No se publican abiertamente ni se monetizan; el cliente puede pedir que se retiren cuando lo desee.",
-   "cat": "web",
-   "requiereUno": [
-    "vidComp",
-    "resumen",
-    "pelicula",
-    "clip",
-    "reel"
-   ]
-  },
-  {
    "id": "usb",
    "nombre": "Memoria USB con todas tus fotos y videos",
-   "grupo": "Entrega",
-   "unidad": "",
+   "grupo": "Entregables físicos",
+   "unidad": "pieza",
    "precio": 150,
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Memoria USB con todas las fotos y videos en alta resolución. Si el cliente prefiere traer su propia memoria USB, este concepto se quita.",
+   "detalle": "Memoria USB nueva con todas las fotos y videos en alta resolución. Se puede pedir más de una (por ejemplo, una para cada familia). Si el cliente prefiere traer su propia USB, se elige el traspaso en su lugar.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "cobVideo",
-    "equipoFoto",
-    "equipoVideo",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit",
+    "vidComp",
+    "resumen",
+    "pelicula",
+    "reel",
+    "clip"
    ],
    "sugiere": [
+    "cajaUsb",
     "entrega"
    ]
   },
   {
    "id": "cajaUsb",
-   "nombre": "Caja de presentación para la USB, con portada",
-   "grupo": "Entrega",
-   "unidad": "",
-   "precio": 500,
+   "nombre": "Caja de presentación para la USB",
+   "grupo": "Entregables físicos",
+   "unidad": "pieza",
+   "precio": 350,
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Caja de presentación para la memoria USB, con portada diseñada con su foto y sus nombres.",
+   "detalle": "Caja de presentación para la memoria USB.",
    "cat": "producto",
    "requiere": [
     "usb"
-   ]
-  },
-  {
-   "id": "resumen",
-   "nombre": "Video resumen: lo mejor de tu día en una canción",
-   "grupo": "Videos adicionales",
-   "unidad": "",
-   "precio": 1200,
-   "precioXh": 150,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Video corto, normalmente de 3 a 5 minutos, con lo mejor del día montado al ritmo de una canción original creada para el evento. Ideal para compartir en redes y con la familia. Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
-   "cat": "edicion",
-   "requiereUno": [
-    "cobVideo",
-    "equipoVideo"
-   ],
-   "requiere": [
-    "edEquipoVideo"
    ],
    "sugiere": [
-    "trEdicion"
+    "disCajaUsb"
    ]
   },
   {
-   "id": "pelicula",
-   "nombre": "Película cinematográfica con música original",
-   "grupo": "Videos adicionales",
+   "id": "disCajaUsb",
+   "nombre": "Diseño personalizado de la portada de la caja de la USB",
+   "grupo": "Entregables físicos",
    "unidad": "",
-   "precio": 3000,
-   "precioXh": 400,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Película cinematográfica del evento, de 15 a 50 minutos según la cobertura: cuenta la historia del día con las mejores tomas de video (y de dron, si se contrató el dron), el audio de los votos y discursos, y música original. Lleva títulos y créditos. Se edita con las tomas de la cobertura de video contratada; aquí solo se cobra la edición.",
-   "cat": "edicion",
-   "requiereUno": [
-    "cobVideo",
-    "equipoVideo"
-   ],
-   "requiere": [
-    "edEquipoVideo"
-   ],
-   "sugiere": [
-    "trEdicion"
-   ]
-  },
-  {
-   "id": "clip",
-   "nombre": "Videoclip para proyectar en tu fiesta",
-   "grupo": "Videos adicionales",
-   "unidad": "",
-   "precio": 700,
+   "precio": 150,
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Videoclip de 2 a 4 minutos con las fotos y el video de la sesión, musicalizado, para proyectarse durante la fiesta. Se entrega antes del evento, por lo que requiere que la sesión se haga con anticipación. Se arma con las fotos y el video de la sesión previa; aquí solo se cobra la edición.",
+   "detalle": "Diseño personalizado de la portada de la caja de la USB, con su foto y sus nombres.",
    "cat": "edicion",
    "requiere": [
-    "sesionPrevia",
-    "edEquipoVideo"
-   ],
-   "sugiere": [
-    "trEdicion"
+    "cajaUsb"
    ]
-  },
-  {
-   "id": "reel",
-   "nombre": "Reel vertical para Instagram / TikTok",
-   "grupo": "Videos adicionales",
-   "unidad": "",
-   "precio": 700,
-   "precioXh": 0,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Video vertical de 30 a 60 segundos, pensado para Instagram, TikTok o estados de WhatsApp, con los momentos más emotivos y una canción. Se arma con las tomas ya contratadas (evento o sesión); aquí solo se cobra la edición.",
-   "cat": "edicion",
-   "requiereUno": [
-    "cobVideo",
-    "equipoVideo",
-    "sesionPrevia"
-   ],
-   "requiere": [
-    "edEquipoVideo"
-   ],
-   "sugiere": [
-    "trEdicion"
-   ]
-  },
-  {
-   "id": "cancion",
-   "nombre": "Canción original con sus nombres",
-   "grupo": "Videos adicionales",
-   "unidad": "canción",
-   "precio": 700,
-   "precioXh": 0,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Canción original creada para el evento, con sus nombres y su historia, para el vals, la entrada o un momento especial. Se entrega en archivo de audio para que el DJ o el grupo la toque.",
-   "cat": "edicion"
   },
   {
    "id": "imp57",
    "nombre": "fotos impresas 5×7\"",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "foto",
    "precio": 12,
    "precioXh": 0,
@@ -516,9 +760,8 @@
    "detalle": "Impresión fotográfica profesional en tamaño 5×7 pulgadas (13×18 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit"
    ],
    "sugiere": [
     "trImpresion",
@@ -528,7 +771,7 @@
   {
    "id": "imp68",
    "nombre": "fotos impresas 6×8\"",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "foto",
    "precio": 15,
    "precioXh": 0,
@@ -537,9 +780,8 @@
    "detalle": "Impresión fotográfica profesional en tamaño 6×8 pulgadas (15×20 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit"
    ],
    "sugiere": [
     "trImpresion",
@@ -549,27 +791,43 @@
   {
    "id": "cajaFotos",
    "nombre": "Caja de presentación para tus fotos",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "",
-   "precio": 650,
+   "precio": 500,
    "precioXh": 0,
    "extraHora": 0,
    "combo": "",
-   "detalle": "Caja de presentación para guardar las fotos impresas, con portada diseñada con su foto y sus nombres.",
+   "detalle": "Caja de presentación para guardar las fotos impresas.",
    "cat": "producto",
    "requiereUno": [
     "imp57",
     "imp68"
    ],
    "sugiere": [
+    "disCajaFotos",
     "trImpresion",
     "entrega"
    ]
   },
   {
+   "id": "disCajaFotos",
+   "nombre": "Diseño personalizado de la portada de la caja de fotos",
+   "grupo": "Entregables físicos",
+   "unidad": "",
+   "precio": 150,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Diseño personalizado de la portada de la caja de fotos, con su foto y sus nombres.",
+   "cat": "edicion",
+   "requiere": [
+    "cajaFotos"
+   ]
+  },
+  {
    "id": "ampCh",
    "nombre": "Ampliación con marco 28×36 cm",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "",
    "precio": 800,
    "precioXh": 0,
@@ -578,9 +836,8 @@
    "detalle": "Ampliación de 28×36 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit"
    ],
    "sugiere": [
     "trAmpliacion",
@@ -590,7 +847,7 @@
   {
    "id": "ampMd",
    "nombre": "Ampliación con marco 40×50 cm",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "",
    "precio": 1250,
    "precioXh": 0,
@@ -599,9 +856,8 @@
    "detalle": "Ampliación de 40×50 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit"
    ],
    "sugiere": [
     "trAmpliacion",
@@ -611,7 +867,7 @@
   {
    "id": "ampXl",
    "nombre": "Ampliación con marco 20×24\" (50×61 cm)",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "",
    "precio": 1550,
    "precioXh": 0,
@@ -620,9 +876,8 @@
    "detalle": "Ampliación de 20×24 pulgadas (50×61 cm) de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit"
    ],
    "sugiere": [
     "trAmpliacion",
@@ -632,7 +887,7 @@
   {
    "id": "ampGr",
    "nombre": "Ampliación con marco 60×80 cm",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "",
    "precio": 1900,
    "precioXh": 0,
@@ -641,9 +896,8 @@
    "detalle": "Ampliación de 60×80 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit"
    ],
    "sugiere": [
     "trAmpliacion",
@@ -653,7 +907,7 @@
   {
    "id": "libro",
    "nombre": "Fotolibro 12×24\" con caja y mini fotolibro de regalo",
-   "grupo": "Impresos y entrega",
+   "grupo": "Entregables físicos",
    "unidad": "",
    "precio": 3600,
    "precioXh": 0,
@@ -662,9 +916,8 @@
    "detalle": "Fotolibro de 12×24 pulgadas con 10 hojas (20 páginas) y alrededor de 100 fotos, con diseño a medida y portada retocada, en caja; incluye de regalo un mini fotolibro. Las fotos se eligen en el selector.",
    "cat": "producto",
    "requiereUno": [
-    "cobFoto",
-    "equipoFoto",
-    "sesionPrevia"
+    "fotoSel",
+    "fotoEdit"
    ],
    "sugiere": [
     "trImpresion",
@@ -674,7 +927,7 @@
   {
    "id": "trCasa",
    "nombre": "Traslado a la casa de la festejada (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -687,7 +940,7 @@
   {
    "id": "trMisa",
    "nombre": "Traslado a la ceremonia (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -700,7 +953,7 @@
   {
    "id": "trFiesta",
    "nombre": "Traslado a la recepción (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -713,7 +966,7 @@
   {
    "id": "trSesion",
    "nombre": "Traslado a la sesión del mismo día (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -726,7 +979,7 @@
   {
    "id": "trSesionPrevia",
    "nombre": "Traslado a la sesión previa (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -734,14 +987,33 @@
    "combo": "",
    "detalle": "Traslado de ida y vuelta del equipo y el personal (a la locación de la sesión previa): $100 de ida y $100 de regreso, dentro de León.",
    "cat": "traslado",
-   "requiere": [
-    "sesionPrevia"
+   "requiereUno": [
+    "sesPrevFoto",
+    "sesPrevVideo",
+    "sesPrevDron"
+   ]
+  },
+  {
+   "id": "trSesionPost",
+   "nombre": "Traslado a la sesión posterior (ida y vuelta)",
+   "grupo": "Traslados y viáticos",
+   "unidad": "",
+   "precio": 200,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Traslado de ida y vuelta del equipo y el personal (a la locación de la sesión posterior): $100 de ida y $100 de regreso, dentro de León.",
+   "cat": "traslado",
+   "requiereUno": [
+    "sesPostFoto",
+    "sesPostVideo",
+    "sesPostDron"
    ]
   },
   {
    "id": "trContrato",
    "nombre": "Visita para firmar el contrato (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -753,7 +1025,7 @@
   {
    "id": "trEdicion",
    "nombre": "Traslado para llevar el material a edición (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -766,14 +1038,13 @@
     "resumen",
     "pelicula",
     "reel",
-    "clip",
-    "fotoEdit"
+    "clip"
    ]
   },
   {
    "id": "trImpresion",
    "nombre": "Traslado al laboratorio de impresión (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -791,7 +1062,7 @@
   {
    "id": "trAmpliacion",
    "nombre": "Traslado para hacer la ampliación y el marco (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -807,21 +1078,9 @@
    ]
   },
   {
-   "id": "viaticos",
-   "nombre": "Viáticos fuera de León",
-   "grupo": "Traslados",
-   "unidad": "viaje",
-   "precio": 900,
-   "precioXh": 0,
-   "extraHora": 0,
-   "combo": "",
-   "detalle": "Gastos de traslado, casetas, gasolina y, si hace falta, hospedaje y alimentos cuando la sesión o el evento son fuera de León. Se especifica el lugar y el monto por viaje; aplica a la sesión, al evento o a ambos.",
-   "cat": "traslado"
-  },
-  {
    "id": "entrega",
    "nombre": "Entrega a domicilio (ida y vuelta)",
-   "grupo": "Traslados",
+   "grupo": "Traslados y viáticos",
    "unidad": "",
    "precio": 200,
    "precioXh": 0,
@@ -840,6 +1099,18 @@
     "libro",
     "usb"
    ]
+  },
+  {
+   "id": "viaticos",
+   "nombre": "Viáticos fuera de León",
+   "grupo": "Traslados y viáticos",
+   "unidad": "viaje",
+   "precio": 900,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Gastos de traslado, casetas, gasolina y, si hace falta, hospedaje y alimentos cuando la sesión o el evento son fuera de León. Se especifica el lugar y el monto por viaje; aplica a la sesión, al evento o a ambos.",
+   "cat": "traslado"
   }
  ]
 }

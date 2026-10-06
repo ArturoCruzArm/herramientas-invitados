@@ -1264,11 +1264,17 @@
         sug.forEach(s => { sel[s] = 1; satisfacer(s); });
         if (sug.length) msgs.push(`Con «${nom(id)}» se marcaron tambien: ${sug.map(nom).join(', ')}. Puedes quitar lo que no necesite.`);
       }
+      // al quitar algo que tiene alternativa (p. ej. edicion una por una -> seleccion), se marca la otra
+      const alt = !marcado && por[id] && por[id].alternativa;
+      if (alt && por[alt] && !+sel[alt]){ sel[alt] = 1; satisfacer(alt); msgs.push(`Se marco «${nom(alt)}» en lugar de «${nom(id)}».`); }
       let cambio = true;
       while (cambio) {
         cambio = false;
         cat.forEach(c => { if (+sel[c.id] && !cumple(c)) { sel[c.id] = 0; cambio = true; msgs.push(`Se quito «${c.nombre}»: necesita algo que ya no esta marcado.`); } });
       }
+      // avisos: lo grabado siempre lleva su edicion
+      cat.forEach(c => { if (+sel[c.id] && (c.avisa || []).some(r => por[r]) && !(c.avisa || []).some(r => +sel[r]))
+        msgs.push(`«${c.nombre}» necesita su edicion: elige ${(c.avisa || []).filter(r => por[r]).map(nom).join(' o ')}.`); });
       return msgs;
     }
     function textoRequisitos(c, cat) {
@@ -1283,8 +1289,8 @@
     const LISTA_GRATIS = {};            // cortesias
     const LISTA_VIAT = { lugar: '', monto: 0 };
     const LISTA_SEL = { equipoFoto: 1, cobFoto: 1, fotoSel: 1, edEquipoFoto: 1, selector: 1, album: 1,
-                        equipoVideo: 1, cobVideo: 1, vidComp: 1, edEquipoVideo: 1, usb: 1, cajaUsb: 1, youtube: 1,
-                        equipoDron: 1, cobDron: 1, panel: 1, trEdicion: 1, entrega: 1 };
+                        equipoVideo: 1, cobVideo: 1, vidComp: 1, edEquipoVideo: 1, youtube: 1, disMiniaturas: 1,
+                        usb: 1, cajaUsb: 1, disCajaUsb: 1, equipoDron: 1, cobDron: 1, edDron: 1, panel: 1, trEdicion: 1, entrega: 1 };
     const LUGAR_INPUT = { hArreglo: 'lh-arreglo', hMisa: 'lh-misa', hSalon: 'lh-salon', hSesion: 'lh-sesion' };
     const lh = id => parseFloat(document.getElementById(id).value) || 0;
     const horasCob = () => lh('lh-arreglo') + lh('lh-misa') + lh('lh-salon') + lh('lh-sesion');
@@ -1298,7 +1304,7 @@
       if (c.id === 'viaticos' && +LISTA_VIAT.monto) return +LISTA_VIAT.monto;
       const extra = Math.max(0, horasCob() - (LISTA.horasIncluidas || 0));
       const v = c.precio + (c.precioXh || 0) * horasCob() + (c.extraHora || 0) * extra;
-      return c.unidad ? Math.ceil(v) : redondear(v);
+      return c.unidad === 'foto' ? Math.ceil(v) : redondear(v);   // solo las fotos impresas van al peso
     }
     function comboActivo() {
       return new Set(LISTA.conceptos.filter(c => c.combo && +LISTA_SEL[c.id]).map(c => c.combo));
@@ -1329,6 +1335,7 @@
       let t = l.c.precioXh && !l.c.unidad && /^(cob|equipo)/.test(l.c.id) ? `${l.c.nombre} (${h} ${h === 1 ? 'hora' : 'horas'})`
             : (l.c.unidad ? l.q + ' ' : '') + nombreLista(l.c);
       if (l.c.id === 'viaticos') t = `${nombreLista(l.c)} (${l.q} ${l.q === 1 ? 'viaje' : 'viajes'})`;
+      if (l.c.unidad === 'hora') t = `${l.c.nombre} (${l.q} ${l.q === 1 ? 'hora' : 'horas'})`;
       return t + (l.gratis ? ' (cortesia)' : '');
     }
 
@@ -1343,7 +1350,7 @@
         const precio = !p ? 'Incluido' : gratis ? `<s>${pesos(p)}</s><b style="color:#1b7a43">Gratis</b>`
                      : (pc < p ? `<s>${pesos(p)}</s>${pesos(pc)}` : pesos(p)) + (c.unidad ? ' c/u' : '');
         const ctl = c.unidad
-          ? `<input type="number" class="lista-cant" min="0" step="${c.unidad === 'foto' ? 10 : 1}" data-id="${c.id}" value="${q || ''}" placeholder="0">`
+          ? `<input type="number" class="lista-cant" min="0" step="${c.unidad === 'foto' ? 10 : c.unidad === 'hora' ? 0.5 : 1}" data-id="${c.id}" value="${q || ''}" placeholder="${c.unidad === 'hora' ? 'horas' : '0'}">`
           : `<input type="checkbox" data-id="${c.id}"${q ? ' checked' : ''}${c.lugar ? ' disabled title="Se agrega solo segun las horas"' : ''}>`;
         // lo que necesita cada concepto va dentro del icono (en el celular la lista quedaba muy larga)
         const req = textoRequisitos(c, LISTA.conceptos);
@@ -1369,7 +1376,7 @@
         i.addEventListener('change', () => { LISTA_VIAT[i.dataset.viat] = i.dataset.viat === 'monto' ? (+i.value || 0) : i.value.trim(); renderLista(); });
       });
       box.querySelectorAll('[data-id]').forEach(el => el.addEventListener('change', () => {
-        LISTA_SEL[el.dataset.id] = el.type === 'checkbox' ? (el.checked ? 1 : 0) : Math.max(0, parseInt(el.value) || 0);
+        LISTA_SEL[el.dataset.id] = el.type === 'checkbox' ? (el.checked ? 1 : 0) : Math.max(0, parseFloat(el.value) || 0);
         LISTA_AVISOS = ajustarSeleccion(LISTA_SEL, LISTA.conceptos, el.dataset.id, !!LISTA_SEL[el.dataset.id]);
         renderLista();
       }));
@@ -1409,7 +1416,9 @@
       if (!LISTA) return;
       const r = cotizarLista();
       if (!r.lineas.length) { alert('Marca al menos un concepto.'); return; }
-      PAQUETES.lista = { nombre: 'Cotizacion a la medida', incluye: r.lineas.map(textoLinea),
+      const secciones = (LISTA.secciones || [...new Set(LISTA.conceptos.map(c => c.grupo))])
+        .map(s => ({ titulo: s, items: r.lineas.filter(l => l.c.grupo === s).map(textoLinea) })).filter(s => s.items.length);
+      PAQUETES.lista = { nombre: 'Cotizacion a la medida', incluye: r.lineas.map(textoLinea), secciones,
         definiciones: r.lineas
           .filter(l => l.c.detalle && (document.getElementById('lista-def-todas').checked || LISTA_ABIERTAS.has(l.c.id)))
           .map(l => ({ nombre: l.c.nombre, detalle: l.c.detalle })) };
@@ -1705,7 +1714,9 @@
         </table>
 
         <h2>${sec++}. PAQUETE CONTRATADO: ${paq ? paq.nombre.toUpperCase() : BLANK}</h2>
-        ${paq ? `<p>El presente paquete incluye:</p><ul>${paq.incluye.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
+        ${paq && paq.secciones ? `<p>Los servicios contratados, por seccion:</p>${paq.secciones.map(s =>
+            `<p style="margin:8pt 0 2pt"><strong>${s.titulo}</strong></p><ul>${s.items.map(item => `<li>${item}</li>`).join('')}</ul>`).join('')}`
+          : paq ? `<p>El presente paquete incluye:</p><ul>${paq.incluye.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
 
         ${paq && paq.definiciones && paq.definiciones.length ? `<h2>${sec++}. DEFINICION DE LOS SERVICIOS CONTRATADOS</h2>
           <p class="clausula">Para que ambas partes tengan claro el alcance de cada concepto, se describe lo que incluye y sus condiciones:</p>
