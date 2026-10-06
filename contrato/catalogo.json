@@ -50,7 +50,10 @@
    "extraHora": 0,
    "combo": "foto",
    "detalle": "Renta del equipo fotográfico profesional para el evento: cámara, lentes, flash, tarjetas y pilas de respaldo. Se desglosa aparte del fotógrafo porque es el equipo en el que se invirtió; su cobro sirve para mantenerlo y reponerlo. Se cobra por hora, sin cargo inicial ni final: cada hora adicional en el mismo lugar cuesta lo mismo que las demás.",
-   "cat": "equipo"
+   "cat": "equipo",
+   "puesto": "Renta de equipo",
+   "cliente": "Renta de equipo fotográfico (cámara, lentes, flash y respaldo)",
+   "tecnico": true
   },
   {
    "id": "cobFoto",
@@ -75,7 +78,9 @@
    "avisa": [
     "fotoSel",
     "fotoEdit"
-   ]
+   ],
+   "puesto": "Fotógrafo",
+   "cliente": "Fotografía de todo tu evento"
   },
   {
    "id": "fotoSel",
@@ -99,7 +104,9 @@
    ],
    "excluye": [
     "fotoEdit"
-   ]
+   ],
+   "puesto": "Editor de fotos",
+   "cliente": "Todas tus fotos, seleccionadas y con ajuste de color"
   },
   {
    "id": "fotoEdit",
@@ -124,7 +131,9 @@
    "excluye": [
     "fotoSel"
    ],
-   "alternativa": "fotoSel"
+   "alternativa": "fotoSel",
+   "puesto": "Editor de fotos",
+   "cliente": "Todas tus fotos editadas una por una"
   },
   {
    "id": "edEquipoFoto",
@@ -140,7 +149,10 @@
    "requiereUno": [
     "fotoSel",
     "fotoEdit"
-   ]
+   ],
+   "puesto": "Renta de equipo",
+   "cliente": "Equipo de edición de fotos (computadora, licencias y respaldo)",
+   "tecnico": true
   },
   {
    "id": "fotoWhats",
@@ -156,7 +168,9 @@
    "requiereUno": [
     "fotoSel",
     "fotoEdit"
-   ]
+   ],
+   "puesto": "Entrega digital",
+   "cliente": "Tus fotos por WhatsApp o enlace de descarga"
   },
   {
    "id": "fotoTraspaso",
@@ -172,7 +186,9 @@
    "requiereUno": [
     "fotoSel",
     "fotoEdit"
-   ]
+   ],
+   "puesto": "Entrega digital",
+   "cliente": "Tus fotos copiadas a tu memoria USB"
   },
   {
    "id": "selector",
@@ -188,7 +204,9 @@
    "requiereUno": [
     "fotoSel",
     "fotoEdit"
-   ]
+   ],
+   "puesto": "Entrega digital",
+   "cliente": "Selector web para elegir tus fotos favoritas"
   },
   {
    "id": "album",
@@ -204,7 +222,9 @@
    "requiereUno": [
     "fotoSel",
     "fotoEdit"
-   ]
+   ],
+   "puesto": "Entrega digital",
+   "cliente": "Álbum web privado con todas tus fotos"
   },
   {
    "id": "equipoVideo",
@@ -216,7 +236,10 @@
    "extraHora": 0,
    "combo": "video",
    "detalle": "Renta del equipo de video profesional para el evento: cámaras, estabilizador, micrófonos inalámbricos, pilas y tarjetas de respaldo. Se desglosa aparte del videógrafo porque es el equipo en el que se invirtió; su cobro sirve para mantenerlo y reponerlo. Se cobra por hora, sin cargo inicial ni final: cada hora adicional en el mismo lugar cuesta lo mismo que las demás.",
-   "cat": "equipo"
+   "cat": "equipo",
+   "puesto": "Renta de equipo",
+   "cliente": "Renta de equipo de video (cámaras, estabilizador y micrófonos)",
+   "tecnico": true
   },
   {
    "id": "cobVideo",
@@ -246,7 +269,9 @@
     "resumen",
     "pelicula",
     "reel"
-   ]
+   ],
+   "puesto": "Videógrafo",
+   "cliente": "Video de todo tu evento"
   },
   {
    "id": "vidComp",
@@ -268,7 +293,9 @@
    ],
    "sugiere": [
     "trEdicion"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Video completo de tu evento en alta definición"
   },
   {
    "id": "resumen",
@@ -290,7 +317,9 @@
    ],
    "sugiere": [
     "trEdicion"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Video resumen con lo mejor de tu día"
   },
   {
    "id": "pelicula",
@@ -312,7 +341,9 @@
    ],
    "sugiere": [
     "trEdicion"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Película cinematográfica en alta definición"
   },
   {
    "id": "reel",
@@ -336,7 +367,9 @@
    ],
    "sugiere": [
     "trEdicion"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Reel vertical para redes sociales"
   },
   {
    "id": "edEquipoVideo",
@@ -358,7 +391,10 @@
     "historia",
     "titulos",
     "edDron"
-   ]
+   ],
+   "puesto": "Renta de equipo",
+   "cliente": "Equipo de edición de video (computadora, licencias y respaldo)",
+   "tecnico": true
   },
   {
    "id": "youtube",
@@ -380,7 +416,9 @@
    ],
    "sugiere": [
     "disMiniaturas"
-   ]
+   ],
+   "puesto": "Entrega digital",
+   "cliente": "Tus videos en YouTube con enlace privado"
   },
   {
    "id": "disMiniaturas",
@@ -395,7 +433,10 @@
    "cat": "edicion",
    "requiere": [
     "youtube"
-   ]
+   ],
+   "puesto": "Diseño",
+   "cliente": "Diseño de miniaturas personalizadas para YouTube",
+   "tecnico": true
   },
   {
    "id": "vidTraspaso",
@@ -414,7 +455,9 @@
     "pelicula",
     "reel",
     "clip"
-   ]
+   ],
+   "puesto": "Entrega digital",
+   "cliente": "Tus videos copiados a tu memoria USB"
   },
   {
    "id": "equipoDron",
@@ -426,7 +469,10 @@
    "extraHora": 0,
    "combo": "dron",
    "detalle": "Renta del dron con sus baterías, hélices y tarjetas de respaldo para las tomas aéreas del evento.",
-   "cat": "equipo"
+   "cat": "equipo",
+   "puesto": "Renta de equipo",
+   "cliente": "Renta del dron (con baterías y respaldo)",
+   "tecnico": true
   },
   {
    "id": "cobDron",
@@ -444,7 +490,9 @@
    ],
    "sugiere": [
     "edDron"
-   ]
+   ],
+   "puesto": "Dronero",
+   "cliente": "Tomas aéreas con dron"
   },
   {
    "id": "edDron",
@@ -464,7 +512,10 @@
    ],
    "requiere": [
     "edEquipoVideo"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Edición de las tomas de dron integradas a tus videos",
+   "tecnico": true
   },
   {
    "id": "sesPrevFoto",
@@ -479,7 +530,9 @@
    "cat": "personal",
    "sugiere": [
     "trSesionPrevia"
-   ]
+   ],
+   "puesto": "Fotógrafo",
+   "cliente": "Sesión previa: fotos"
   },
   {
    "id": "sesPrevVideo",
@@ -494,7 +547,9 @@
    "cat": "personal",
    "sugiere": [
     "trSesionPrevia"
-   ]
+   ],
+   "puesto": "Videógrafo",
+   "cliente": "Sesión previa: video"
   },
   {
    "id": "sesPrevDron",
@@ -509,7 +564,9 @@
    "cat": "personal",
    "sugiere": [
     "trSesionPrevia"
-   ]
+   ],
+   "puesto": "Dronero",
+   "cliente": "Sesión previa: tomas con dron"
   },
   {
    "id": "sesPostFoto",
@@ -524,7 +581,9 @@
    "cat": "personal",
    "sugiere": [
     "trSesionPost"
-   ]
+   ],
+   "puesto": "Fotógrafo",
+   "cliente": "Sesión posterior: fotos"
   },
   {
    "id": "sesPostVideo",
@@ -539,7 +598,9 @@
    "cat": "personal",
    "sugiere": [
     "trSesionPost"
-   ]
+   ],
+   "puesto": "Videógrafo",
+   "cliente": "Sesión posterior: video"
   },
   {
    "id": "sesPostDron",
@@ -554,7 +615,9 @@
    "cat": "personal",
    "sugiere": [
     "trSesionPost"
-   ]
+   ],
+   "puesto": "Dronero",
+   "cliente": "Sesión posterior: tomas con dron"
   },
   {
    "id": "clip",
@@ -577,7 +640,9 @@
    "sugiere": [
     "cancion",
     "titulos"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Videoclip de tu sesión para proyectar en tu fiesta"
   },
   {
    "id": "cancion",
@@ -589,7 +654,9 @@
    "extraHora": 0,
    "combo": "",
    "detalle": "Canción original creada para el evento, con sus nombres y su historia, para el videoclip, el vals o la entrada. Se entrega en archivo de audio para que el DJ o el grupo la toque.",
-   "cat": "edicion"
+   "cat": "edicion",
+   "puesto": "Música original",
+   "cliente": "Canción original con tus nombres"
   },
   {
    "id": "historia",
@@ -604,7 +671,9 @@
    "cat": "edicion",
    "requiere": [
     "edEquipoVideo"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Mi historia en fotos"
   },
   {
    "id": "titulos",
@@ -619,7 +688,9 @@
    "cat": "edicion",
    "requiere": [
     "edEquipoVideo"
-   ]
+   ],
+   "puesto": "Editor de video",
+   "cliente": "Títulos para la proyección en el salón"
   },
   {
    "id": "panel",
@@ -631,7 +702,9 @@
    "extraHora": 0,
    "combo": "",
    "detalle": "Página privada del evento con los preparativos, el contrato, los pagos y las fechas importantes, para consultarlos en cualquier momento desde el celular. Sin costo.",
-   "cat": "web"
+   "cat": "web",
+   "puesto": "Página web",
+   "cliente": "Panel de tu evento: preparativos, contrato, pagos y fechas importantes en línea"
   },
   {
    "id": "invWeb",
@@ -643,7 +716,9 @@
    "extraHora": 0,
    "combo": "",
    "detalle": "Invitación digital con su propia dirección (por ejemplo nombres.invitados.org): fotos, cuenta regresiva, ubicación de ceremonia y salón con mapa, itinerario y música. Se comparte por WhatsApp y se puede actualizar si cambia algún dato.",
-   "cat": "web"
+   "cat": "web",
+   "puesto": "Página web",
+   "cliente": "Invitación web con tu propia dirección (nombres.invitados.org), cuenta regresiva y mapas"
   },
   {
    "id": "rsvp",
@@ -658,7 +733,9 @@
    "cat": "web",
    "requiere": [
     "invWeb"
-   ]
+   ],
+   "puesto": "Página web",
+   "cliente": "Confirmación de asistencia en línea y pase con QR para cada invitado"
   },
   {
    "id": "invitados",
@@ -673,7 +750,9 @@
    "cat": "web",
    "requiere": [
     "rsvp"
-   ]
+   ],
+   "puesto": "Página web",
+   "cliente": "Lista de invitados y plano de mesas"
   },
   {
    "id": "acceso",
@@ -688,7 +767,9 @@
    "cat": "web",
    "requiere": [
     "rsvp"
-   ]
+   ],
+   "puesto": "Página web",
+   "cliente": "Control de acceso en la puerta escaneando el QR"
   },
   {
    "id": "usb",
@@ -713,7 +794,9 @@
    "sugiere": [
     "cajaUsb",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Memoria USB con tus fotos y videos"
   },
   {
    "id": "cajaUsb",
@@ -731,7 +814,9 @@
    ],
    "sugiere": [
     "disCajaUsb"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Caja personalizada para tu USB"
   },
   {
    "id": "disCajaUsb",
@@ -746,7 +831,10 @@
    "cat": "edicion",
    "requiere": [
     "cajaUsb"
-   ]
+   ],
+   "puesto": "Diseño",
+   "cliente": "Diseño personalizado de la portada de la caja de la USB",
+   "tecnico": true
   },
   {
    "id": "imp57",
@@ -766,7 +854,9 @@
    "sugiere": [
     "trImpresion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "fotos impresas 5×7\""
   },
   {
    "id": "imp68",
@@ -786,7 +876,9 @@
    "sugiere": [
     "trImpresion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "fotos impresas 6×8\""
   },
   {
    "id": "cajaFotos",
@@ -807,7 +899,9 @@
     "disCajaFotos",
     "trImpresion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Caja personalizada para tus fotos"
   },
   {
    "id": "disCajaFotos",
@@ -822,7 +916,10 @@
    "cat": "edicion",
    "requiere": [
     "cajaFotos"
-   ]
+   ],
+   "puesto": "Diseño",
+   "cliente": "Diseño personalizado de la portada de la caja de fotos",
+   "tecnico": true
   },
   {
    "id": "ampCh",
@@ -842,7 +939,9 @@
    "sugiere": [
     "trAmpliacion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Ampliación con marco 28×36 cm"
   },
   {
    "id": "ampMd",
@@ -862,7 +961,9 @@
    "sugiere": [
     "trAmpliacion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Ampliación con marco 40×50 cm"
   },
   {
    "id": "ampXl",
@@ -882,7 +983,9 @@
    "sugiere": [
     "trAmpliacion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Ampliación con marco 20×24\" (50×61 cm)"
   },
   {
    "id": "ampGr",
@@ -902,7 +1005,9 @@
    "sugiere": [
     "trAmpliacion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Ampliación con marco 60×80 cm"
   },
   {
    "id": "libro",
@@ -922,7 +1027,9 @@
    "sugiere": [
     "trImpresion",
     "entrega"
-   ]
+   ],
+   "puesto": "Entregables físicos",
+   "cliente": "Fotolibro 12×24\" con caja y mini fotolibro de regalo"
   },
   {
    "id": "trCasa",
@@ -935,7 +1042,10 @@
    "combo": "",
    "detalle": "Traslado de ida y vuelta del equipo y el personal (a la casa de la festejada o de los novios): $100 de ida y $100 de regreso, dentro de León.",
    "cat": "traslado",
-   "lugar": "hArreglo"
+   "lugar": "hArreglo",
+   "puesto": "Traslados",
+   "cliente": "Traslado a la casa de la festejada (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trMisa",
@@ -948,7 +1058,10 @@
    "combo": "",
    "detalle": "Traslado de ida y vuelta del equipo y el personal (a la ceremonia): $100 de ida y $100 de regreso, dentro de León.",
    "cat": "traslado",
-   "lugar": "hMisa"
+   "lugar": "hMisa",
+   "puesto": "Traslados",
+   "cliente": "Traslado a la ceremonia (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trFiesta",
@@ -961,7 +1074,10 @@
    "combo": "",
    "detalle": "Traslado de ida y vuelta del equipo y el personal (a la recepción): $100 de ida y $100 de regreso, dentro de León.",
    "cat": "traslado",
-   "lugar": "hSalon"
+   "lugar": "hSalon",
+   "puesto": "Traslados",
+   "cliente": "Traslado a la recepción (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trSesion",
@@ -974,7 +1090,10 @@
    "combo": "",
    "detalle": "Traslado de ida y vuelta del equipo y el personal (a la locación de la sesión del mismo día): $100 de ida y $100 de regreso, dentro de León.",
    "cat": "traslado",
-   "lugar": "hSesion"
+   "lugar": "hSesion",
+   "puesto": "Traslados",
+   "cliente": "Traslado a la sesión del mismo día (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trSesionPrevia",
@@ -991,7 +1110,10 @@
     "sesPrevFoto",
     "sesPrevVideo",
     "sesPrevDron"
-   ]
+   ],
+   "puesto": "Traslados",
+   "cliente": "Traslado a la sesión previa (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trSesionPost",
@@ -1008,7 +1130,10 @@
     "sesPostFoto",
     "sesPostVideo",
     "sesPostDron"
-   ]
+   ],
+   "puesto": "Traslados",
+   "cliente": "Traslado a la sesión posterior (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trContrato",
@@ -1020,7 +1145,10 @@
    "extraHora": 0,
    "combo": "",
    "detalle": "Traslado de ida y vuelta del equipo y el personal (para visitar al cliente y firmar el contrato): $100 de ida y $100 de regreso, dentro de León.",
-   "cat": "traslado"
+   "cat": "traslado",
+   "puesto": "Traslados",
+   "cliente": "Visita para firmar el contrato (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trEdicion",
@@ -1039,7 +1167,10 @@
     "pelicula",
     "reel",
     "clip"
-   ]
+   ],
+   "puesto": "Traslados",
+   "cliente": "Traslado para llevar el material a edición (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trImpresion",
@@ -1057,7 +1188,10 @@
     "imp68",
     "cajaFotos",
     "libro"
-   ]
+   ],
+   "puesto": "Traslados",
+   "cliente": "Traslado al laboratorio de impresión (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "trAmpliacion",
@@ -1075,7 +1209,10 @@
     "ampMd",
     "ampXl",
     "ampGr"
-   ]
+   ],
+   "puesto": "Traslados",
+   "cliente": "Traslado para hacer la ampliación y el marco (ida y vuelta)",
+   "tecnico": true
   },
   {
    "id": "entrega",
@@ -1098,7 +1235,9 @@
     "ampGr",
     "libro",
     "usb"
-   ]
+   ],
+   "puesto": "Traslados",
+   "cliente": "Entrega a domicilio"
   },
   {
    "id": "viaticos",
@@ -1110,7 +1249,9 @@
    "extraHora": 0,
    "combo": "",
    "detalle": "Gastos de traslado, casetas, gasolina y, si hace falta, hospedaje y alimentos cuando la sesión o el evento son fuera de León. Se especifica el lugar y el monto por viaje; aplica a la sesión, al evento o a ambos.",
-   "cat": "traslado"
+   "cat": "traslado",
+   "puesto": "Traslados",
+   "cliente": "Viáticos fuera de León"
   }
  ]
 }

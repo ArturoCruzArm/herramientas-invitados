@@ -379,7 +379,7 @@
               <h4>Paquete Basico $<input type="number" class="precio-edit" data-paquete="basico" value="5000" min="0" step="100"> MXN</h4>
               <ul>
                 <li>50 fotos impresas 5x7"</li>
-                <li>Pelicula USB 4K (2 horas)</li>
+                <li>Pelicula USB en alta definicion (2 horas)</li>
                 <li>Foto ampliada 11x14"</li>
                 <li>Caja impresa para USB y fotos</li>
                 <li>1 hora ceremonia + 4 horas fiesta</li>
@@ -418,7 +418,7 @@
         <div class="form-section">
           <h3>Servicios adicionales</h3>
           <div class="checkbox-group">
-            <label><input type="checkbox" id="extra-dron" data-precio="1200" data-label="Tomas con Dron 4K"> Dron 4K (+$1,200)</label>
+            <label><input type="checkbox" id="extra-dron" data-precio="1200" data-label="Tomas aereas con dron"> Dron (+$1,200)</label>
             <label><input type="checkbox" id="extra-invitacion" data-precio="0" data-label="Invitacion Web personalizada"> Invitacion Web</label>
             <label><input type="checkbox" id="extra-musica" data-precio="0" data-label="Musica personalizada"> Musica personalizada</label>
           </div>
@@ -574,6 +574,10 @@
         <p style="font-size:0.78rem;color:var(--color-text-light);margin-top:0.3rem;">
           Si no la marcas, al contrato solo van las definiciones que abras con &#9432; (lo que el cliente pregunto).
         </p>
+        <div style="display:flex;gap:0.4rem;margin-top:1rem;flex-wrap:wrap">
+          <button type="button" class="btn btn-outline" id="lista-v-mia" style="font-size:0.8rem;padding:0.3rem 0.8rem">Mi vista (detalle por puesto)</button>
+          <button type="button" class="btn btn-outline" id="lista-v-cliente" style="font-size:0.8rem;padding:0.3rem 0.8rem">Vista del cliente</button>
+        </div>
         <div class="lista-res" id="lista-res"></div>
         <div class="builder-bar">
           <div class="bar-info"><span id="lista-count">0</span> conceptos &bull; Total: <strong>$<span id="lista-total">0</span></strong></div>
@@ -675,7 +679,7 @@
         nombre: 'Paquete Basico',
         incluye: [
           '50 fotografias impresas en formato 5x7"',
-          'Pelicula en USB 4K (2 horas de grabacion)',
+          'Pelicula en USB en alta definicion (2 horas de grabacion)',
           'Fotografia ampliada 11x14"',
           'Caja impresa para USB y fotografias',
           'Cobertura: 1 hora de ceremonia + 4 horas de fiesta'
@@ -747,7 +751,7 @@
       { grupo: 'Video', items: [
         { id: 'pelicula', label: 'Pelicula master', cant: 2, precio: 0,
           tpl: 'Pelicula master de {cant} {p:hora|horas} aprox. en memoria USB, formato {formato}',
-          opts: { formato: { label: 'Formato', values: ['FHD 1080p', '4K UHD'] } } },
+          opts: { formato: { label: 'Formato', values: ['alta definicion (Full HD 1080p)'] } } },
         { id: 'duplicado', label: 'Duplicado de la pelicula', cant: 1, precio: 0,
           tpl: '{cant} {p:duplicado|duplicados} de la pelicula en memoria USB' },
         { id: 'clip_resumen', label: 'Clip resumen del evento', cant: 1, precio: 0,
@@ -760,7 +764,7 @@
           tpl: 'Proyeccion en el salon: collage de crecimiento y videoclip de la sesion' },
         { id: 'dron', label: 'Tomas aereas con dron', sinCant: true, precio: 0,
           tpl: 'Tomas aereas con dron, video en formato {formato}',
-          opts: { formato: { label: 'Formato', values: ['FHD 1080p', '4K UHD'] } } },
+          opts: { formato: { label: 'Formato', values: ['alta definicion (Full HD 1080p)'] } } },
         { id: 'canciones', label: 'Canciones producidas', cant: 6, precio: 0,
           tpl: '{cant} {p:cancion producida|canciones producidas} para la edicion del material' },
       ] },
@@ -791,12 +795,12 @@
     const PRESETS = {
       paqueteb: [
         { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 6 },
-        { id: 'pelicula', cant: 3, opts: { formato: 'FHD 1080p' } },
+        { id: 'pelicula', cant: 3, opts: { formato: 'alta definicion (Full HD 1080p)' } },
         { id: 'duplicado', cant: 1 }, { id: 'clip_resumen', cant: 1 },
         { id: 'fotos_impresas', cant: 85, opts: { tam: '6x8" (15x20 cm)' } },
         { id: 'ampliacion', cant: 1, opts: { tam: '50x40 cm', acabado: 'retocada en marco faldon' } },
         { id: 'clip_fotos' }, { id: 'co2' }, { id: 'ilum_vals' },
-        { id: 'dron', opts: { formato: 'FHD 1080p' } }, { id: 'collage' },
+        { id: 'dron', opts: { formato: 'alta definicion (Full HD 1080p)' } }, { id: 'collage' },
       ],
       fotografia: [
         { id: 'sesion', cant: 1, opts: { momento: 'previa al evento', locs: '1' } },
@@ -809,7 +813,7 @@
       basico: [
         { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 4 },
         { id: 'fotos_impresas', cant: 50, opts: { tam: '5x7" (13x18 cm)' } },
-        { id: 'pelicula', cant: 2, opts: { formato: '4K UHD' } },
+        { id: 'pelicula', cant: 2, opts: { formato: 'alta definicion (Full HD 1080p)' } },
         { id: 'ampliacion', cant: 1, opts: { tam: '11x14" (28x36 cm)', acabado: 'con marco' } },
         { id: 'caja', cant: 1, opts: { tipo: 'impresa para USB y fotografias' } },
         { id: 'collage' },
@@ -817,7 +821,7 @@
       completo: [
         { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 6 },
         { id: 'fotos_impresas', cant: 100, opts: { tam: '5x7" (13x18 cm)' } },
-        { id: 'pelicula', cant: 3, opts: { formato: '4K UHD' } },
+        { id: 'pelicula', cant: 3, opts: { formato: 'alta definicion (Full HD 1080p)' } },
         { id: 'proyeccion' },
         { id: 'ampliacion', cant: 1, opts: { tam: '50x60 cm', acabado: 'con marco' } },
         { id: 'collage' },
@@ -827,7 +831,7 @@
         { id: 'cob_ceremonia', cant: 1 }, { id: 'cob_fiesta', cant: 8 },
         { id: 'fotos_impresas', cant: 200, opts: { tam: '5x7" (13x18 cm)' } },
         { id: 'fotolibro', cant: 1, opts: { tam: '30x60 cm', paginas: '30' } },
-        { id: 'pelicula', cant: 3, opts: { formato: '4K UHD' } },
+        { id: 'pelicula', cant: 3, opts: { formato: 'alta definicion (Full HD 1080p)' } },
         { id: 'proyeccion' },
         { id: 'ampliacion', cant: 1, opts: { tam: '60x80 cm', acabado: 'con marco' } },
         { id: 'caja', cant: 1, opts: { tipo: 'de madera para fotografias' } },
@@ -886,8 +890,8 @@
 
       { id: 'liquidacion', def: true,
         titulo: 'Liquidacion del saldo',
-        resumen: 'Si no liquidan 8 dias antes, no te presentas.',
-        texto: 'El saldo debera liquidarse a mas tardar ocho dias naturales antes de la fecha del evento. La falta de liquidacion en ese plazo faculta a {E} a no presentarse al evento sin responsabilidad alguna, conservando las cantidades recibidas como pena convencional por la reserva de la fecha.' },
+        resumen: 'Si no liquidan 8 dias antes: se cubre el evento, pero sin ampliacion en el salon ni proyeccion, y la entrega espera al pago.',
+        texto: 'El saldo debera liquidarse a mas tardar ocho dias naturales antes de la fecha del evento. Las cantidades recibidas se destinan primero a cubrir el evento: personal, equipo y traslados. Si el saldo no esta liquidado en ese plazo, {E} cubrira el evento, pero no llevara la ampliacion impresa al salon ni realizara la proyeccion, y la entrega de fotografias, videos, impresos, memorias USB y accesos web quedara pendiente hasta que se liquide el total, sin que ello constituya incumplimiento de {E}.' },
 
       { id: 'conducta', def: true,
         titulo: 'Seguridad y trato al personal',
@@ -1120,7 +1124,7 @@
       const base = parseInt(document.getElementById('custom-base').value) || 0;
       const total = items.reduce((s, i) => s + i.precio, 0) + base;
       document.getElementById('builder-count').textContent = items.length;
-      document.getElementById('builder-total').textContent = total.toLocaleString();
+      document.getElementById('builder-total').textContent = total.toLocaleString('es-MX');
       const prev = document.getElementById('builder-preview');
       prev.innerHTML = items.length
         ? '<ul>' + items.map(i => `<li>${i.texto}${i.precio ? ` <span style="color:var(--color-text-light)">(${formatMoneda(i.precio)})</span>` : ''}</li>`).join('') + '</ul>'
@@ -1284,7 +1288,7 @@
       return [r.length ? 'requiere ' + r.join(' y ') : '', u.length ? 'requiere ' + u.join(' o ') : ''].filter(Boolean).join(' · ');
     }
 
-    let LISTA = null, LISTA_AVISOS = [];
+    let LISTA = null, LISTA_AVISOS = [], LISTA_VISTA = 'mia';
     const LISTA_ABIERTAS = new Set();   // definiciones que se abrieron con el icono: esas van al contrato
     const LISTA_GRATIS = {};            // cortesias
     const LISTA_VIAT = { lugar: '', monto: 0 };
@@ -1339,6 +1343,28 @@
       return t + (l.gratis ? ' (cortesia)' : '');
     }
 
+    // vista del cliente: por seccion, solo lo que recibe; lo tecnico se suma al subtotal de su seccion
+    function seccionesCliente(r) {
+      const orden = LISTA.secciones || [...new Set(LISTA.conceptos.map(c => c.grupo))];
+      return orden.map(s => {
+        const ls = r.lineas.filter(l => l.c.grupo === s);
+        if (!ls.length) return null;
+        const visibles = ls.filter(l => !l.c.tecnico);
+        const items = visibles.map(l => {
+          let t = l.c.unidad === 'hora' ? `${l.c.cliente || l.c.nombre} (${l.q} ${l.q === 1 ? 'hora' : 'horas'})`
+                : l.c.id === 'viaticos' ? nombreLista(l.c) : (l.c.unidad ? l.q + ' ' : '') + (l.c.cliente || l.c.nombre);
+          return t + (l.gratis ? ' (cortesia)' : '');
+        });
+        if (!items.length) items.push(s);          // seccion solo tecnica (p. ej. traslados): una sola linea
+        return { titulo: s, items, subtotal: ls.reduce((a, l) => a + (l.gratis ? 0 : l.precio), 0) };
+      }).filter(Boolean);
+    }
+    function semitotalesPuesto(r) {
+      const m = {};
+      r.lineas.forEach(l => { const p = l.c.puesto || 'Otros'; m[p] = (m[p] || 0) + (l.gratis ? 0 : l.precio); });
+      return Object.entries(m).sort((a, b) => b[1] - a[1]);
+    }
+
     function renderLista() {
       const box = document.getElementById('lista-items');
       const combo = comboActivo(), dc = descCombo(combo);
@@ -1381,7 +1407,26 @@
         renderLista();
       }));
       const r = cotizarLista();
+      const pieDescuentos = (r.cortesia ? `<div class="ln ahorro"><span>Cortesias (gratis)</span><span>-${pesos(r.cortesia)}</span></div>` : '') +
+        (r.descCombo ? `<div class="ln ahorro"><span>Descuento por juntar ${[...r.combo].join(' + ')}</span><span>-${pesos(r.descCombo)}</span></div>` : '') +
+        (r.descVol ? `<div class="ln ahorro"><span>Descuento extra (${r.dv}%)</span><span>-${pesos(r.descVol)}</span></div>` : '') +
+        `<div class="ln total"><span>Total</span><span>${pesos(r.total)}</span></div>`;
+      document.getElementById('lista-v-mia').classList.toggle('btn-primary', LISTA_VISTA === 'mia');
+      document.getElementById('lista-v-cliente').classList.toggle('btn-primary', LISTA_VISTA === 'cliente');
+      if (LISTA_VISTA === 'cliente') {
+        document.getElementById('lista-res').innerHTML = seccionesCliente(r).map(s =>
+          `<div class="ln" style="font-weight:600;margin-top:0.4rem"><span>${s.titulo}</span><span>${s.subtotal ? pesos(s.subtotal) : 'Incluido'}</span></div>` +
+          s.items.map(i => `<div class="ln" style="padding-left:0.8rem;color:var(--color-text-light)"><span>${i}</span><span></span></div>`).join('')).join('') +
+          `<div class="ln" style="border-top:1px solid var(--color-border);margin-top:0.3rem;padding-top:0.3rem"><span>Subtotal</span><span>${pesos(r.sub - r.cortesia)}</span></div>` +
+          pieDescuentos.replace(/<div class="ln ahorro"><span>Cortesias[\s\S]*?<\/div>/, '');
+        document.getElementById('lista-count').textContent = r.lineas.length;
+        document.getElementById('lista-total').textContent = r.total.toLocaleString('es-MX');
+        return;
+      }
       document.getElementById('lista-res').innerHTML =
+        `<div class="ln" style="font-weight:600"><span>Semitotal por puesto</span><span></span></div>` +
+        semitotalesPuesto(r).map(([p, v]) => `<div class="ln" style="padding-left:0.8rem"><span>${p}</span><span>${pesos(v)}</span></div>`).join('') +
+        `<div style="border-top:1px dashed var(--color-border);margin:0.4rem 0"></div>` +
         (LISTA_AVISOS.length ? `<div style="background:rgba(6,68,32,0.07);border-radius:8px;padding:0.5rem;margin-bottom:0.5rem;font-size:0.82rem">${LISTA_AVISOS.join('<br>')}</div>` : '') +
         r.lineas.map(l => `<div class="ln"><span>${textoLinea(l)}</span><span>${l.gratis ? `<s>${pesos(l.precio)}</s> Gratis` : l.precio ? pesos(l.precio) : 'Incluido'}</span></div>`).join('') +
         `<div class="ln" style="border-top:1px solid var(--color-border);margin-top:0.3rem;padding-top:0.3rem"><span>Subtotal</span><span>${pesos(r.sub)}</span></div>` +
@@ -1416,8 +1461,7 @@
       if (!LISTA) return;
       const r = cotizarLista();
       if (!r.lineas.length) { alert('Marca al menos un concepto.'); return; }
-      const secciones = (LISTA.secciones || [...new Set(LISTA.conceptos.map(c => c.grupo))])
-        .map(s => ({ titulo: s, items: r.lineas.filter(l => l.c.grupo === s).map(textoLinea) })).filter(s => s.items.length);
+      const secciones = seccionesCliente(r);
       PAQUETES.lista = { nombre: 'Cotizacion a la medida', incluye: r.lineas.map(textoLinea), secciones,
         definiciones: r.lineas
           .filter(l => l.c.detalle && (document.getElementById('lista-def-todas').checked || LISTA_ABIERTAS.has(l.c.id)))
@@ -1436,17 +1480,16 @@
         <ul>${r.lineas.map(l => `<li>${textoLinea(l)}</li>`).join('')}</ul>
         <button class="btn btn-outline btn-editar-lista" style="font-size:0.78rem;padding:0.25rem 0.7rem;margin-top:0.4rem;">Editar la lista</button>`;
       const precioInput = card.querySelector('.precio-edit');
-      precioInput.value = r.sub;
+      precioInput.value = r.sub - r.cortesia;          // las cortesias ya no se cobran: se ven como "(cortesia)" en su seccion
       precioInput.addEventListener('input', updateResumen);
       precioInput.addEventListener('click', e => e.stopPropagation());
       card.querySelector('.btn-editar-lista').addEventListener('click', e => { e.stopPropagation(); abrirLista(); });
 
       // cortesias y descuentos van como descuento visible en el contrato
-      const ahorro = r.sub - r.total;
+      const ahorro = r.sub - r.cortesia - r.total;
       document.getElementById('descuento-monto').value = ahorro;
       const motivos = [];
-      if (r.cortesia) motivos.push('cortesias: ' + r.lineas.filter(l => l.gratis).map(l => l.c.nombre).join(', '));
-      if (r.descCombo || r.descVol) motivos.push('descuento por contratar los servicios juntos');
+      if (r.descCombo || r.descVol) motivos.push('por contratar los servicios juntos');
       if (motivos.length) document.getElementById('descuento-motivo').value = motivos.join('; ').replace(/^./, m => m.toUpperCase());
       // la hora extra del contrato = lo que cuestan por hora el equipo y las personas contratados
       const he = LISTA.conceptos.filter(c => /^(cob|equipo)/.test(c.id) && LISTA_SEL[c.id])
@@ -1466,10 +1509,8 @@
       const festejado = document.getElementById('evento-nombre').value.trim();
       const tipo = document.getElementById('evento-tipo').value;
       return [`*Cotizacion ${empresaActiva ? empresaActiva.nombre : 'Foro 7'}*${festejado ? ' — ' + tipo + ' ' + festejado : ''}`,
-        `Cobertura: ${horasCob()} h`, '',
-        ...r.lineas.map(l => `• ${textoLinea(l)} — ${l.gratis ? '~' + pesos(l.precio) + '~ GRATIS' : l.precio ? pesos(l.precio) : 'incluido'}`), '',
-        `Subtotal: ${pesos(r.sub)}`,
-        ...(r.cortesia ? [`Cortesias: -${pesos(r.cortesia)}`] : []),
+        '', ...seccionesCliente(r).flatMap(s => [`*${s.titulo}* — ${s.subtotal ? pesos(s.subtotal) : 'incluido'}`, ...s.items.map(i => `• ${i}`), '']),
+        `Subtotal: ${pesos(r.sub - r.cortesia)}`,
         ...(r.descCombo ? [`Descuento por juntar servicios: -${pesos(r.descCombo)}`] : []),
         ...(r.descVol ? [`Descuento extra: -${pesos(r.descVol)}`] : []),
         `*Total: ${pesos(r.total)}*` + (r.sub > r.total ? ` (ahorras ${pesos(r.sub - r.total)})` : ''),
@@ -1478,6 +1519,8 @@
 
     ['lh-arreglo', 'lh-misa', 'lh-salon', 'lh-sesion'].forEach(id =>
       document.getElementById(id).addEventListener('input', () => LISTA && renderLista()));
+    document.getElementById('lista-v-mia').addEventListener('click', () => { LISTA_VISTA = 'mia'; renderLista(); });
+    document.getElementById('lista-v-cliente').addEventListener('click', () => { LISTA_VISTA = 'cliente'; renderLista(); });
     document.getElementById('btn-lista').addEventListener('click', abrirLista);
     document.getElementById('btn-lista-cancelar').addEventListener('click', cerrarLista);
     document.getElementById('btn-lista-usar').addEventListener('click', usarListaEnContrato);
@@ -1605,13 +1648,13 @@
       const apartado = parseInt(document.getElementById('pago-apartado').value) || 0;
       const restante = Math.max(0, total - apartado);
 
-      document.getElementById('resumen-paquete').textContent = paq ? `${paq.nombre} - $${precioPaquete.toLocaleString()}` : '-';
-      document.getElementById('resumen-extras').textContent = '$' + precioExtras.toLocaleString();
-      document.getElementById('resumen-conceptos').textContent = '$' + precioConceptos.toLocaleString();
-      document.getElementById('resumen-descuento').textContent = descuento > 0 ? `-$${descuento.toLocaleString()}` : '-$0';
-      document.getElementById('resumen-total').textContent = total.toLocaleString();
-      document.getElementById('resumen-apartado').textContent = apartado.toLocaleString();
-      document.getElementById('resumen-restante').textContent = restante.toLocaleString();
+      document.getElementById('resumen-paquete').textContent = paq ? `${paq.nombre} - $${precioPaquete.toLocaleString('es-MX')}` : '-';
+      document.getElementById('resumen-extras').textContent = '$' + precioExtras.toLocaleString('es-MX');
+      document.getElementById('resumen-conceptos').textContent = '$' + precioConceptos.toLocaleString('es-MX');
+      document.getElementById('resumen-descuento').textContent = descuento > 0 ? `-$${descuento.toLocaleString('es-MX')}` : '-$0';
+      document.getElementById('resumen-total').textContent = total.toLocaleString('es-MX');
+      document.getElementById('resumen-apartado').textContent = apartado.toLocaleString('es-MX');
+      document.getElementById('resumen-restante').textContent = restante.toLocaleString('es-MX');
     }
 
     document.querySelectorAll('.checkbox-group input').forEach(cb => cb.addEventListener('change', updateResumen));
@@ -1630,7 +1673,7 @@
       return `${parseInt(d)} de ${meses[parseInt(m)-1]} de ${y}`;
     }
 
-    function formatMoneda(n) { return '$' + n.toLocaleString() + ' MXN'; }
+    function formatMoneda(n) { return '$' + n.toLocaleString('es-MX') + ' MXN'; }
 
     const BLANK = '<span style="display:inline-block;min-width:180px;border-bottom:1px solid #000;">&nbsp;</span>';
 
@@ -1671,7 +1714,11 @@
 
       let sec = 1;
 
-      let costRows = `<tr><td class="label">${paq ? paq.nombre : 'Paquete contratado'}</td><td style="text-align:right">${formatMoneda(precioPaquete)}</td></tr>`;
+      let costRows = paq && paq.secciones && paq.secciones[0] && paq.secciones[0].subtotal != null
+        ? paq.secciones.map(s => `<tr><td class="label">${s.titulo}</td><td style="text-align:right">${s.subtotal ? formatMoneda(s.subtotal) : 'Incluido'}</td></tr>`).join('') +
+          (precioPaquete !== paq.secciones.reduce((a, s) => a + s.subtotal, 0)
+            ? `<tr><td class="label">Ajuste de precio acordado</td><td style="text-align:right">${formatMoneda(precioPaquete - paq.secciones.reduce((a, s) => a + s.subtotal, 0))}</td></tr>` : '')
+        : `<tr><td class="label">${paq ? paq.nombre : 'Paquete contratado'}</td><td style="text-align:right">${formatMoneda(precioPaquete)}</td></tr>`;
       allExtras.filter(e => e.precio > 0).forEach(e => {
         costRows += `<tr><td class="label">${e.label}</td><td style="text-align:right">${formatMoneda(e.precio)}</td></tr>`;
       });
@@ -1715,7 +1762,8 @@
 
         <h2>${sec++}. PAQUETE CONTRATADO: ${paq ? paq.nombre.toUpperCase() : BLANK}</h2>
         ${paq && paq.secciones ? `<p>Los servicios contratados, por seccion:</p>${paq.secciones.map(s =>
-            `<p style="margin:8pt 0 2pt"><strong>${s.titulo}</strong></p><ul>${s.items.map(item => `<li>${item}</li>`).join('')}</ul>`).join('')}`
+            `<p style="margin:8pt 0 2pt"><strong>${s.titulo}</strong></p><ul>${s.items.map(item => `<li>${item}</li>`).join('')}</ul>`).join('')}
+          <p style="font-size:9pt;color:#555">Toda la produccion se entrega en alta definicion (Full HD).</p>`
           : paq ? `<p>El presente paquete incluye:</p><ul>${paq.incluye.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
 
         ${paq && paq.definiciones && paq.definiciones.length ? `<h2>${sec++}. DEFINICION DE LOS SERVICIOS CONTRATADOS</h2>
@@ -1730,7 +1778,7 @@
         </table>
 
         <h2>${sec++}. FORMA DE PAGO</h2>
-        <p class="clausula">El cliente ha entregado un apartado de <strong>${formatMoneda(apartado)}</strong> en fecha <strong>${formatFecha(fechaApartado)}</strong> mediante <strong>${metodoPago.toLowerCase()}</strong>. El saldo restante de <strong>${formatMoneda(restante)}</strong> debera liquidarse a mas tardar <strong>8 dias antes del evento</strong>.</p>
+        <p class="clausula">El cliente ha entregado un apartado de <strong>${formatMoneda(apartado)}</strong> en fecha <strong>${formatFecha(fechaApartado)}</strong> mediante <strong>${metodoPago.toLowerCase()}</strong>. El saldo restante de <strong>${formatMoneda(restante)}</strong> debera liquidarse a mas tardar <strong>8 dias antes del evento</strong>. El pago recibido se destina primero a cubrir el evento (personal, equipo y traslados). Si el saldo no esta liquidado en ese plazo, el evento se cubre de todas formas, pero la ampliacion no se lleva impresa al salon, no se realiza la proyeccion, y las fotografias, videos, impresos, memorias USB y accesos web se entregan una vez liquidado el total.</p>
 
         <h2>${sec++}. COMPROMISOS DE ${emp.nombre.toUpperCase()}</h2>
         <p class="clausula"><strong>a)</strong> Presentarse puntualmente en los lugares y horarios acordados con el equipo profesional necesario para la cobertura del evento.</p>
