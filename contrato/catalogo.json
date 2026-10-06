@@ -3,42 +3,351 @@
  "horasIncluidas": 4,
  "redondeo": 100,
  "combos": [
-  {"servicios": ["foto", "video"], "descuento": 10},
-  {"servicios": ["foto", "video", "dron"], "descuento": 15}
+  {
+   "servicios": [
+    "foto",
+    "video"
+   ],
+   "descuento": 10
+  },
+  {
+   "servicios": [
+    "foto",
+    "video",
+    "dron"
+   ],
+   "descuento": 15
+  }
  ],
  "volumen": [
-  {"desde": 12000, "descuento": 5},
-  {"desde": 20000, "descuento": 10}
+  {
+   "desde": 12000,
+   "descuento": 5
+  },
+  {
+   "desde": 20000,
+   "descuento": 10
+  }
  ],
  "conceptos": [
-  {"id": "cobFoto", "nombre": "Fotografía de principio a fin", "grupo": "Cobertura del evento", "unidad": "", "precio": 1700, "precioXh": 0, "extraHora": 500, "combo": "foto"},
-  {"id": "cobVideo", "nombre": "Video de principio a fin", "grupo": "Cobertura del evento", "unidad": "", "precio": 1700, "precioXh": 0, "extraHora": 500, "combo": "video"},
-  {"id": "cobDron", "nombre": "Tomas aéreas con dron", "grupo": "Cobertura del evento", "unidad": "", "precio": 1700, "precioXh": 0, "extraHora": 0, "combo": "dron"},
-  {"id": "sesionPrevia", "nombre": "Sesión de fotos y video en otro día", "grupo": "Cobertura del evento", "unidad": "", "precio": 2300, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "fotoSel", "nombre": "Todas las fotos del evento, seleccionadas", "grupo": "Edición", "unidad": "", "precio": 0, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "fotoEdit", "nombre": "Todas tus fotos editadas una por una", "grupo": "Edición", "unidad": "", "precio": 600, "precioXh": 0, "extraHora": 0, "combo": "foto"},
-  {"id": "vidComp", "nombre": "Video completo de tu evento, editado y con audio limpio", "grupo": "Edición", "unidad": "", "precio": 600, "precioXh": 0, "extraHora": 0, "combo": "video"},
-  {"id": "panel", "nombre": "Panel de tu evento: preparativos, contrato, pagos y fechas importantes en línea", "grupo": "Página web del evento", "unidad": "", "precio": 0, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "selector", "nombre": "Selector de fotos: eliges tus favoritas para imprimir, ampliar y para el fotolibro", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "album", "nombre": "Álbum web privado: todas tus fotos para ver, compartir y descargar", "grupo": "Página web del evento", "unidad": "", "precio": 500, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "youtube", "nombre": "Tus videos en YouTube con enlace privado, capítulos y descripción", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "invWeb", "nombre": "Invitación web con tu propia dirección (nombres.invitados.org), cuenta regresiva y mapas", "grupo": "Página web del evento", "unidad": "", "precio": 1000, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "rsvp", "nombre": "Confirmación de asistencia en línea y pase con QR para cada invitado", "grupo": "Página web del evento", "unidad": "", "precio": 400, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "invitados", "nombre": "Lista de invitados y plano de mesas", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "acceso", "nombre": "Control de acceso en la puerta escaneando el QR", "grupo": "Página web del evento", "unidad": "", "precio": 300, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "resumen", "nombre": "Video resumen: lo mejor de tu día en una canción", "grupo": "Videos adicionales", "unidad": "", "precio": 1200, "precioXh": 150, "extraHora": 0, "combo": ""},
-  {"id": "pelicula", "nombre": "Película cinematográfica con tomas de dron y música original", "grupo": "Videos adicionales", "unidad": "", "precio": 3000, "precioXh": 400, "extraHora": 0, "combo": ""},
-  {"id": "clip", "nombre": "Videoclip para proyectar en tu fiesta", "grupo": "Videos adicionales", "unidad": "", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "reel", "nombre": "Reel vertical para Instagram / TikTok", "grupo": "Videos adicionales", "unidad": "", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "cancion", "nombre": "Canción original con sus nombres", "grupo": "Videos adicionales", "unidad": "canción", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "imp57", "nombre": "fotos impresas 5×7\"", "grupo": "Impresos y entrega", "unidad": "foto", "precio": 12, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "imp68", "nombre": "fotos impresas 6×8\"", "grupo": "Impresos y entrega", "unidad": "foto", "precio": 15, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "cajaFotos", "nombre": "Caja de presentación para tus fotos", "grupo": "Impresos y entrega", "unidad": "", "precio": 700, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "ampCh", "nombre": "Ampliación con marco 28×36 cm", "grupo": "Impresos y entrega", "unidad": "", "precio": 800, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "ampMd", "nombre": "Ampliación con marco 40×50 cm", "grupo": "Impresos y entrega", "unidad": "", "precio": 1200, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "ampGr", "nombre": "Ampliación con marco 60×80 cm", "grupo": "Impresos y entrega", "unidad": "", "precio": 1900, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "libro", "nombre": "Fotolibro 12×24\" con caja y mini fotolibro de regalo", "grupo": "Impresos y entrega", "unidad": "", "precio": 3600, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "usb", "nombre": "USB con todas tus fotos y videos, en caja de presentación", "grupo": "Impresos y entrega", "unidad": "", "precio": 600, "precioXh": 0, "extraHora": 0, "combo": ""},
-  {"id": "entrega", "nombre": "Entrega en persona", "grupo": "Impresos y entrega", "unidad": "", "precio": 400, "precioXh": 0, "extraHora": 0, "combo": ""}
+  {
+   "id": "cobFoto",
+   "nombre": "Fotografía de principio a fin",
+   "grupo": "Cobertura del evento",
+   "unidad": "",
+   "precio": 1700,
+   "precioXh": 0,
+   "extraHora": 500,
+   "combo": "foto",
+   "detalle": "Fotógrafo profesional durante todo el evento, de principio a fin, por las horas contratadas: preparativos (si se contratan), ceremonia completa, llegada al salón, entrada, vals, brindis, pastel, baile y momentos con familia e invitados, además de retratos de los festejados. Incluye el equipo profesional con respaldo (cámara, flash, tarjetas y pilas de repuesto). La cobertura corre desde la hora pactada; cada hora adicional se cobra aparte al precio de hora extra."
+  },
+  {
+   "id": "cobVideo",
+   "nombre": "Video de principio a fin",
+   "grupo": "Cobertura del evento",
+   "unidad": "",
+   "precio": 1700,
+   "precioXh": 0,
+   "extraHora": 500,
+   "combo": "video",
+   "detalle": "Videógrafo profesional durante todo el evento por las horas contratadas: graba la ceremonia completa, discursos, entrada, vals, brindis y la fiesta, con estabilizador y micrófonos inalámbricos para que se escuchen los votos, los mensajes y las palabras. Incluye equipo de respaldo. Cada hora adicional se cobra aparte al precio de hora extra."
+  },
+  {
+   "id": "cobDron",
+   "nombre": "Tomas aéreas con dron",
+   "grupo": "Cobertura del evento",
+   "unidad": "",
+   "precio": 1700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "dron",
+   "detalle": "Tomas aéreas en video con dron: templo, llegada, salón y panorámicas del lugar. Se vuela solo en exteriores y cuando el clima, el viento, la luz y las reglas del lugar o de la zona lo permiten; si no es posible volar por esas razones, se avisa en el momento y no constituye incumplimiento."
+  },
+  {
+   "id": "sesionPrevia",
+   "nombre": "Sesión de fotos y video en otro día",
+   "grupo": "Cobertura del evento",
+   "unidad": "",
+   "precio": 2300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Sesión de fotos y video en un día distinto al evento, de hasta 2 horas, en una locación dentro de León (exteriores o lugar acordado). Incluye las fotos seleccionadas en la galería web y el material para el videoclip de proyección si también se contrata. Las entradas a lugares con costo o permisos especiales corren por cuenta del cliente."
+  },
+  {
+   "id": "fotoSel",
+   "nombre": "Todas las fotos del evento, seleccionadas",
+   "grupo": "Edición",
+   "unidad": "",
+   "precio": 0,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Se revisan todas las fotos tomadas y se entregan todas las buenas: se descartan repetidas, desenfocadas u ojos cerrados. Llevan un ajuste general de luz y color en lote, sin edición individual. Se entregan en promedio unas 100 fotos por hora de cobertura, según el ritmo del evento."
+  },
+  {
+   "id": "fotoEdit",
+   "nombre": "Todas tus fotos editadas una por una",
+   "grupo": "Edición",
+   "unidad": "",
+   "precio": 600,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "foto",
+   "detalle": "Edición de cada foto entregada, una por una, en Lightroom: luz, color, tono de piel natural, enderezado y encuadre. No incluye retoque de cuerpo ni de piel a detalle (ese retoque se hace en Photoshop solo en ampliaciones y portadas)."
+  },
+  {
+   "id": "vidComp",
+   "nombre": "Video completo de tu evento, editado y con audio limpio",
+   "grupo": "Edición",
+   "unidad": "",
+   "precio": 600,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "video",
+   "detalle": "Video de todo el evento editado: ceremonia y fiesta en orden, sin tiempos muertos, con el audio real limpio (votos, mensajes, discursos y la música del lugar) y títulos de inicio y cierre. Se entrega en YouTube privado y, si se contrata la USB, en archivo. Su duración depende de la cobertura (normalmente de 1 a 4 horas)."
+  },
+  {
+   "id": "panel",
+   "nombre": "Panel de tu evento: preparativos, contrato, pagos y fechas importantes en línea",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 0,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Página privada del evento con los preparativos, el contrato, los pagos y las fechas importantes, para consultarlos en cualquier momento desde el celular. Sin costo."
+  },
+  {
+   "id": "selector",
+   "nombre": "Selector de fotos: eliges tus favoritas para imprimir, ampliar y para el fotolibro",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Página privada donde el cliente ve todas las fotos y marca cuáles quiere para impresión, ampliación, fotolibro y álbum digital. Lo marcado se guarda en línea y puede revisarlo la familia desde varios celulares. Se habilita cuando el paquete está liquidado."
+  },
+  {
+   "id": "album",
+   "nombre": "Álbum web privado: todas tus fotos para ver, compartir y descargar",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 500,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Galería privada con todas las fotos entregadas, para verlas, compartirlas por WhatsApp y descargarlas en buena resolución. Se habilita cuando el paquete está liquidado y se mantiene durante el periodo de resguardo del material."
+  },
+  {
+   "id": "youtube",
+   "nombre": "Tus videos en YouTube con enlace privado, capítulos y descripción",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Los videos se suben a YouTube como privados o no listados (solo los ve quien tiene el enlace), con título, descripción, capítulos para ir directo a cada momento y miniatura diseñada. No se publican abiertamente ni se monetizan; el cliente puede pedir que se retiren cuando lo desee."
+  },
+  {
+   "id": "invWeb",
+   "nombre": "Invitación web con tu propia dirección (nombres.invitados.org), cuenta regresiva y mapas",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 1000,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Invitación digital con su propia dirección (por ejemplo nombres.invitados.org): fotos, cuenta regresiva, ubicación de ceremonia y salón con mapa, itinerario y música. Se comparte por WhatsApp y se puede actualizar si cambia algún dato."
+  },
+  {
+   "id": "rsvp",
+   "nombre": "Confirmación de asistencia en línea y pase con QR para cada invitado",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 400,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Los invitados confirman su asistencia desde la invitación y cada uno recibe un pase con código QR y el número de lugares asignados. El cliente ve en tiempo real quién confirmó y cuántos asistirán."
+  },
+  {
+   "id": "invitados",
+   "nombre": "Lista de invitados y plano de mesas",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Lista de invitados en línea con su mesa asignada y plano del salón, para organizar lugares y saber cuántas personas hay en cada mesa."
+  },
+  {
+   "id": "acceso",
+   "nombre": "Control de acceso en la puerta escaneando el QR",
+   "grupo": "Página web del evento",
+   "unidad": "",
+   "precio": 300,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "El día del evento se escanea con un celular el QR de cada pase en la puerta: muestra la mesa y los lugares, y avisa si un pase ya se usó. La persona que recibe en la puerta la pone el cliente o el salón; Foro 7 deja el sistema listo y explica cómo usarlo."
+  },
+  {
+   "id": "resumen",
+   "nombre": "Video resumen: lo mejor de tu día en una canción",
+   "grupo": "Videos adicionales",
+   "unidad": "",
+   "precio": 1200,
+   "precioXh": 150,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Video corto, normalmente de 3 a 5 minutos, con lo mejor del día montado al ritmo de una canción original creada para el evento. Ideal para compartir en redes y con la familia."
+  },
+  {
+   "id": "pelicula",
+   "nombre": "Película cinematográfica con tomas de dron y música original",
+   "grupo": "Videos adicionales",
+   "unidad": "",
+   "precio": 3000,
+   "precioXh": 400,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Película cinematográfica del evento, de 15 a 50 minutos según la cobertura: cuenta la historia del día con las mejores tomas de video y dron, el audio de los votos y discursos, y música original. Lleva títulos y créditos."
+  },
+  {
+   "id": "clip",
+   "nombre": "Videoclip para proyectar en tu fiesta",
+   "grupo": "Videos adicionales",
+   "unidad": "",
+   "precio": 700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Videoclip de 2 a 4 minutos con las fotos y el video de la sesión, musicalizado, para proyectarse durante la fiesta. Se entrega antes del evento, por lo que requiere que la sesión se haga con anticipación."
+  },
+  {
+   "id": "reel",
+   "nombre": "Reel vertical para Instagram / TikTok",
+   "grupo": "Videos adicionales",
+   "unidad": "",
+   "precio": 700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Video vertical de 30 a 60 segundos, pensado para Instagram, TikTok o estados de WhatsApp, con los momentos más emotivos y una canción."
+  },
+  {
+   "id": "cancion",
+   "nombre": "Canción original con sus nombres",
+   "grupo": "Videos adicionales",
+   "unidad": "canción",
+   "precio": 700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Canción original creada para el evento, con sus nombres y su historia, para el vals, la entrada o un momento especial. Se entrega en archivo de audio para que el DJ o el grupo la toque."
+  },
+  {
+   "id": "imp57",
+   "nombre": "fotos impresas 5×7\"",
+   "grupo": "Impresos y entrega",
+   "unidad": "foto",
+   "precio": 12,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Impresión fotográfica profesional en tamaño 5×7 pulgadas (13×18 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional."
+  },
+  {
+   "id": "imp68",
+   "nombre": "fotos impresas 6×8\"",
+   "grupo": "Impresos y entrega",
+   "unidad": "foto",
+   "precio": 15,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Impresión fotográfica profesional en tamaño 6×8 pulgadas (15×20 cm). Las fotos las elige el cliente en el selector; si no las elige en el plazo acordado, Foro 7 las selecciona con criterio profesional."
+  },
+  {
+   "id": "cajaFotos",
+   "nombre": "Caja de presentación para tus fotos",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 700,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Caja de presentación para guardar las fotos impresas, con portada diseñada con su foto y sus nombres."
+  },
+  {
+   "id": "ampCh",
+   "nombre": "Ampliación con marco 28×36 cm",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 800,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Ampliación de 28×36 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco."
+  },
+  {
+   "id": "ampMd",
+   "nombre": "Ampliación con marco 40×50 cm",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 1200,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Ampliación de 40×50 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco."
+  },
+  {
+   "id": "ampGr",
+   "nombre": "Ampliación con marco 60×80 cm",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 1900,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Ampliación de 60×80 cm de la foto que elija el cliente, retocada a detalle en Photoshop, impresa, montada en MDF con textura y con marco."
+  },
+  {
+   "id": "libro",
+   "nombre": "Fotolibro 12×24\" con caja y mini fotolibro de regalo",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 3600,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Fotolibro de 12×24 pulgadas con 10 hojas (20 páginas) y alrededor de 100 fotos, con diseño a medida y portada retocada, en caja; incluye de regalo un mini fotolibro. Las fotos se eligen en el selector."
+  },
+  {
+   "id": "usb",
+   "nombre": "USB con todas tus fotos y videos, en caja de presentación",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 600,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Memoria USB con todas las fotos y videos en alta resolución, en caja de presentación con portada diseñada."
+  },
+  {
+   "id": "entrega",
+   "nombre": "Entrega en persona",
+   "grupo": "Impresos y entrega",
+   "unidad": "",
+   "precio": 400,
+   "precioXh": 0,
+   "extraHora": 0,
+   "combo": "",
+   "detalle": "Entrega del material físico en persona dentro de León, en el domicilio o lugar que indique el cliente."
+  }
  ]
 }

@@ -121,6 +121,8 @@
     .lista-op .pr { text-align: right; white-space: nowrap; }
     .lista-op .pr s { color: var(--color-text-light); font-size: 0.78rem; margin-right: 0.3rem; }
     .lista-op small { display: block; color: var(--color-text-light); font-size: 0.75rem; }
+    .lista-op .inf { border: 0; background: none; color: var(--color-primary); font-size: 1rem; cursor: pointer; padding: 0 0.3rem; }
+    .lista-op .def { display: block; font-size: 0.8rem; color: var(--color-text); background: rgba(6,68,32,0.06); border-radius: 8px; padding: 0.5rem 0.6rem; margin-top: 0.35rem; line-height: 1.4; }
     .lista-res { border: 1px solid var(--color-border); border-radius: 10px; padding: 0.8rem; margin-top: 1rem; font-size: 0.9rem; }
     .lista-res .ln { display: flex; justify-content: space-between; padding: 0.15rem 0; }
     .lista-res .ln.ahorro { color: #1b7a43; }
@@ -1268,9 +1270,14 @@
           : `<input type="checkbox" data-id="${c.id}"${q ? ' checked' : ''}>`;
         const nota = c.extraHora ? `<small>incluye ${LISTA.horasIncluidas} h · +${pesos(c.extraHora)} por hora extra</small>`
                    : c.precioXh ? `<small>${pesos(c.precio)} + ${pesos(c.precioXh)} por hora de cobertura</small>` : '';
-        h += `<label class="lista-op${q ? ' on' : ''}">${c.unidad ? '<span></span>' : ctl}<span>${c.nombre}${nota}</span><span class="pr">${c.unidad ? ctl + '<br>' : ''}${precio}</span></label>`;
+        const inf = c.detalle ? `<button type="button" class="inf" data-inf title="¿Que incluye?">&#9432;</button>` : '';
+        const def = c.detalle ? `<span class="def" hidden>${c.detalle}</span>` : '';
+        h += `<label class="lista-op${q ? ' on' : ''}">${c.unidad ? '<span></span>' : ctl}<span>${c.nombre}${inf}${nota}${def}</span><span class="pr">${c.unidad ? ctl + '<br>' : ''}${precio}</span></label>`;
       });
       box.innerHTML = h;
+      box.querySelectorAll('[data-inf]').forEach(b => b.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation(); const d = b.parentElement.querySelector('.def'); d.hidden = !d.hidden;
+      }));
       box.querySelectorAll('[data-id]').forEach(el => el.addEventListener('change', () => {
         LISTA_SEL[el.dataset.id] = el.type === 'checkbox' ? (el.checked ? 1 : 0) : Math.max(0, parseInt(el.value) || 0);
         renderLista();
@@ -1309,7 +1316,8 @@
       if (!LISTA) return;
       const r = cotizarLista();
       if (!r.lineas.length) { alert('Marca al menos un concepto.'); return; }
-      PAQUETES.lista = { nombre: 'Cotizacion a la medida', incluye: r.lineas.map(textoLinea) };
+      PAQUETES.lista = { nombre: 'Cotizacion a la medida', incluye: r.lineas.map(textoLinea),
+        definiciones: r.lineas.filter(l => l.c.detalle).map(l => ({ nombre: l.c.nombre, detalle: l.c.detalle })) };
       let card = document.querySelector('.paquete-option[data-paquete="lista"]');
       if (!card) {
         card = document.createElement('div');
@@ -1599,6 +1607,10 @@
 
         <h2>${sec++}. PAQUETE CONTRATADO: ${paq ? paq.nombre.toUpperCase() : BLANK}</h2>
         ${paq ? `<p>El presente paquete incluye:</p><ul>${paq.incluye.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
+
+        ${paq && paq.definiciones && paq.definiciones.length ? `<h2>${sec++}. DEFINICION DE LOS SERVICIOS CONTRATADOS</h2>
+          <p class="clausula">Para que ambas partes tengan claro el alcance de cada concepto, se describe lo que incluye y sus condiciones:</p>
+          ${paq.definiciones.map(d => `<p class="clausula"><strong>${d.nombre}.</strong> ${d.detalle}</p>`).join('')}` : ''}
 
         ${hasExtras ? `<h2>${sec++}. SERVICIOS ADICIONALES</h2>${extrasListHTML}` : ''}
 
